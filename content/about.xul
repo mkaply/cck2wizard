@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/about.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
+  <script type="application/x-javascript" src="about.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&about.label;" value="about" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="about" setconfig="setAbout" getconfig="getAbout">
+      <vbox>
+        <label value="&name.label;"></label>
+        <label id="name"/>
+      </vbox>
+      <vbox>
+        <label value="&description.label;"></label>
+        <textbox config="description"></textbox>
+        <description>&id.description;</description>
+      </vbox>
+      <vbox>
+        <label value="&id.label;"></label>
+        <label id="id"/>
+      </vbox>
+      <vbox>
+        <label value="&version.label;"></label>
+        <textbox config="version"></textbox>
+      </vbox>
+    </vbox>
+  </deck>
+</overlay>

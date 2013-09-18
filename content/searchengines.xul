@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/searchengines.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="searchengines.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&searchengines.label;" value="searchengines" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="searchengines" setconfig="setSearchEngines" getconfig="getSearchEngines" resetconfig="resetSearchEngines">
+      <listbox id="searchengines-listbox"></listbox>
+      <hbox>
+        <button id="searchengines-addfile" label="&addfile.label;"/>
+        <button id="searchengines-addurl" label="&addurl.label;"/>
+      </hbox>
+    </vbox>
+  </deck>
+  <deck id="cck2wizard-dialog-deck">
+    <vbox id="searchengineurl-dialog" onaccept="onSearchEngineURLOK">
+      <label value="URL:" />
+      <textbox id="searchengineurl-name" />
+    </vbox>
+  </deck>
+</overlay>

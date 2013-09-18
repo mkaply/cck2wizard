@@ -1,0 +1,24 @@
+#cck2wizard-button {
+  list-style-image: url('chrome://cck2wizard/skin/icon16.png');
+}
+
+#cck2wizard-tree {
+  width: 150px;
+  height: 480px;
+}
+
+#cck2wizard-deck {
+  width: 490px;
+}
+
+#cck2wizard-dialog-panel {
+  background-color: rgba(0, 0, 0, 0.75);
+  -moz-appearance: none;
+  border: none;
+}
+
+#cck2wizard-dialog {
+  background-color: -moz-Dialog;
+  padding: 10px;
+  border: 2px solid black;
+}
