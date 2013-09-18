@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/permissions.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="permissions.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <!-- Make sure to set container="true" -->
+    <treeitem container="true" open="true">
+      <treerow>
+        <treecell label="&permissions.label;" value="permissions" />
+      </treerow>
+      <treechildren>
+        <treeitem>
+          <treerow>
+            <treecell label="&popups.label;" value="popups" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
+            <treecell label="&cookies.label;" value="cookies" />
+          </treerow>
+        </treeitem>
+      </treechildren>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="popups" setconfig="setPopupPermissions" getconfig="getPopupPermissions" resetconfig="resetPopupPermissions">
+      <description control="PopupAllowedSites">&popupAllowedSites.label;</description>
+      <vbox>
+        <textbox id="PopupAllowedSites" flex="1" />
+      </vbox>
+      <description control="PopupDeniedSites">&popupDeniedSites.label;</description>
+      <vbox>
+        <textbox id="PopupDeniedSites" flex="1" />
+      </vbox>
+    </vbox>
+    <vbox id="cookies" setconfig="setCookiePermissions" getconfig="getCookiePermissions" resetconfig="resetCookiePermissions">
+      <description control="CookieAllowedSites">&cookieAllowedSites.label;</description>
+      <vbox>
+        <textbox id="CookieAllowedSites" flex="1" />
+      </vbox>
+      <description control="CookieDeniedSites">&cookieDeniedSites.label;</description>
+      <vbox>
+        <textbox id="CookieDeniedSites" flex="1" />
+      </vbox>
+    </vbox>
+  </deck>
+</overlay>

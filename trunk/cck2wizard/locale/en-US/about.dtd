@@ -1,0 +1,8 @@
+<!ENTITY about.label "About">
+
+<!ENTITY name.label "Name:">
+<!ENTITY id.label "Identifer:">
+<!ENTITY id.description "This is an internal identifier used by CCK2. It can only contain letters, numbers, undercores and dashes. This is not the same as the extension ID.">
+<!ENTITY description.label "Description:">
+<!ENTITY version.label "Version:">
+<!ENTITY version.description "Version can have up to four numbers (1.2.3.4). You should increment the version every time you create a new distribution of your CCK.">

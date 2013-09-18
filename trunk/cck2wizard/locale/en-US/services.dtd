@@ -1,0 +1,4 @@
+<!ENTITY services.label "Services">
+<!ENTITY privatebrowsing.label "Disable Private Browsing">
+<!ENTITY sync.label "Disable Sync">
+<!ENTITY aboutconfig.label "Prevent access to about:config">

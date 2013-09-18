@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/plugins.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="plugins.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&plugins.label;" value="plugins" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="plugins" setconfig="setPlugins" getconfig="getPlugins" resetconfig="resetPlugins">
+      <listbox id="plugins-listbox"></listbox>
+      <button id="plugins-add">Add</button>
+    </vbox>
+  </deck>
+</overlay>

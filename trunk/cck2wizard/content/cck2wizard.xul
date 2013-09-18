@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://cck2wizard/skin/cck2wizard.css" type="text/css"?>
+<?xul-overlay href="chrome://cck2wizard/content/about.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/permissions.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/plugins.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
+<!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cck2wizard-window" title="CCK2" onclose="return onCloseWindow()">
+  <script type="application/x-javascript;version=1.7" src="util.js" />
+  <script type="application/x-javascript;version=1.7" src="cck2wizard.js" />
+  <script type="application/x-javascript;version=1.7" src="cck2dialogs.js" />
+  <menubar id="menubarid">
+    <menu id="menuid" label="File">
+      <menupopup>
+        <menuitem label="New" oncommand="onNew()" />
+        <menu label="Open Recent" id="cckwizard2-recent" oncommand="onOpenRecent(event)">
+          <menupopup onpopupshowing="onRecentPopup(event)" />
+        </menu>
+        <menuitem label="Save" oncommand="onSave()" />
+        <menuitem label="Export" oncommand="onExport()" />
+        <menuitem label="Import" oncommand="onImport()" />
+        <menuitem label="Close" oncommand="onClose()" />
+      </menupopup>
+    </menu>
+  </menubar>
+  <deck id="main-deck">
+    <vbox align="center" pack="center" flex="1" style="height: 200px;">
+      <label>To get started with the CCK2 Wizard, select an option from the file menu.</label>
+      <label>If you're starting from scratch, select New.</label>
+      <label>If you've used a previous version of the CCK Wizard, select Import.</label>
+    </vbox>
+    <hbox>
+      <tree id="cck2wizard-tree" hidecolumnpicker="true" seltype="single">
+        <treecols>
+          <treecol hideheader="true" primary="true" flex="1" />
+        </treecols>
+        <treechildren id="cck2wizard-treechildren"></treechildren>
+      </tree>
+      <vbox>
+        <groupbox flex="1">
+          <deck id="cck2wizard-deck" flex="1"></deck>
+        </groupbox>
+        <hbox align="right" pack="top">
+          <button id="previous" label="&previous.label;" oncommand="onPrevious();"></button>
+          <button id="next" label="&next.label;" oncommand="onNext();"></button>
+        </hbox>
+      </vbox>
+    </hbox>
+  </deck>
+  <popupset id="mainPopupSet">
+    <panel id="cck2wizard-dialog-panel" width="640" height="480" pack="center" align="center" noautohide="true">
+      <vbox id="cck2wizard-dialog">
+        <deck id="cck2wizard-dialog-deck">
+          <vbox id="cck2wizard-new-dialog" onaccept="onNewPanelOK">
+            <label value="Name" />
+            <textbox id="cck2wizard-new-name" />
+            <label value="ID" />
+            <textbox id="cck2wizard-new-id" />
+          </vbox>
+        </deck>
+        <hbox>
+          <button oncommand="onOK()" label="OK" />
+          <button oncommand="onCancel()" label="Cancel" />
+        </hbox>
+      </vbox>
+    </panel>
+  </popupset>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="cck2wizard-string-bundle" src="chrome://cck2wizard/locale/cck2wizard.properties" />
+  </stringbundleset>
+</window>

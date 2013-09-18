@@ -1,0 +1,7 @@
+<!ENTITY permissions.label "Permissions">
+<!ENTITY userinterface.label "User Interface">
+<!ENTITY userinterface-bookmarkstoolbar.label "Display the bookmarks toolbar by default">
+
+<!ENTITY previous.label "Previous">
+<!ENTITY next.label "Next">
+<!ENTITY finish.label "Finish">
