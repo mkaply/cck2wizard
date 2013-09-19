@@ -16,6 +16,11 @@ function setSearchEngines(config) {
         getSearchEngineInfoFromURL(url, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, url);
+            listitem.setAttribute("class", "listitem-iconic");
+            if (response.image) {
+              listitem.setAttribute("class", "listitem-iconic");
+              listitem.setAttribute("image", response.image);
+            }
           }
         });        
       } catch (e) {
@@ -25,7 +30,10 @@ function setSearchEngines(config) {
         getSearchEngineInfoFromFile(searchengineFile, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
-            listitem.image = response.image;
+            if (response.image) {
+              listitem.setAttribute("class", "listitem-iconic");
+              listitem.setAttribute("image", response.image);
+            }
           }
         });
       }
@@ -74,6 +82,10 @@ function addSearchEngineFromFile() {
   getSearchEngineInfoFromFile(searchengineFile, function(response) {
     if (response) {
       var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
+      if (response.image) {
+        listitem.setAttribute("class", "listitem-iconic");
+        listitem.setAttribute("image", response.image);
+      }
     }
   });
 }
@@ -137,6 +149,10 @@ function onSearchEngineURLOK()
   }
   getSearchEngineInfoFromURL(url, function(response) {
     var listitem = gSearchEnginesListbox.appendItem(response.name, url);
+    if (response.image) {
+      listitem.setAttribute("class", "listitem-iconic");
+      listitem.setAttribute("image", response.image);
+    }
   });
   return true;
 }
