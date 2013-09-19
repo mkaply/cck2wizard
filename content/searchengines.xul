@@ -11,7 +11,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="searchengines" setconfig="setSearchEngines" getconfig="getSearchEngines" resetconfig="resetSearchEngines">
-      <listbox id="searchengines-listbox"></listbox>
+      <listbox id="searchengines-listbox" flex="1"/>
       <hbox>
         <button id="searchengines-addfile" label="&addfile.label;"/>
         <button id="searchengines-addurl" label="&addurl.label;"/>
