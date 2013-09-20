@@ -45,8 +45,20 @@ var CCK2 = {
       if (in_config) {
         this.config = in_config;
       } else {
-        // Get config from somewhere else
-        // Prefs, group policy, etc.        
+        // Try to get config from default preference. If it is there, default
+        // preference always wins
+        var configJSON = Preferences.defaults.get("extensions.cck2.config");
+        if (!configJSON) {
+          configJSON = Preferences.defaults.get("extensions.cck2.config");
+        }
+        if (!configJSON) {
+          // Try something else. Grou policy?
+        }
+        try {
+          config = JSON.parse(configJSON);
+        } catch (ex) {
+          return;
+        }
       }    
       var config = this.config;
   
