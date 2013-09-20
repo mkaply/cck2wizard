@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/extension.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="extension.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&extension.label;" value="extension" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="extension" setconfig="setExtensionInfo" getconfig="getExtensionInfo" resetconfig="resetExtensionInfo">
+      <grid>
+        <columns>
+          <column />
+          <column flex="1" />
+        </columns>
+        <rows>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-id.label;" />
+            </vbox>
+            <textbox id="extension-id" config="extension.id" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label />
+            </vbox>
+            <label value="&extension-id.description;" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label  pack="end" value="&extension-name.label;" />
+            </vbox>
+            <textbox id="extension-name" config="extension.name" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-version.label;" />
+            </vbox>
+            <textbox id="extension-version" config="extension.version" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-description.label;" />
+            </vbox>
+            <textbox id="extension-description" config="extension.description" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-creator.label;" />
+            </vbox>
+            <textbox id="extension-creator" config="extension.creator" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-homepage.label;" />
+            </vbox>
+            <textbox id="extension-homepage" config="extension.homepage" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-updateurl.label;" />
+            </vbox>
+            <textbox id="extension-updateurl" config="extension.updateurl" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label control="iconURL" value="extension-icon.label;" />
+            </vbox>
+            <hbox align="center">
+              <textbox flex="1" id="iconURL" onblur="" />
+              <image id="extension-icon" src='' width='32' height='32' />
+              <button label="&choosefile.label;" oncommand="onExtensionChooseIcon()" />
+            </hbox>
+          </row>
+        </rows>
+      </grid>
+    </vbox>
+  </deck>
+</overlay>

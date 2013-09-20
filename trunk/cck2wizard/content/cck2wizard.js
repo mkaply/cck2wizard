@@ -156,6 +156,10 @@ function onSave() {
   return true;
 }
 
+function onViewConfig() {
+  alert(JSON.stringify(getConfig(), null, 2));
+}
+
 function onExport() {
   var configJSON = JSON.stringify(getConfig(), null, 2);
   var configFile = chooseFile(window, "cck2config.json");
@@ -217,9 +221,16 @@ function setConfig(config) {
     }
     var textboxes = gDeck.querySelectorAll("textbox[config]");
     for (var i=0; i < textboxes.length; i++) {
-      var configValue = textboxes[i].getAttribute("config");
-      if (configValue in config) {
-        textboxes[i].value = config[configValue];
+      var configPath = textboxes[i].getAttribute("config").split('.');
+      if (configPath.length > 1) {
+        if (configPath[0] in config &&
+            [configPath[1]] in config[configPath[0]]) {
+          textboxes[i].value = config[configPath[0]][configPath[1]];
+        }
+      } else {
+        if (configPath[0] in config) {
+          textboxes[i].value = config[configPath[0]];
+        }
       }
     }
     var setconfigs = gDeck.querySelectorAll("*[setconfig]");
@@ -236,7 +247,7 @@ function setConfig(config) {
 }
 
 
-/** This function queries all of the user interface elements to cretate a
+/** This function queries all of the user interface elements to create a
   * config file.
   */
 function getConfig(destdir) {
@@ -253,7 +264,15 @@ function getConfig(destdir) {
     var textboxes = gDeck.querySelectorAll("textbox[config]");
     for (var i=0; i < textboxes.length; i++) {
       if (textboxes[i].value) {
-        config[textboxes[i].getAttribute("config")] = textboxes[i].value;
+        var configPath = textboxes[i].getAttribute("config").split('.');
+        if (configPath.length > 1) {
+          if (!(configPath[0] in config)) {
+            config[configPath[0]] = {};
+          }
+          config[configPath[0]][configPath[1]] = textboxes[i].value;
+        } else {
+          config[configPath[0]] = textboxes[i].value;
+        }
       }
     }
     var getconfigs = gDeck.querySelectorAll("*[getconfig]");

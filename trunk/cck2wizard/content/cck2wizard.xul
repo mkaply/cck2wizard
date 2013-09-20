@@ -7,6 +7,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/plugins.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
 <!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cck2wizard-window" title="CCK2" onclose="return onCloseWindow()">
@@ -24,6 +25,7 @@
         <menuitem label="Export" oncommand="onExport()" />
         <menuitem label="Import" oncommand="onImport()" />
         <menuitem label="Close" oncommand="onClose()" />
+        <menuitem label="View Config" oncommand="onViewConfig()" />
       </menupopup>
     </menu>
   </menubar>

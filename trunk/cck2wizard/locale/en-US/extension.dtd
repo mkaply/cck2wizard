@@ -1,0 +1,17 @@
+<!ENTITY extension.label "Extension Only">
+
+<!ENTITY extension-id.label "Unique ID:">
+<!ENTITY extension-id.description "Format: companyname-cck@extensions.domainname.tld">
+
+<!ENTITY extension-name.label "Name:">
+<!ENTITY extension-version.label "Version:">
+<!ENTITY extension-description.label "Description:">
+<!ENTITY extension-creator.label "Creator (optional):">
+<!ENTITY extension-homepage.label "Homepage URL (optional):">
+<!ENTITY extension-updateurl.label "Update URL:">
+<!ENTITY extension-updateurl.description "TALKE ABOTU UPDATEURL">
+<!ENTITY extension-updatepublickey.label "Update Public Key:">
+<!ENTITY extension-updatepublickey.description "Update URL:">
+<!ENTITY extension-icon.description "Icon:">
+<!ENTITY choosefile.label "Choose File:">
+<!ENTITY extension-filename.label "Filename:">
