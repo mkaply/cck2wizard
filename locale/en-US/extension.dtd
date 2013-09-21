@@ -5,9 +5,8 @@
 
 <!ENTITY extension-name.label "Name:">
 <!ENTITY extension-version.label "Version:">
-<!ENTITY extension-description.label "Description:">
-<!ENTITY extension-creator.label "Creator (optional):">
-<!ENTITY extension-homepage.label "Homepage URL (optional):">
+<!ENTITY extension-description.label "Description (optional):">
+<!ENTITY extension-homepageurl.label "Homepage URL (optional):">
 <!ENTITY extension-updateurl.label "Update URL:">
 <!ENTITY extension-updateurl.description "TALKE ABOTU UPDATEURL">
 <!ENTITY extension-updatepublickey.label "Update Public Key:">
