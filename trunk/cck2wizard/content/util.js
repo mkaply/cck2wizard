@@ -20,7 +20,7 @@ function writeFile(file, data, successCallback, errorCallback) {
       return;
     }
     if (successCallback) {
-      successCallback();
+      successCallback(file);
     }
   });
 }
