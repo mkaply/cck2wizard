@@ -15,17 +15,22 @@
   <script type="application/x-javascript;version=1.7" src="cck2wizard.js" />
   <script type="application/x-javascript;version=1.7" src="cck2dialogs.js" />
   <menubar id="menubarid">
-    <menu id="menuid" label="File">
-      <menupopup>
-        <menuitem label="New" oncommand="onNew()" />
-        <menu label="Open Recent" id="cckwizard2-recent" oncommand="onOpenRecent(event)">
-          <menupopup onpopupshowing="onRecentPopup(event)" />
+    <menu id="menuid" label="&file.label;">
+      <menupopup onpopupshowing="onFilePopup(event)">
+        <menuitem label="&new.label;" oncommand="onNew()" />
+        <menu label="&recent.label;" id="cckwizard2-recent" oncommand="onOpenRecent(event)">
+          <menupopup onpopupshowing="onRecentPopup(event)" />          
         </menu>
-        <menuitem label="Save" oncommand="onSave()" />
-        <menuitem label="Export" oncommand="onExport()" />
-        <menuitem label="Import" oncommand="onImport()" />
-        <menuitem label="Close" oncommand="onClose()" />
-        <menuitem label="View Config" oncommand="onViewConfig()" />
+        <menuitem id="save-menuitem" label="&save.label;" oncommand="onSave()" />
+        <menuitem id="export-menuitem" label="&export.label;" oncommand="onExport()" />
+        <menuitem label="&import.label;" oncommand="onImport()" />
+        <menuitem label="&close.label;" oncommand="onClose()" />
+        <menu id="debug-menu" label="Debug">
+          <menupopup>
+            <menuitem label="View Original Config" oncommand="onViewOriginalConfig()"/>
+            <menuitem label="View Current Config" oncommand="onViewCurrentConfig()"/>
+          </menupopup>
+        </menu>
       </menupopup>
     </menu>
   </menubar>

@@ -5,3 +5,12 @@
 <!ENTITY previous.label "Previous">
 <!ENTITY next.label "Next">
 <!ENTITY finish.label "Finish">
+
+<!ENTITY file.label "File">
+<!ENTITY new.label "New">
+<!ENTITY recent.label "Open Recent">
+<!ENTITY save.label "Save">
+<!ENTITY import.label "Import">
+<!ENTITY export.label "Export">
+<!ENTITY close.label "Close">
+<!ENTITY none.label "(none)">

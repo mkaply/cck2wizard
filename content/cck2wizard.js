@@ -22,13 +22,24 @@ function onLoad() {
 }
 window.addEventListener("load", onLoad, false);
 
-var gCurrentConfig = {};
+var gCurrentConfig = null;
+
+function onFilePopup(event) {
+  if (gCurrentConfig) {
+    document.getElementById("save-menuitem").disabled = false;
+    document.getElementById("export-menuitem").disabled = false;
+  } else {
+    document.getElementById("save-menuitem").disabled = true;
+    document.getElementById("export-menuitem").disabled = true;
+  }
+}
 
 function onRecentPopup(event) {
   var configs = Services.prefs.getChildList(prefsPrefix + "configs.", []);
   var recentMenuPopup = event.target;
-  while (recentMenuPopup.firstChild)
+  while (recentMenuPopup.firstChild) {
     recentMenuPopup.removeChild(recentMenuPopup.firstChild)
+  }
   if (configs.length > 0) {
     for (var i=0; i < configs.length; i++) {
       var menuitem = document.createElement("menuitem");
@@ -53,7 +64,7 @@ function onRecentPopup(event) {
 function onOpenRecent(event) {
   var config = event.target.config;
   // If we're trying to switch to the current config, just ignore
-  if (config.id == gCurrentConfig.id) {
+  if (gCurrentConfig && config.id == gCurrentConfig.id) {
     return;
   }
   if (!checkToSave()) {
@@ -86,8 +97,7 @@ function onImport() {
 // Returns true if it is OK to continue, false if not
 function checkToSave() {
   var newConfig = getConfig();
-//  alert (JSON.stringify(newConfig) + "\n\n" + JSON.stringify(gCurrentConfig));
-  if (JSON.stringify(newConfig)  != JSON.stringify(gCurrentConfig)) {
+  if (gCurrentConfig && (JSON.stringify(newConfig)  != JSON.stringify(gCurrentConfig))) {
     var buttonFlags = (Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_YES) +
                       (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_CANCEL) +
                       (Services.prompt.BUTTON_POS_2) * (Services.prompt.BUTTON_TITLE_NO) +
@@ -156,8 +166,12 @@ function onSave() {
   return true;
 }
 
-function onViewConfig() {
+function onViewCurrentConfig() {
   alert(JSON.stringify(getConfig(), null, 2));
+}
+
+function onViewOriginalConfig() {
+  alert(JSON.stringify(gCurrentConfig, null, 2));
 }
 
 function onExport() {
