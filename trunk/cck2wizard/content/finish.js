@@ -54,6 +54,13 @@ const defaultPrefsTemplate = [
 'pref("extensions.cck2.config", "%config%");',
 ''].join("\n");
 
+const autoconfigPrefs = [
+'pref("general.config.filename", "cck2.cfg");',
+'pref("general.config.obscure_value", 0);',
+''].join("\n");
+
+
+
 const autoconfigStart = "// Autoconfig file written by CCK2\n\nvar config = ";
 const autoconfigEnd = "\n\nComponents.utils.import(\"resource://cck2/CCK2.jsm\");\nCCK2.init(config)\n";
 
@@ -104,13 +111,18 @@ function onFinishAutoconfig() {
 var zipwriter;
 
 function onFinishExtension() {
+  var type = "distribution"
   var numFilesToWrite = 0;
   var basedir = chooseDir(window);
   if (!basedir) {
     return;
   }
   var dir = basedir.clone();
-  dir.append("xpi");
+  if (type == "distribution") {
+    dir.append("firefox");
+  } else {
+    dir.append("xpi");
+  }
   if (dir.exists()) {
     try {
       dir.remove(true);
@@ -123,55 +135,79 @@ function onFinishExtension() {
   var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
   zipwriter = new zipwritera();
   var zipfile = basedir.clone();
-  zipfile.append("foo.xpi");
+  if (type == "distribution") {
+    zipfile.append("autoconfig.zip");
+  } else {
+    zipfile.append("foo.xpi");
+  }
   if (zipfile.exists()) {
     zipfile.remove(false);
   }
   zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
 
   var config = getConfig();
-  alert(JSON.stringify(config));
-  var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
-  installRDF = installRDF.replace("%name%", config.extension.name);
-  installRDF = installRDF.replace("%version%", config.extension.version);
-  if ("description" in config.extension) {
-    installRDF = installRDF.replace("%description%", config.extension.description);
-  } else {
-    installRDF = installRDF.split("\n").filter(function(element) {
-      return !/%description%/.test(element);
-    }).join("\n");
+  
+  if (type == "distribution") {
+    var autoconfigFile = dir.clone();
+    autoconfigFile.append("cck2.cfg");
+    writeFile(autoconfigFile, autoconfigStart + JSON.stringify(config, null, 2) + autoconfigEnd, addFileToZip(zipwriter));
   }
-  if ("homepageURL" in config.extension) {
-    installRDF = installRDF.replace("%homepageURL%", config.extension.homepageURL);
-  } else {
-    installRDF = installRDF.split("\n").filter(function(element) {
-      return !/%homepageURL%/.test(element);
-    }).join("\n");
+  if (type != "distribution") {
+    var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
+    installRDF = installRDF.replace("%name%", config.extension.name);
+    installRDF = installRDF.replace("%version%", config.extension.version);
+    if ("description" in config.extension) {
+      installRDF = installRDF.replace("%description%", config.extension.description);
+    } else {
+      installRDF = installRDF.split("\n").filter(function(element) {
+        return !/%description%/.test(element);
+      }).join("\n");
+    }
+    if ("homepageURL" in config.extension) {
+      installRDF = installRDF.replace("%homepageURL%", config.extension.homepageURL);
+    } else {
+      installRDF = installRDF.split("\n").filter(function(element) {
+        return !/%homepageURL%/.test(element);
+      }).join("\n");
+    }
+    if ("updateURL" in config.extension) {
+      installRDF = installRDF.replace("%updateURL%", config.extension.updateURL);
+    } else {
+      installRDF = installRDF.split("\n").filter(function(element) {
+        return !/%updateURL%/.test(element);
+      }).join("\n");
+    }
+    if ("updateKey" in config.extension) {
+      installRDF = installRDF.replace("%updateKey%", config.extension.updateKey);
+    } else {
+      installRDF = installRDF.split("\n").filter(function(element) {
+        return !/%updateKey%/.test(element);
+      }).join("\n");
+    }
+    var installRDFFile = dir.clone();
+    installRDFFile.append("install.rdf");
+    numFilesToWrite += 1;
+    writeFile(installRDFFile, installRDF, addFileToZip(zipwriter));
   }
-  if ("updateURL" in config.extension) {
-    installRDF = installRDF.replace("%updateURL%", config.extension.updateURL);
-  } else {
-    installRDF = installRDF.split("\n").filter(function(element) {
-      return !/%updateURL%/.test(element);
-    }).join("\n");
-  }
-  if ("updateKey" in config.extension) {
-    installRDF = installRDF.replace("%updateKey%", config.extension.updateKey);
-  } else {
-    installRDF = installRDF.split("\n").filter(function(element) {
-      return !/%updateKey%/.test(element);
-    }).join("\n");
-  }
-  var installRDFFile = dir.clone();
-  installRDFFile.append("install.rdf");
-  numFilesToWrite += 1;
-  writeFile(installRDFFile, installRDF, addFileToZip(zipwriter));
   var chromeManifest = chromeManifestTemplate.replace("%id%", config.id);
   var chromeManifestFile = dir.clone();
+  if (type == "distribution") {
+    chromeManifestFile.append("distribution");
+    chromeManifestFile.append(config.id);
+    if (!chromeManifestFile.exists()) {
+      chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    }
+    chromeManifest = chromeManifest.split("\n").filter(function(element) {
+      return !/chrome\.manifest/.test(element);
+    }).join("\n");
+  }
   chromeManifestFile.append("chrome.manifest");
   numFilesToWrite += 1;
   writeFile(chromeManifestFile, chromeManifest, addFileToZip(zipwriter));
   var cck2Dir = dir.clone();
+  if (type == "distribution") {
+    cck2Dir.append("distribution");
+  }
   cck2Dir.append("cck2");
   cck2Dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   numFilesToWrite += cck2Files.length;
@@ -192,6 +228,10 @@ function onFinishExtension() {
   }
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
+    if (type == "distribution") {
+      pluginsDir.append("distribution");
+      pluginsDir.append(config.id);
+    }
     pluginsDir.append("plugins");
     pluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
     for (var i=0; i < config.plugins.length; i++) {
@@ -202,6 +242,10 @@ function onFinishExtension() {
     delete(config.plugins);
   }
   var resourceDir = dir.clone();
+  if (type == "distribution") {
+    resourceDir.append("distribution");
+    resourceDir.append(config.id);
+  }
   resourceDir.append("resources");
   resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   if ("searchplugins" in config) {
@@ -221,16 +265,26 @@ function onFinishExtension() {
   // certs in resources/certs
   // extension in resources/extensions
   // proxy config file in resources/proxyconfig
-
-  var preferencesFile = dir.clone();
-  preferencesFile.append("defaults");
-  preferencesFile.append("preferences");
-  preferencesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-  preferencesFile.append("prefs.js");
-  delete config.extension;
-  var defaultPrefs = defaultPrefsTemplate.replace("%config%", JSON.stringify(config).replace(/"/g, "\\\""));
-  numFilesToWrite += 1;
-  writeFile(preferencesFile, defaultPrefs, addFileToZip(zipwriter));
+  if (type != "distribution") {
+    var preferencesFile = dir.clone();
+    preferencesFile.append("defaults");
+    preferencesFile.append("preferences");
+    preferencesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    preferencesFile.append("prefs.js");
+    delete config.extension;
+    var defaultPrefs = defaultPrefsTemplate.replace("%config%", JSON.stringify(config).replace(/"/g, "\\\""));
+    numFilesToWrite += 1;
+    writeFile(preferencesFile, defaultPrefs, addFileToZip(zipwriter));
+  }
+  if (type == "distribution") {
+    var preferencesFile = dir.clone();
+    preferencesFile.append("defaults");
+    preferencesFile.append("pref");
+    preferencesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    preferencesFile.append("autoconfig.js");
+    numFilesToWrite += 1;
+    writeFile(preferencesFile, autoconfigPrefs, addFileToZip(zipwriter));
+  }
 
   function copyAndAddFileToZip(zipwriter, file, destdir, filename) {
     file.copyTo(destdir, filename);
