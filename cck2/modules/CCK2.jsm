@@ -41,7 +41,6 @@ var CCK2 = {
       if (this.initialized) {
         return;
       }
-      this.initialized = true;
       if (in_config) {
         this.config = in_config;
       } else {
@@ -55,12 +54,13 @@ var CCK2 = {
           // Try something else. Grou policy?
         }
         try {
-          config = JSON.parse(configJSON);
+          this.config = JSON.parse(configJSON);
         } catch (ex) {
           return;
         }
-      }    
+      }
       var config = this.config;
+      this.initialized = true;
   
       // We don't handle in content preferences right now, so make sure they
       // can't be used
@@ -81,12 +81,14 @@ var CCK2 = {
   
       if (!config)
         return;
-      this.firstrun = Preferences.get("extensons.cck2." + config.id + ".firstrun", true);
-      Preferences.set("extensons.cck2." + config.id + ".firstrun", false);
+      this.firstrun = Preferences.get("extensions.cck2." + config.id + ".firstrun", true);
+      Preferences.set("extensions.cck2." + config.id + ".firstrun", false);
       if (!this.firstrun) {
-        this.installedVersion = Preferences.get("extensons.cck2." + config.id + ".installedVersion");
+        this.installedVersion = Preferences.get("extensions.cck2." + config.id + ".installedVersion");
       }
-      Preferences.set("extensons.cck2." + config.id + ".installedVersion", config.version);
+      if ("version" in config) {
+        Preferences.set("extensions.cck2." + config.id + ".installedVersion", config.version);
+      }
       if (config.permissions) {
         for (var i in config.permissions) {
           updatePermissions(i, config.permissions[i]);
@@ -271,7 +273,7 @@ var CCK2 = {
         if (!config || (!this.firstrun && this.installedVersion == config.version)) {
           return;
         }
-        if (config.certs.override) {
+        if ("certs" in config && "override" in config.certs) {
           for (var i=0; i < config.certs.override.length; i++) {
             var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
             try {

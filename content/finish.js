@@ -101,18 +101,36 @@ function onFinishAutoconfig() {
   // Write a zip file of distribution directory with autoconfig at the top level.
 }
 
+var zipwriter;
+
 function onFinishExtension() {
   var numFilesToWrite = 0;
-  var dir = chooseDir(window);
-  if (!dir) {
+  var basedir = chooseDir(window);
+  if (!basedir) {
     return;
   }
+  var dir = basedir.clone();
   dir.append("xpi");
   if (dir.exists()) {
-    dir.remove(true);
+    try {
+      dir.remove(true);
+    }  catch (ex) {
+      alert("Directory is in use");
+      return;
+    }
   }
   dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
+  zipwriter = new zipwritera();
+  var zipfile = basedir.clone();
+  zipfile.append("foo.xpi");
+  if (zipfile.exists()) {
+    zipfile.remove(false);
+  }
+  zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
+
   var config = getConfig();
+  alert(JSON.stringify(config));
   var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
   installRDF = installRDF.replace("%name%", config.extension.name);
   installRDF = installRDF.replace("%version%", config.extension.version);
@@ -147,16 +165,12 @@ function onFinishExtension() {
   var installRDFFile = dir.clone();
   installRDFFile.append("install.rdf");
   numFilesToWrite += 1;
-  writeFile(installRDFFile, installRDF, function() {
-    numFilesToWrite -= 1;
-  });
+  writeFile(installRDFFile, installRDF, addFileToZip(zipwriter));
   var chromeManifest = chromeManifestTemplate.replace("%id%", config.id);
   var chromeManifestFile = dir.clone();
   chromeManifestFile.append("chrome.manifest");
   numFilesToWrite += 1;
-  writeFile(chromeManifestFile, chromeManifest, function() {
-    numFilesToWrite -= 1;
-  });
+  writeFile(chromeManifestFile, chromeManifest, addFileToZip(zipwriter));
   var cck2Dir = dir.clone();
   cck2Dir.append("cck2");
   cck2Dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -169,14 +183,12 @@ function onFinishExtension() {
       destfile.append(splitpath[j]);
     }
     destfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
-    writeFile(destfile, data, function() {
-      numFilesToWrite -= 1;
-    });
+    writeFile(destfile, data, addFileToZip(zipwriter));
   }
   if ("iconurl" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
     iconFile.initWithPath(config.extension.iconurl);
-    iconFile.copyTo(dir, "icon.png");
+    copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
   }
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
@@ -185,23 +197,23 @@ function onFinishExtension() {
     for (var i=0; i < config.plugins.length; i++) {
       var pluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
       pluginFile.initWithPath(config.plugins[i]);
-      pluginFile.copyTo(pluginsDir, null);
+      copyAndAddFileToZip(zipwriter, pluginFile, pluginsDir, null);
     }
     delete(config.plugins);
   }
   var resourceDir = dir.clone();
   resourceDir.append("resources");
   resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-  if ("searchengines" in config) {
-    var searchenginesDir = resourceDir.clone();
-    searchenginesDir.append("searchengines");
-    searchenginesDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    for (var i=0; i < config.searchengines.length; i++) {
-      if (!/^https?:/.test(config.searchengines[i])) {
-        var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-        searchengineFile.initWithPath(config.searchengines[i]);
-        searchengineFile.copyTo(searchenginesDir, null);
-        config.searchengines[i] = "chrome://" + config.id + "/" + searchengineFile.leafName;
+  if ("searchplugins" in config) {
+    var searchpluginsDir = resourceDir.clone();
+    searchpluginsDir.append("searchplugins");
+    searchpluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    for (var i=0; i < config.searchplugins.length; i++) {
+      if (!/^https?:/.test(config.searchplugins[i])) {
+        var searchpluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        searchpluginFile.initWithPath(config.searchplugins[i]);
+        copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
+        config.searchplugins[i] = "resource://" + config.id + "/searchplugins/" + searchpluginFile.leafName;
       }
     }
   }
@@ -209,18 +221,55 @@ function onFinishExtension() {
   // certs in resources/certs
   // extension in resources/extensions
   // proxy config file in resources/proxyconfig
+
   var preferencesFile = dir.clone();
-  preferencesFile.append("default");
+  preferencesFile.append("defaults");
   preferencesFile.append("preferences");
   preferencesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   preferencesFile.append("prefs.js");
   delete config.extension;
   var defaultPrefs = defaultPrefsTemplate.replace("%config%", JSON.stringify(config).replace(/"/g, "\\\""));
   numFilesToWrite += 1;
-  writeFile(preferencesFile, defaultPrefs, function() {
-    numFilesToWrite -= 1;
-  });
+  writeFile(preferencesFile, defaultPrefs, addFileToZip(zipwriter));
+
+  function copyAndAddFileToZip(zipwriter, file, destdir, filename) {
+    file.copyTo(destdir, filename);
+    var destfile = destdir.clone();
+    if (filename) {
+      destfile.append(filename);
+    } else {
+      destfile.append(file.leafName);
+    }
+    var zipPath = destfile.path.replace(dir.path, "");
+    zipPath = zipPath.substr(1);
+    zipPath = zipPath.replace(/\\/g, "/");
+    zipwriter.addEntryFile(zipPath, Ci.nsIZipWriter.COMPRESSION_NONE, destfile, true);
+  }
+
+  function addFileToZip(zipwriter) {
+    return function (file) {
+      var zipPath = file.path.replace(dir.path, "");
+      zipPath = zipPath.substr(1);
+      zipPath = zipPath.replace(/\\/g, "/");
+      zipwriter.addEntryFile(zipPath, Ci.nsIZipWriter.COMPRESSION_NONE, file, true);
+      numFilesToWrite -= 1;
+      if (numFilesToWrite == 0) {
+        zipwriter.processQueue(observer, null);
+      }
+    }
+  }
 }
+
+var observer = {
+  onStartRequest: function(request, context)
+  {
+  },
+
+  onStopRequest: function(request, context, status)
+  {
+    zipwriter.close();
+  }
+};
 
 
 function readChromeFile(path) {

@@ -8,11 +8,11 @@ function onSearchEnginesLoad() {
 window.addEventListener("load", onSearchEnginesLoad, false);
 
 function setSearchEngines(config) {
-  if ("searchengines" in config) {
-    for (var i=0; i < config.searchengines.length; i++) {
+  if ("searchplugins" in config) {
+    for (var i=0; i < config.searchplugins.length; i++) {
       try {
-        Services.io.newURI(config.searchengines[i], null, null);
-        var url = config.searchengines[i];
+        Services.io.newURI(config.searchplugins[i], null, null);
+        var url = config.searchplugins[i];
         getSearchEngineInfoFromURL(url, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, url);
@@ -26,7 +26,7 @@ function setSearchEngines(config) {
       } catch (e) {
         // Filename
         var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-        searchengineFile.initWithPath(config.searchengines[i]);
+        searchengineFile.initWithPath(config.searchplugins[i]);
         getSearchEngineInfoFromFile(searchengineFile, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
@@ -41,27 +41,11 @@ function setSearchEngines(config) {
   }
 }
 
-function getSearchEngines(config, destdir) {
-  if (destdir) {
-    
-    // ONLY DO THIS IF NOT AUTOCONFIG (distribution)
-    var searchenginesdir = destdir.clone();
-    searchenginesdir.append("searchengines");
-    if (!searchenginesdir.exists()) {
-      searchenginesdir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    }
+function getSearchEngines(config) {
+  if (gSearchEnginesListbox.itemCount > 0) {
+    config.searchplugins = [];
     for (var i=0; i < gSearchEnginesListbox.itemCount; i++) {
-      var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-      searchengineFile.initWithPath(gSearchEnginesListbox.getItemAtIndex(i).value);
-      searchengineFile.copyTo(searchenginesdir, null);
-    }
-    
-  } else {
-    if (gSearchEnginesListbox.itemCount > 0) {
-      config.searchengines = [];
-      for (var i=0; i < gSearchEnginesListbox.itemCount; i++) {
-        config.searchengines.push(gSearchEnginesListbox.getItemAtIndex(i).value);
-      }
+      config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i).value);
     }
   }
   return config;

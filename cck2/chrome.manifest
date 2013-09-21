@@ -6,6 +6,6 @@ overlay about:addons chrome://cck2/content/cck2-extensions-overlay.xul
 overlay chrome://mozapps/content/extensions/extensions.xul chrome://cck2/content/cck2-extensions-overlay.xul
 overlay chrome://browser/content/preferences/preferences.xul chrome://cck2/content/cck2-prefs-overlay.xul
 
-#component {b6dccb2f-72e7-4954-a248-6e6a53de4972} components/CCK2Service.js
-#contract @kaply.com/cck2-service;1 {b6dccb2f-72e7-4954-a248-6e6a53de4972}
-#category profile-after-change CCK2Service @kaply.com/cck2-service;1
+component {b6dccb2f-72e7-4954-a248-6e6a53de4972} components/CCK2Service.js
+contract @kaply.com/cck2-service;1 {b6dccb2f-72e7-4954-a248-6e6a53de4972}
+category profile-after-change CCK2Service @kaply.com/cck2-service;1
