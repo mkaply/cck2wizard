@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/finish.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="finish.js" />
   <treechildren id="cck2wizard-treechildren">
@@ -11,9 +11,10 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="finish">
-      <description>Fill in the blank</description>
-      <button id="finish-autoconfig">Autoconfig</button>
-      <button id="finish-extension">Extension</button>
+      <description>&autoconfig.description;</description>
+      <hbox pack="center"><button id="finish-autoconfig" label="&autoconfig.label;"/></hbox>
+      <description>&extension.description;</description>
+      <hbox pack="center"><button id="finish-extension" label="&extension.label;"/></hbox>
     </vbox>
   </deck>
 </overlay>
