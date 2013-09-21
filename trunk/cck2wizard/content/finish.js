@@ -160,6 +160,7 @@ function onFinishExtension() {
   var cck2Dir = dir.clone();
   cck2Dir.append("cck2");
   cck2Dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  numFilesToWrite += cck2Files.length;
   for (var i=0; i < cck2Files.length; i++) {
     var data = readChromeFile("chrome://cck2files/content/" + cck2Files[i]);
     var destfile = cck2Dir.clone();
@@ -168,16 +169,46 @@ function onFinishExtension() {
       destfile.append(splitpath[j]);
     }
     destfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
-    numFilesToWrite += 1;
     writeFile(destfile, data, function() {
       numFilesToWrite -= 1;
     });
   }
   if ("iconurl" in config.extension) {
-    var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+    var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
     iconFile.initWithPath(config.extension.iconurl);
     iconFile.copyTo(dir, "icon.png");
   }
+  if ("plugins" in config) {
+    var pluginsDir = dir.clone();
+    pluginsDir.append("plugins");
+    pluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    for (var i=0; i < config.plugins.length; i++) {
+      var pluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+      pluginFile.initWithPath(config.plugins[i]);
+      pluginFile.copyTo(pluginsDir, null);
+    }
+    delete(config.plugins);
+  }
+  var resourceDir = dir.clone();
+  resourceDir.append("resources");
+  resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  if ("searchengines" in config) {
+    var searchenginesDir = resourceDir.clone();
+    searchenginesDir.append("searchengines");
+    searchenginesDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    for (var i=0; i < config.searchengines.length; i++) {
+      if (!/^https?:/.test(config.searchengines[i])) {
+        var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        searchengineFile.initWithPath(config.searchengines[i]);
+        searchengineFile.copyTo(searchenginesDir, null);
+        config.searchengines[i] = "chrome://" + config.id + "/" + searchengineFile.leafName;
+      }
+    }
+  }
+
+  // certs in resources/certs
+  // extension in resources/extensions
+  // proxy config file in resources/proxyconfig
   var preferencesFile = dir.clone();
   preferencesFile.append("default");
   preferencesFile.append("preferences");
@@ -189,27 +220,8 @@ function onFinishExtension() {
   writeFile(preferencesFile, defaultPrefs, function() {
     numFilesToWrite -= 1;
   });
-  if ("plugins" in config) {
-    var pluginsDir = dir.clone();
-    pluginsDir.append("plugins");
-    for (var i=0; i < config.plugins.length; i++) {
-      var pluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-      pluginFile.initWithPath(config.plugins[i]);
-      pluginFile.copyTo(pluginsDir, null);
-    }
-    delete (config.plugins);
-  }
-
-  var resourceDir = dir.clone();
-  resourceDir.append("resources");
-  resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-  // plugins in top level plugins
-  // searchplugins in resources/searchplugins
-  // certs in resources/certs
-  // extension in resources/extensions
-  // proxy config file in resources/proxyconfig
-  
 }
+
 
 function readChromeFile(path) {
   var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
