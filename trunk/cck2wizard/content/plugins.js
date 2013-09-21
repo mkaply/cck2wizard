@@ -14,25 +14,11 @@ function setPlugins(config) {
   }
 }
 
-function getPlugins(config, destdir) {
-  if (destdir) {
-    var pluginsdir = destdir.clone();
-    pluginsdir.append("plugins");
-    if (!pluginsdir.exists()) {
-      pluginsdir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    }
+function getPlugins(config) {
+  if (gPluginsListbox.itemCount > 0) {
+    config.plugins = [];
     for (var i=0; i < gPluginsListbox.itemCount; i++) {
-      var pluginfile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-      pluginfile.initWithPath(gPluginsListbox.getItemAtIndex(i).label);
-      pluginfile.copyTo(pluginsdir, null);
-    }
-    
-  } else {
-    if (gPluginsListbox.itemCount > 0) {
-      config.plugins = [];
-      for (var i=0; i < gPluginsListbox.itemCount; i++) {
-        config.plugins.push(gPluginsListbox.getItemAtIndex(i).label);
-      }
+      config.plugins.push(gPluginsListbox.getItemAtIndex(i).label);
     }
   }
   return config;

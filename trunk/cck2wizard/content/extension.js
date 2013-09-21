@@ -2,7 +2,6 @@ var gExtensionID = null;
 var gExtensionName = null;
 var gExtensionVersion = null;
 var gExtensionDescription = null;
-var gExtensionCreator = null;
 var gExtensionHomepage = null;
 var gExtensionUpdateURL = null;
 var gExtensionUpdateKey = null;
@@ -14,8 +13,7 @@ function onExtensionInfoLoad() {
   gExtensionName = document.getElementById("extension-name");
   gExtensionVersion = document.getElementById("extension-version");
   gExtensionDescription = document.getElementById("extension-description");
-  gExtensionCreator = document.getElementById("extension-creator");
-  gExtensionHomepage = document.getElementById("extension-homepage");
+  gExtensionHomepageURL = document.getElementById("extension-homepageurl");
   gExtensionUpdateURL = document.getElementById("extension-updateurl");
   gExtensionUpdateKey = document.getElementById("extension-updatekey");
   gExtensionIcon = document.getElementById("extension-icon");
@@ -49,5 +47,6 @@ function onExtensionChooseIcon() {
   var iconfile = chooseFile(window);
   if (iconfile) {
     document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconfile).spec);
+    document.getElementById("iconURL").value = iconfile.path;
   }
 }

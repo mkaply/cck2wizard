@@ -49,15 +49,9 @@
           </row>
           <row align="center">
             <vbox align="right">
-              <label pack="end" value="&extension-creator.label;" />
+              <label pack="end" value="&extension-homepageurl.label;" />
             </vbox>
-            <textbox id="extension-creator" config="extension.creator" />
-          </row>
-          <row align="center">
-            <vbox align="right">
-              <label pack="end" value="&extension-homepage.label;" />
-            </vbox>
-            <textbox id="extension-homepage" config="extension.homepage" />
+            <textbox id="extension-homepageurl" config="extension.homepageurl" />
           </row>
           <row align="center">
             <vbox align="right">
@@ -70,7 +64,7 @@
               <label control="iconURL" value="extension-icon.label;" />
             </vbox>
             <hbox align="center">
-              <textbox flex="1" id="iconURL" onblur="" />
+              <textbox flex="1" config="extension.iconurl" id="iconURL" onblur="" />
               <image id="extension-icon" src='' width='32' height='32' />
               <button label="&choosefile.label;" oncommand="onExtensionChooseIcon()" />
             </hbox>
