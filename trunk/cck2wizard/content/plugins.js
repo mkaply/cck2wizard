@@ -26,7 +26,7 @@ function getPlugins(config) {
 
 function resetPlugins() {
   while (gPluginsListbox.itemCount > 0) {
-    gPluginsListbox.removeItemat(0);
+    gPluginsListbox.removeItemAt(0);
   }
 }
 
