@@ -18,10 +18,4 @@
       </hbox>
     </vbox>
   </deck>
-  <deck id="cck2wizard-dialog-deck">
-    <vbox id="searchengineurl-dialog" onaccept="onSearchEngineURLOK">
-      <label value="URL:" />
-      <textbox id="searchengineurl-name" />
-    </vbox>
-  </deck>
 </overlay>

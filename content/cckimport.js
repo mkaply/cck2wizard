@@ -99,10 +99,93 @@ function importCCKFile(configFileContent)
   if ("alwaysdefaultbrowser" in configarray) {
     config.alwaysDefaultBrowser = true;
   }
-  
-
-  
-
+  if ("HomePageURL" in configrray) {
+  }
+  if ("HomePageWelcomeURL" in configrray) {
+  }
+  if ("noWelcomePage" in configrray) {
+  }
+  if ("HomePageOverrideURL" in configrray) {
+  }
+  if ("noOverridePage" in configrray) {
+  }
+  if ("CompanyName" in configarray) {
+    config.titlemodifier = configarray.CompanyName
+  }
+  if ("HelpMenuCommandName" in configarray) {
+    config.helpMenu = {};
+    config.helpMenu.label = configarray.HelpMenuCommandName;
+    if ("HelpMenuCommandURL" in configarray) {
+      config.helpMenu.url = configarray.HelpMenuCommandURL;
+    }
+    if ("HelpMenuCommandAccesskey" in configarray) {
+      config.helpMenu.accesskey = configarray.HelpMenuCommandAccesskey;
+    }
+  }
+  if ("bookmarksbar" in configarray) {
+    config.displayBookmarksToolbar = true;
+  }
+  if ("menubar" in configarray) {
+    config.displayMenuBar = true;
+  }
+  function addPermissions(type, action, sites) {
+    if (!config.permissions)
+      config.permissions = {};
+    if (!config.permissions[type])
+      config.permissions[type] = {};
+    config.permissions[type][action] = sites.split(',');
+  }s
+  if ("PopupAllowedSites" in configarray) {
+    addPermissions("popup", "allow", configarray.PopupAllowedSites);
+  }
+  if ("InstallAllowedSites" in configarray) {
+    addPermissions("install", "allow", configarray.InstallAllowedSites);
+  }
+  if ("CookieAllowedSites" in configarray) {
+    addPermissions("cookie", "allow", configarray.CookieAllowedSites);
+  }
+  if ("PluginAllowedSites" in configarray) {
+    addPermissions("plugins", "allow", configarray.PluginAllowedSites);
+  }
+  if ("PopupAllowedSites" in configarray) {
+    addPermissions("popup", "deny", configarray.PopupAllowedSites);
+  }
+  if ("InstallAllowedSites" in configarray) {
+    addPermissions("install", "deny", configarray.InstallAllowedSites);
+  }
+  if ("CookieAllowedSites" in configarray) {
+    addPermissions("cookie", "deny", configarray.CookieAllowedSites);
+  }
+  if ("PluginAllowedSites" in configarray) {
+    addPermissions("plugins", "deny", configarray.PluginAllowedSites);
+  }
+  if ("BrowserPluginPath1" in configarray) {
+    config.plugins = [];
+    var pluginname, i=1;
+    while ((pluginname = configarray['BrowserPluginPath' + i])) {
+      config.plugins.push(pluginname);
+      i++;
+    }
+  }
+  if ("SearchEngine1" in configarray) {
+    config.searchplugins = [];
+    var searchpluginname, i=1;
+    while ((searchpluginname = configarray['SearchEngine' + i])) {
+      config.searchplugins.push(searchpluginname);
+      i++;
+    }
+  }
+  if ("DefaultSearchEngine" in configarray) {
+    config.defaultSearchEngine = configarray["DefaultSearchEngine"];
+  }
+  if ("BundlePath1" in configarray) {
+    config.addons = [];
+    var addonname, i=1;
+    while ((addonname = configarray['BundlePath' + i])) {
+      config.addons.push(addonname);
+      i++;
+    }
+  }
   return config;
 
   // handle prefs

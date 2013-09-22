@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/addons.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="addons.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&addons.label;" value="addons" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="addons" setconfig="setAddons" getconfig="getAddons" resetconfig="resetAddons">
+      <listbox id="addons-listbox" flex="1"/>
+      <hbox>
+        <button id="addons-addfile" label="&addfile.label;"/>
+        <button id="addons-addurl" label="&addurl.label;"/>
+      </hbox>
+    </vbox>
+  </deck>
+</overlay>
