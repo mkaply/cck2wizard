@@ -99,15 +99,15 @@ function importCCKFile(configFileContent)
   if ("alwaysdefaultbrowser" in configarray) {
     config.alwaysDefaultBrowser = true;
   }
-  if ("HomePageURL" in configrray) {
+  if ("HomePageURL" in configarray) {
   }
-  if ("HomePageWelcomeURL" in configrray) {
+  if ("HomePageWelcomeURL" in configarray) {
   }
-  if ("noWelcomePage" in configrray) {
+  if ("noWelcomePage" in configarray) {
   }
-  if ("HomePageOverrideURL" in configrray) {
+  if ("HomePageOverrideURL" in configarray) {
   }
-  if ("noOverridePage" in configrray) {
+  if ("noOverridePage" in configarray) {
   }
   if ("CompanyName" in configarray) {
     config.titlemodifier = configarray.CompanyName
@@ -134,7 +134,7 @@ function importCCKFile(configFileContent)
     if (!config.permissions[type])
       config.permissions[type] = {};
     config.permissions[type][action] = sites.split(',');
-  }s
+  }
   if ("PopupAllowedSites" in configarray) {
     addPermissions("popup", "allow", configarray.PopupAllowedSites);
   }

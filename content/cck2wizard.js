@@ -76,30 +76,38 @@ function onOpenRecent(event) {
 }
 
 function onImport() {
-  if (!checkToSave()) {
-    return;
-  }
-  var configFile = chooseFile(window);
-  if (configFile) {
-    readFile(configFile, function(configFileContent) {
-      try {
-        var config = JSON.parse(configFileContent);
-        setConfig(config);
-        // This seems odd, but the imported JSON doesn't match
-        // the order of the regular JSON. I want it to.
-        config = getConfig();
-        setConfig(config);
-        document.getElementById("main-deck").selectedIndex = 1;
-      } catch(e) {
-        if (configFileContent.substr(0, 3) == "id=") {
-          var config = importCCKFile(configFileContent);
+  try {
+    if (!checkToSave()) {
+      return;
+    }
+    var configFile = chooseFile(window);
+    if (configFile) {
+      readFile(configFile, function(configFileContent) {
+        try {
+          var config = JSON.parse(configFileContent);
+          setConfig(config);
+          // This seems odd, but the imported JSON doesn't match
+          // the order of the regular JSON. I want it to.
+          config = getConfig();
           setConfig(config);
           document.getElementById("main-deck").selectedIndex = 1;
-        } else {
-          alert("INVALID FILE");
+        } catch(e) {
+          if (configFileContent.substr(0, 3) == "id=") {
+            try {
+              var config = importCCKFile(configFileContent);
+              setConfig(config);
+              document.getElementById("main-deck").selectedIndex = 1;
+            } catch (e) {
+              errorCritical(e);
+            }
+          } else {
+            alert("INVALID FILE");
+          }
         }
-      }
-    }, errorCritical)
+      }, errorCritical)
+    }
+  } catch(e) {
+    errorCritical(e);
   }
 }
 
