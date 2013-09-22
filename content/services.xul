@@ -11,7 +11,11 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="services">
-      <checkbox config="disablePrivateBrowsing" label="&privatebrowsing.label;" />
+      <checkbox config="disablePrivateBrowsing" label="&disableprivatebrowsing.label;" />
+      <checkbox config="disableAboutConfig" label="&disableaboutconfig.label;" />
+      <checkbox config="disableSync" label="&disablesync.label;" />
+      <checkbox config="noGetAddons" label="&noGetAddons.label;" />
+      <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
     </vbox>
   </deck>
 </overlay>
