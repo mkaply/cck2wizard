@@ -1,52 +1,39 @@
-var gExtensionID = null;
 var gExtensionName = null;
-var gExtensionVersion = null;
-var gExtensionDescription = null;
-var gExtensionHomepage = null;
-var gExtensionUpdateURL = null;
-var gExtensionUpdateKey = null;
 var gExtensionIcon = null;
-var gExtensionFilename = null;
 
 function onExtensionInfoLoad() {
-  gExtensionID = document.getElementById("extension-id");
   gExtensionName = document.getElementById("extension-name");
-  gExtensionVersion = document.getElementById("extension-version");
-  gExtensionDescription = document.getElementById("extension-description");
-  gExtensionHomepageURL = document.getElementById("extension-homepageurl");
-  gExtensionUpdateURL = document.getElementById("extension-updateurl");
-  gExtensionUpdateKey = document.getElementById("extension-updatekey");
   gExtensionIcon = document.getElementById("extension-icon");
-  gExtensionFilename = document.getElementById("extension-filename");
 }
 window.addEventListener("load", onExtensionInfoLoad, false);
-
 
 function setExtensionInfo(config) {
   if (!gExtensionName.value) {
     gExtensionName.value = config.name;
   }
+  if ("extension" in config && "icon" in config.extension) {
+    setIcon(config.extension.icon);
+  }
 }
 
 function getExtensionInfo(config, destdir) {
-  // 
-  if (destdir) {
-    
-  } else {
-    
-    
-  }
   return config;
 }
 
 function resetExtensionInfo() {
-  
+  document.getElementById("extension-icon").removeAttribute("src");
 }
 
 function onExtensionChooseIcon() {
   var iconfile = chooseFile(window);
   if (iconfile) {
     document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconfile).spec);
-    document.getElementById("iconURL").value = iconfile.path;
+    document.querySelector("textbox[config='extension.icon']").value = iconfile.path;
   }
+}
+
+function setIcon(path) {
+  var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+  iconFile.initWithPath(path);
+  document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
 }
