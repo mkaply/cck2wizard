@@ -81,14 +81,23 @@ function onImport() {
   }
   var configFile = chooseFile(window);
   if (configFile) {
-    readFile(configFile, function(configJSON) {
+    readFile(configFile, function(configFileContent) {
       try {
-        var config = JSON.parse(configJSON);
+        var config = JSON.parse(configFileContent);
+        setConfig(config);
+        // This seems odd, but the imported JSON doesn't match
+        // the order of the regular JSON. I want it to.
+        config = getConfig();
         setConfig(config);
         document.getElementById("main-deck").selectedIndex = 1;
       } catch(e) {
-        // EITHER BAD FILE OR PREVIOUS CCK WIZARD
-        errorCritical(e);
+        if (configFileContent.substr(0, 3) == "id=") {
+          var config = importCCKFile(configFileContent);
+          setConfig(config);
+          document.getElementById("main-deck").selectedIndex = 1;
+        } else {
+          alert("INVALID FILE");
+        }
       }
     }, errorCritical)
   }
