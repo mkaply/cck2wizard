@@ -9,8 +9,8 @@
 <!ENTITY extension-homepageurl.label "Homepage URL (optional):">
 <!ENTITY extension-updateurl.label "Update URL:">
 <!ENTITY extension-updateurl.description "TALKE ABOTU UPDATEURL">
-<!ENTITY extension-updatepublickey.label "Update Public Key:">
-<!ENTITY extension-updatepublickey.description "Update URL:">
-<!ENTITY extension-icon.description "Icon:">
-<!ENTITY choosefile.label "Choose File:">
+<!ENTITY extension-updatekey.label "Update Public Key:">
+<!ENTITY extension-updatekey.description "TALKE ANPUT BPUPDATE KEY">
+<!ENTITY extension-icon.label "Icon:">
+<!ENTITY choosefile.label "Choose File...">
 <!ENTITY extension-filename.label "Filename:">
