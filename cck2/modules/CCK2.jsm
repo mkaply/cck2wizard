@@ -133,6 +133,9 @@ var CCK2 = {
                                                 "privatebrowsing");
         CCK2.aboutFactories.push(aboutPrivateBrowsing);
       }
+      if (config.noGetAddons) {
+        Preferences.lock("extensions.getAddons.showPane", false);
+      }
       if (config.disableSync) {
         Preferences.lock("services.sync.enabled", false);
         var aboutSyncLog = {};
