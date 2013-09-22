@@ -21,7 +21,7 @@
             <vbox align="right">
               <label pack="end" value="&extension-id.label;" />
             </vbox>
-            <textbox id="extension-id" config="extension.id" />
+            <textbox config="extension.id" />
           </row>
           <row align="center">
             <vbox align="right">
@@ -39,35 +39,47 @@
             <vbox align="right">
               <label pack="end" value="&extension-version.label;" />
             </vbox>
-            <textbox id="extension-version" config="extension.version" />
+            <textbox config="extension.version" />
           </row>
           <row align="center">
             <vbox align="right">
               <label pack="end" value="&extension-description.label;" />
             </vbox>
-            <textbox id="extension-description" config="extension.description" />
+            <textbox config="extension.description" />
           </row>
           <row align="center">
             <vbox align="right">
               <label pack="end" value="&extension-homepageurl.label;" />
             </vbox>
-            <textbox id="extension-homepageurl" config="extension.homepageurl" />
+            <textbox config="extension.homepageURL" />
           </row>
           <row align="center">
             <vbox align="right">
               <label pack="end" value="&extension-updateurl.label;" />
             </vbox>
-            <textbox id="extension-updateurl" config="extension.updateurl" />
+            <textbox config="extension.updateURL" />
           </row>
           <row align="center">
             <vbox align="right">
-              <label control="iconURL" value="extension-icon.label;" />
+              <label pack="end" value="&extension-updatekey.label;" />
+            </vbox>
+            <textbox config="extension.updateKey" />
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label value="&extension-icon.label;" />
             </vbox>
             <hbox align="center">
-              <textbox flex="1" config="extension.iconurl" id="iconURL" onblur="" />
+              <textbox flex="1" config="extension.icon" readonly="true"/>
               <image id="extension-icon" src='' width='32' height='32' />
               <button label="&choosefile.label;" oncommand="onExtensionChooseIcon()" />
             </hbox>
+          </row>
+          <row align="center">
+            <vbox align="right">
+              <label pack="end" value="&extension-filename.label;" />
+            </vbox>
+            <hbox align="center"><textbox config="extension.filename" /><label value=".xpi"/></hbox>
           </row>
         </rows>
       </grid>
