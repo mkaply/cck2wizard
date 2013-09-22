@@ -6,6 +6,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/plugins.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/addons.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
@@ -69,10 +70,14 @@
             <label value="ID" />
             <textbox id="cck2wizard-new-id" />
           </vbox>
+          <vbox id="cck2wizard-urldialog">
+            <label value="URL:" />
+            <textbox id="cck2wizard-urldialog-url" />
+          </vbox>
         </deck>
         <hbox>
-          <button oncommand="onOK()" label="OK" />
-          <button oncommand="onCancel()" label="Cancel" />
+          <button id="cck2wizard-dialog-accept" oncommand="onOK()" label="OK" />
+          <button id="cck2wizard-dialog-cancel" oncommand="onCancel()" label="Cancel" />
         </hbox>
       </vbox>
     </panel>

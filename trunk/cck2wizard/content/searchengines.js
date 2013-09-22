@@ -58,7 +58,7 @@ function resetSearchEngines() {
 }
 
 function addSearchEngineFromURL() {
-  openDialog("searchengineurl-dialog");  
+  openDialog("cck2wizard-urldialog", "onSearchEngineURLOK");
 }
 
 function addSearchEngineFromFile() {
@@ -117,18 +117,18 @@ function getSearchEngineInfoFromURL(url, successCallback) {
     }
   }
   request.onerror = function() {
-    showErrorMessage("searchengine-invalidurl")
+    showErrorMessage("invalidurl")
   }
   request.send();
 }
 
 function onSearchEngineURLOK()
 {
-  var url = document.getElementById("searchengineurl-name").value;
+  var url = document.getElementById("cck2wizard-urldialog-url").value;
   try {
     Services.io.newURI(url, null, null);
   } catch (ex) {
-    showErrorMessage("searchengine-invalidurl");
+    showErrorMessage("invalidurl");
     return false;
   }
   getSearchEngineInfoFromURL(url, function(response) {

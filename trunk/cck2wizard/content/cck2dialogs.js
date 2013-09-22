@@ -22,17 +22,29 @@ function onDialogsLoad() {
 }
 window.addEventListener("load", onDialogsLoad, false);
 
-function openDialog(id) {
-  var style = window.getComputedStyle(document.documentElement);
-  var width = parseInt(style.getPropertyValue("width"));
-  var height = parseInt(style.getPropertyValue("height"));
-  gDialogPanel.setAttribute("width", width);
-  gDialogPanel.setAttribute("height", height);
-  var dialog = document.getElementById(id);;
-  gDialogDeck.selectedPanel = dialog;
-  var controls = dialog.querySelectorAll("textbox");
-  gDialogPanel.openPopup(null, "", 0, 0, false, false);
-  controls[0].focus();
+function openDialog(id, acceptCallbackName) {
+  try {
+    var style = window.getComputedStyle(document.documentElement);
+    var width = parseInt(style.getPropertyValue("width"));
+    var height = parseInt(style.getPropertyValue("height"));
+    gDialogPanel.setAttribute("width", width);
+    gDialogPanel.setAttribute("height", height);
+    var dialog = document.getElementById(id);;
+    gDialogDeck.selectedPanel = dialog;
+    gDialogPanel.openPopup(null, "", 0, 0, false, false);
+    var controls = dialog.querySelectorAll("textbox");
+    if (controls.length > 0) {
+      for (var i=0; i < controls.length; i++) {
+        controls[i].value = "";
+      }
+      controls[0].focus();
+    }
+    if (acceptCallbackName) {
+      dialog.setAttribute("onaccept", acceptCallbackName);
+    }
+  } catch (e) {
+    errorCritical(e);
+  }
 }
 
 function onOK() {

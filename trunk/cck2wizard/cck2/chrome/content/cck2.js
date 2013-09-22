@@ -201,6 +201,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 	  var menuitem = document.createElement("menuitem");
 	  menuitem.setAttribute("label", config.helpMenu.label);
 	  menuitem.setAttribute("url", config.helpMenu.url);
+	  menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
 	  menuitem.setAttribute("oncommand", "openUILink(this.getAttribute('url'), event, false, true)")
 	  menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
 	  if (E("aboutName").hidden) {
