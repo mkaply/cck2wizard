@@ -53,7 +53,7 @@ function getSearchEngines(config) {
 
 function resetSearchEngines() {
   while (gSearchEnginesListbox.itemCount > 0) {
-    gSearchEnginesListbox.removeItemat(0);
+    gSearchEnginesListbox.removeItemAt(0);
   }
 }
 
