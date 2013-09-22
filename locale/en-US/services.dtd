@@ -1,4 +1,6 @@
 <!ENTITY services.label "Services">
-<!ENTITY privatebrowsing.label "Disable Private Browsing">
-<!ENTITY sync.label "Disable Sync">
-<!ENTITY aboutconfig.label "Prevent access to about:config">
+<!ENTITY disableprivatebrowsing.label "Disable Private Browsing">
+<!ENTITY disablesync.label "Disable Sync">
+<!ENTITY disableaboutconfig.label "Prevent access to about:config">
+<!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
+<!ENTITY noGetAddons.label "Prevent Discovering Add-ons in the Add-ons Manager">
