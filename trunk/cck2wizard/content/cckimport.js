@@ -4,8 +4,7 @@ function importCCKFile(configFileContent)
   var configFile = configFileContent.split("\n");
 
   var configarray = [];
-//  for (var i=0; i < configFile.length; i++) {
-  for (var i=0; i < 20; i++) {
+  for (var i=0; i < configFile.length; i++) {
     var str = configFile[i];
     var equals = str.indexOf('=');
     if (equals != -1) {
@@ -185,6 +184,20 @@ function importCCKFile(configFileContent)
       config.addons.push(addonname);
       i++;
     }
+  }
+  if (ToolbarFolder1 in configarray) {
+  }
+  if (ToolbarBookmarkTitle1 in configarray) {
+  }
+  if (BookmarkFolder1 in configarray) {
+  }
+  if (BookmarkTitle1 in configarray) {
+  }
+  if (PreferenceName1 in configarray) {
+  }
+  if (RegName1 in configarray) {
+  }
+  if (CertPath1 in configarray) {
   }
   return config;
 

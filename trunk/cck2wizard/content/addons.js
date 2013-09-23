@@ -10,7 +10,7 @@ window.addEventListener("load", onAddonsLoad, false);
 function setAddons(config) {
   if ("addons" in config) {
     for (var i=0; i < config.addons.length; i++) {
-      gAddonsListbox.appendItem(response.name, config.addons[i]);
+      gAddonsListbox.appendItem(config.addons[i]);
     }
   }
 }
