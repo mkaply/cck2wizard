@@ -36,3 +36,8 @@ function onOK() {
   retVals.value = gValue.value;
   retVals.type = gType.value;
 }
+
+function onCancel() {
+  var retVals = window.arguments[0];
+  retVals.cancel = true;
+}
