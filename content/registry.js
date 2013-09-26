@@ -37,10 +37,11 @@ function resetRegistry() {
 
 function onAddRegistryItem() {
   var retVals = { rootkey: null, key: null, name: null, value: null, type: null };
-  var confirm = window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
-  if (confirm) {
-    addRegistryItem(retVals, false);
+  window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
+  if (retVals.cancel) {
+    return;
   }
+  addRegistryItem(retVals, false);
 }
 
 function addRegistryItem(registryitem, update) {
@@ -107,9 +108,10 @@ function convertListItemToRegistryItem(listitem) {
 function onEditRegistryItem() {
   var retVals = convertListItemToRegistryItem(gRegistryListbox.selectedItem);
   window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
-  if (confirm) {
-    updateRegistryListItem(gRegistryListbox.selectedItem, retVals);
+  if (retVals.cancel) {
+    return;
   }
+  updateRegistryListItem(gRegistryListbox.selectedItem, retVals);
 }
 
 function checkToEnableOKButton() {

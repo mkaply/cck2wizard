@@ -5,6 +5,7 @@
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         buttons="accept,cancel"
         ondialogaccept="return onOK()"
+        ondialogcancel="return onCancel()"
         onload="onLoad();"
         width="480">
   <script src="chrome://cck2wizard/content/registry-dialog.js"/>
