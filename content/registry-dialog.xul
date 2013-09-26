@@ -18,11 +18,11 @@
       </menupopup>      
     </menulist>
     <label control="Key">&regKey.label;:</label>
-    <textbox id="Key" onchange="regCheckOKButton();" onkeyup="regCheckOKButton();"/>
+    <textbox id="Key" onchange="checkToEnableOKButton();" onkeyup="checkToEnableOKButton();"/>
     <label control="Name">&regName.label;:</label>
-    <textbox id="Name" onchange="regCheckOKButton();" onkeyup="regCheckOKButton();"/>
+    <textbox id="Name" onchange="checkToEnableOKButton();" onkeyup="checkToEnableOKButton();"/>
     <label control="NameValue1">&regNameValue.label;:</label>
-    <textbox id="Value" onchange="regCheckOKButton();" onkeyup="regCheckOKButton();"/>
+    <textbox id="Value" onchange="checkToEnableOKButton();" onkeyup="checkToEnableOKButton();"/>
     <label control="Type">&regType.label;:</label>
     <menulist id="Type">
       <menupopup>
