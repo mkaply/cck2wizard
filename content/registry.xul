@@ -11,7 +11,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="registry" setconfig="setRegistry" getconfig="getRegistry" resetconfig="resetRegistry">
-        <listbox id="registry-listbox">
+        <listbox id="registry-listbox" ondblclick="onEditRegistryItem();" onkeypress="onKeyPressRegistry(event);">
           <listhead>
             <listheader label="Root Key" />
             <listheader label="Key" />
