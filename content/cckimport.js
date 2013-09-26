@@ -185,19 +185,41 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if (ToolbarFolder1 in configarray) {
+  if ("ToolbarFolder1" in configarray) {
   }
-  if (ToolbarBookmarkTitle1 in configarray) {
+  if ("ToolbarBookmarkTitle1" in configarray) {
   }
-  if (BookmarkFolder1 in configarray) {
+  if ("BookmarkFolder1" in configarray) {
   }
-  if (BookmarkTitle1 in configarray) {
+  if ("BookmarkTitle1" in configarray) {
   }
-  if (PreferenceName1 in configarray) {
+  if ("PreferenceName1" in configarray) {
+    config.preferences = {};
+    var preferencename, i=1;
+    while ((preferencename = configarray['PreferenceName' + i])) {
+      // CHECK TYPE IN SYSTEM. USE IT FIRST.
+      // THEN USE VALUE
+      var prefinfo = {};
+      switch (configarray['PreferenceType' + i]) {
+	case "integer":
+	  prefinfo.value = parseInt(configarray['PreferenceValue' + i], 10);
+	  break;
+	case "boolean":
+	  prefinfo.value = JSON.parse(configarray['PreferenceValue' + i]);
+	  break;
+	default:
+	  prefinfo.value = configarray['PreferenceValue' + i];
+      }
+      if ("PreferenceLock1" in configarray) {
+	prefinfo.locked = true;
+      }
+      config.preferences[preferencename] = prefinfo;
+      i++;
+    }
   }
-  if (RegName1 in configarray) {
+  if ("RegName1" in configarray) {
   }
-  if (CertPath1 in configarray) {
+  if ("CertPath1" in configarray) {
   }
   return config;
 

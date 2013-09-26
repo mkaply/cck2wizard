@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/permissions.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="registry.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="Registry" value="registry" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="registry" setconfig="setRegistry" getconfig="getRegistry" resetconfig="resetRegistry">
+        <listbox id="registry-listbox">
+          <listhead>
+            <listheader label="Root Key" />
+            <listheader label="Key" />
+            <listheader label="Name" />
+            <listheader label="Value" />
+            <listheader label="Type" />
+          </listhead>
+          <listcols>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+          </listcols>
+        </listbox>
+      <hbox>
+        <button label="Add" oncommand="onAddRegistryItem()"/>
+      </hbox>
+    </vbox>
+  </deck>
+    <popupset id="mainPopupSet">
+      <menupopup id="registry-contextmenu">
+        <menuitem label="Edit" oncommand="onEditRegistryItem()"/>
+        <menuitem label="Delete" oncommand="onDeleteRegistryItem()"/>
+      </menupopup>
+    </popupset>
+</overlay>
