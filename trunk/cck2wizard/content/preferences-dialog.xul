@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE preferences-dialog SYSTEM "chrome://cck2wizard/locale/preferences.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog title="&preferences.label;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons="accept,cancel"
+        ondialogaccept="return onOK()"
+        ondialogcancel="return onCancel()"
+        onload="onLoad();"
+        onunload="onUnload();"
+        width="480">
+  <script src="chrome://cck2wizard/content/preferences-dialog.js"/>
+  <vbox>
+    <hbox align="center">
+    <label value="Preference:"/>
+    <textbox id="name" type="autocomplete" autocompletesearch="cck2prefs" onkeyup="updatePrefValue();" ontextentered="updatePrefValue();" flex="1"/>
+    </hbox>
+    <hbox align="center">
+    <label value="Value:"/>
+    <deck id="value-deck" flex="1">
+      <textbox id="value-string" flex="1"/>
+      <textbox id="value-int" flex="1" type="number" hidespinbuttons="true"/>
+      <menulist id="value-bool" flex="1">
+        <menupopup>
+          <menuitem label="true" value="true"/>
+          <menuitem label="false" value="false"/>
+        </menupopup>
+      </menulist>
+    </deck>
+    </hbox>
+  </vbox>
+</dialog>

@@ -60,32 +60,31 @@ function resetPreferences() {
 
 function onAddPreference() {
   var retVals = { name: null, value: null, type: null };
-  window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal", retVals);
+  var confirm = window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal", retVals);
+  if ("cancel" in retVals) {
+    return;
+  }
   addPreference(retVals.name, retVals.value, retVals.type, false);
 }
 
-function addPreference(name, value, type, locked, update) {
+function addPreference(name, value, type, locked) {
   for (var i=0; i < gPreferencesListbox.itemCount; i++) {
     var listitem = gPreferencesListbox.getItemAtIndex(i);
     var label = listitem.firstChild.getAttribute("label");
     if (label == name) {
-      if (!update) {
-        alert("duplicate");
-        return;
-      }
-      updateListItem(listitem, name, value, type, locked);
+      alert("duplicate");
       return;
     }
     if (label > name) {
-      gPreferencesListbox.insertBefore(createListItem(name, value, type, locked),
+      gPreferencesListbox.insertBefore(createPreferenceListItem(name, value, type, locked),
                                        listitem);
       return;
     }
   }
-  gPreferencesListbox.appendChild(createListItem(name, value, type, locked));
+  gPreferencesListbox.appendChild(createPreferenceListItem(name, value, type, locked));
 }
 
-function createListItem(name, value, type, locked) {
+function createPreferenceListItem(name, value, type, locked) {
   var listitem = document.createElement("listitem");
   var nameCell = document.createElement("listcell");
   nameCell.setAttribute("label", name);
@@ -111,7 +110,7 @@ function createListItem(name, value, type, locked) {
   return listitem;
 }
 
-function updateListItem(listitem, name, value, type, locked) {
+function updatePreferenceListItem(listitem, name, value, type, locked) {
   listitem.childNodes[0].setAttribute("label", name);
   listitem.childNodes[2].setAttribute("label", type);
   listitem.childNodes[3].setAttribute("label", value);
@@ -151,7 +150,13 @@ function onLockUnlockPreference() {
 }
 
 function onEditPreference() {
+  if (gPreferencesListbox.selectedIndex == -1) {
+    return;
+  }
   var retVals = convertListItemToPreference(gPreferencesListbox.selectedItem);
   window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal", retVals);
-  addPreference(retVals.name, retVals.value, retVals.type, false, true);
+  if ("cancel" in retVals) {
+    return;
+  }
+  updatePreferenceListItem(listitem, retVals.name, retVals.value, retVals.type, false);
 }

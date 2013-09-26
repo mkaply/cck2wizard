@@ -52,16 +52,16 @@ function addRegistryItem(registryitem, update) {
   //      alert("duplicate");
   //      return;
   //    }
-  //    updateListItem(listitem, name, value, type, locked);
+  //    updateRegistryListItem(listitem, name, value, type, locked);
   //    return;
   //  }
   //  if (label > name) {
-  //    gRegistryListbox.insertBefore(createListItem(name, value, type, locked),
+  //    gRegistryListbox.insertBefore(createRegistryListItem(name, value, type, locked),
   //                                     listitem);
   //    return;
   //  }
   //}
-  gRegistryListbox.appendChild(createListItem(registryitem));
+  gRegistryListbox.appendChild(createRegistryListItem(registryitem));
 }
 
 function createListCell(label) {
@@ -70,7 +70,7 @@ function createListCell(label) {
   return listcell;
 }
 
-function createListItem(registryitem) {
+function createRegistryListItem(registryitem) {
   var listitem = document.createElement("listitem");
   listitem.appendChild(createListCell(registryitem.rootkey));
   listitem.appendChild(createListCell(registryitem.key));
@@ -81,12 +81,13 @@ function createListItem(registryitem) {
   return listitem;
 }
 
-function updateListItem(registryitem) {
-  listitem.childNodes[0].setAttribute("label", rootkey);
-  listitem.childNodes[1].setAttribute("label", key);
-  listitem.childNodes[2].setAttribute("label", name);
-  listitem.childNodes[3].setAttribute("label", value);
-  listitem.childNodes[4].setAttribute("label", type);
+function updateRegistryListItem(listitem, registryitem) {
+  listitem.childNodes[0].setAttribute("label", registryitem.rootkey);
+  listitem.childNodes[1].setAttribute("label", registryitem.key);
+  listitem.childNodes[2].setAttribute("label", registryitem.name);
+  listitem.childNodes[3].setAttribute("label", registryitem.value);
+  listitem.childNodes[4].setAttribute("label", registryitem.type);
+  return listitem;
 }
 
 function onDeleteRegistryItem() {
@@ -106,5 +107,11 @@ function convertListItemToRegistryItem(listitem) {
 function onEditRegistryItem() {
   var retVals = convertListItemToRegistryItem(gRegistryListbox.selectedItem);
   window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
-  addPreference(retVals, true);
+  if (confirm) {
+    updateRegistryListItem(gRegistryListbox.selectedItem, retVals);
+  }
+}
+
+function checkToEnableOKButton() {
+  
 }
