@@ -11,7 +11,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="preferences" setconfig="setPreferences" getconfig="getPreferences" resetconfig="resetPreferences">
-        <listbox id="preferences-listbox" ondblclick="onEditPreference()">
+        <listbox id="preferences-listbox" ondblclick="onEditPreference();" onkeypress="onKeyPressPreference(event);">
           <listhead>
             <listheader label="Name" />
             <listheader label="Status" />

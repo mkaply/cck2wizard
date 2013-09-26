@@ -117,6 +117,9 @@ function updatePreferenceListItem(listitem, name, value, type, locked) {
 }
 
 function onDeletePreference() {
+  if (gPreferencesListbox.selectedIndex == -1) {
+    return;
+  }
   gPreferencesListbox.removeChild(gPreferencesListbox.selectedItem);
 }
 
@@ -159,4 +162,15 @@ function onEditPreference() {
     return;
   }
   updatePreferenceListItem(listitem, retVals.name, retVals.value, retVals.type, false);
+}
+
+
+function onKeyPressRegistry(event) {
+  if (event.keyCode == event.DOM_VK_ENTER ||
+      event.keyCode == event.DOM_VK_RETURN) {
+    onEditPreference();
+  } else if (event.keyCode == event.DOM_VK_DELETE ||
+             event.keyCode == event.DOM_VK_BACK_SPACE) {
+    onDeletePreference();
+  }
 }

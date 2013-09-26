@@ -92,6 +92,9 @@ function updateRegistryListItem(listitem, registryitem) {
 }
 
 function onDeleteRegistryItem() {
+  if (gRegistryListbox.selectedIndex == -1) {
+    return;
+  }
   gRegistryListbox.removeChild(gRegistryListbox.selectedItem);
 }
 
@@ -106,6 +109,9 @@ function convertListItemToRegistryItem(listitem) {
 }
 
 function onEditRegistryItem() {
+  if (gRegistryListbox.selectedIndex == -1) {
+    return;
+  }
   var retVals = convertListItemToRegistryItem(gRegistryListbox.selectedItem);
   window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
   if (retVals.cancel) {
@@ -116,4 +122,14 @@ function onEditRegistryItem() {
 
 function checkToEnableOKButton() {
   
+}
+
+function onKeyPressRegistry(event) {
+  if (event.keyCode == event.DOM_VK_ENTER ||
+      event.keyCode == event.DOM_VK_RETURN) {
+    onEditRegistryItem();
+  } else if (event.keyCode == event.DOM_VK_DELETE ||
+             event.keyCode == event.DOM_VK_BACK_SPACE) {
+    onDeleteRegistryItem();
+  }
 }
