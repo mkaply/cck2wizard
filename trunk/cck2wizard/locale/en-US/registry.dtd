@@ -1,0 +1,7 @@
+<!ENTITY registry.label "Registry (Windows only)">
+
+<!ENTITY  regRootKey.label              "Root Key">
+<!ENTITY  regKey.label                  "Key">
+<!ENTITY  regName.label                 "Name">
+<!ENTITY  regNameValue.label            "Name Value">
+<!ENTITY  regType.label                 "Type">

@@ -22,7 +22,7 @@ function onDialogsLoad() {
 }
 window.addEventListener("load", onDialogsLoad, false);
 
-function openDialog(id, acceptCallbackName) {
+function openDialog2(id, acceptCallbackName) {
   try {
     var style = window.getComputedStyle(document.documentElement);
     var width = parseInt(style.getPropertyValue("width"));
