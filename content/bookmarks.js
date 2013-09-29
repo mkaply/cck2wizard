@@ -13,22 +13,36 @@ window.addEventListener("unload", onBookmarksUnload, false);
 
 var bookmarksToolbar = [
     {
-        "name": "Mike",
+        "name": "MikeFolder",
         "folder": [
             {
-                "name": "Yahoo3",
+                "name": "MikeItem1",
                 "location": "http://www.yahoo.com"
             }
         ]
     },
     {
-        "name": "Cynde",
+        "name": "CyndeFolder",
+        "folder": [
+            {
+                "name": "CyndeItem1",
+                "location": "http://www.yahoo.com"
+            },
+            {
+                "name": "CyndeItem2",
+                "location": "http://www.yahoo.com"
+            },
+        ]
+    },
+    {
+        "name": "MichaelaFolder",
         "folder": [
         ]
     },
     {
-        "name": "Yahoo4",
-        "location": "http://www.yahoo.com"
+        "name": "ZakFolder",
+        "folder": [
+        ]
     },
 ];
 
@@ -235,6 +249,18 @@ function getItemsToMove(listitem) {
   return listitemsToMove;
 }
 
+// Given a folder, this function returns the item
+// that should be used to insert before to add to the end.
+function getLastFolderItem(listitem) {
+  var folderLevel = parseInt(listitem.getAttribute("level"), 10);
+  while ((listitem = listitem.nextSibling)) {
+    if (parseInt(listitem.getAttribute("level"), 10) <= folderLevel) {
+      break;
+    }
+  }
+  return listitem;
+}
+
 function onDrop(event) {
   var data = event.dataTransfer.getData("cck2/bookmark");
   if (event.target.nodeName == "listbox") {
@@ -260,10 +286,10 @@ function onDrop(event) {
       var listitemsToMove = getItemsToMove(listitem);
       var folderLevel = parseInt(listitem.getAttribute("level"), 10);
       var newLevelOffset = folderLevel - parseInt(event.target.getAttribute("level"), 10);
-      var target;
-      if (event.target.hasAttribute("folder")) {
+      var target = event.target;
+      if (target.hasAttribute("folder")) {
         newLevelOffset -= 1;
-        target = event.target.nextSibling;
+        target = getLastFolderItem(target);
       } else {
         target = event.target;
       }
