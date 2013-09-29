@@ -165,7 +165,7 @@ function onEditPreference() {
 }
 
 
-function onKeyPressRegistry(event) {
+function onKeyPressPreference(event) {
   if (event.keyCode == event.DOM_VK_ENTER ||
       event.keyCode == event.DOM_VK_RETURN) {
     onEditPreference();
