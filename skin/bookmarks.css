@@ -20,11 +20,11 @@
 }
 
 .bookmarks-listbox listitem[folder="true"] > listcell.listcell-iconic {
-  list-style-image: url("chrome://global/skin/tree/folder.png");
+  list-style-image: url("chrome://cck2wizard/skin/folder.png");
 }
 
 .bookmarks-listbox listitem:not([folder="true"]) > listcell.listcell-iconic {
-  list-style-image: url("chrome://mozapps/skin/places/defaultFavicon.png");
+  list-style-image: url("chrome://cck2wizard/skin/bookmark.png");
 }
 
 .bookmarks-listbox listitem[type="separator"]:after {
