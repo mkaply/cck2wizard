@@ -60,7 +60,7 @@ function resetPreferences() {
 
 function onAddPreference() {
   var retVals = { name: null, value: null, type: null };
-  var confirm = window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal", retVals);
+  var confirm = window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal,centerscreen", retVals);
   if ("cancel" in retVals) {
     return;
   }
@@ -157,7 +157,7 @@ function onEditPreference() {
     return;
   }
   var retVals = convertListItemToPreference(gPreferencesListbox.selectedItem);
-  window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal", retVals);
+  window.openDialog("chrome://cck2wizard/content/preferences-dialog.xul", "cck2wizard-preference", "modal,centerscreen", retVals);
   if ("cancel" in retVals) {
     return;
   }
