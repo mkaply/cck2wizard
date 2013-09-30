@@ -1,7 +1,9 @@
 var gBookmarksToolbarListbox = null;
+var gBookmarksWindowListbox = null;
 
 function onBookmarksLoad() {
   gBookmarksToolbarListbox = document.getElementById("bookmarks-toolbar-listbox");
+  gBookmarksWindowListbox = document.getElementById("bookmarks-window-listbox");
 }
 window.addEventListener("load", onBookmarksLoad, false);
 
@@ -12,6 +14,9 @@ window.addEventListener("unload", onBookmarksUnload, false);
 function setBookmarks(config) {
   if ("bookmarks" in config && "toolbar" in config.bookmarks) {
     addBookmarks(gBookmarksToolbarListbox, config.bookmarks.toolbar);
+  }
+  if ("bookmarks" in config && "window" in config.bookmarks) {
+    addBookmarks(gBookmarksWindowListbox, config.bookmarks.window);
   }
 }
 
@@ -54,16 +59,32 @@ function getBookmarks(config) {
   if (gBookmarksToolbarListbox.itemCount > 0) {
     if (!("bookmarks" in config)) {
       config.bookmarks = {};
-      config.bookmarks.toolbar = [];
-      while (currentItem < gBookmarksToolbarListbox.itemCount) {
-        var listitem1 = gBookmarksToolbarListbox.getItemAtIndex(currentItem);
-        var bookmark1 = convertListItemToBookmark(listitem1);
-        if (listitem1.hasAttribute("folder")) {
-          bookmark1.folder = handleFolder(parseInt(listitem1.getAttribute("level"), 10), gBookmarksToolbarListbox);
-        }
-        config.bookmarks.toolbar.push(bookmark1);
-        currentItem++;
+    }
+    config.bookmarks.toolbar = [];
+    while (currentItem < gBookmarksToolbarListbox.itemCount) {
+      var listitem1 = gBookmarksToolbarListbox.getItemAtIndex(currentItem);
+      var bookmark1 = convertListItemToBookmark(listitem1);
+      if (listitem1.hasAttribute("folder")) {
+        bookmark1.folder = handleFolder(parseInt(listitem1.getAttribute("level"), 10), gBookmarksToolbarListbox);
       }
+      config.bookmarks.toolbar.push(bookmark1);
+      currentItem++;
+    }
+  }
+  var currentItem = 0;
+  if (gBookmarksWindowListbox.itemCount > 0) {
+    if (!("bookmarks" in config)) {
+      config.bookmarks = {};
+    }
+    config.bookmarks.window = [];
+    while (currentItem < gBookmarksWindowListbox.itemCount) {
+      var listitem1 = gBookmarksWindowListbox.getItemAtIndex(currentItem);
+      var bookmark1 = convertListItemToBookmark(listitem1);
+      if (listitem1.hasAttribute("folder")) {
+        bookmark1.folder = handleFolder(parseInt(listitem1.getAttribute("level"), 10), gBookmarksWindowListbox);
+      }
+      config.bookmarks.window.push(bookmark1);
+      currentItem++;
     }
   }
   return config;

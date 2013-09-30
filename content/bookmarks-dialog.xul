@@ -11,11 +11,11 @@
   <script src="chrome://cck2wizard/content/bookmarks-dialog.js"/>
   <vbox>
     <hbox align="center">
-    <label value="Name:"/>
+    <label value="&bookmarks-name.label;:"/>
     <textbox id="name" flex="1"/>
     </hbox>
     <hbox align="center">
-    <label value="Location:"/>
+    <label value="&bookmarks-location.label;:"/>
     <textbox id="location" flex="1"/>
     </hbox>
   </vbox>
