@@ -3,12 +3,10 @@
 }
 
 #cck2wizard-tree {
-  width: 150px;
-  height: 480px;
+  min-width: 150px;
 }
 
 #cck2wizard-deck {
-  width: 490px;
 }
 
 #cck2wizard-dialog-panel {
