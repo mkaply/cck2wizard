@@ -40,10 +40,13 @@ var bookmarksToolbar = [
         ]
     },
     {
-        "name": "ZakFolder",
-        "folder": [
-        ]
+        "name": "ZakItem",
+        "location": "http://www.yahoo.com"
     },
+    {
+        "name": "AttackItem",
+        "location": "http://www.yahoo.com"
+    }
 ];
 
 function setBookmarks(config) {
@@ -299,9 +302,8 @@ function onDrop(event) {
       }
     } else {
       if (event.target.hasAttribute("folder")) {
-        // NEED TO MOVE FOLDERS
         listitem.setAttribute("level", parseInt(event.target.getAttribute("level"), 10)+1);
-        listbox.insertBefore(listitem, event.target.nextSibling);
+        listbox.insertBefore(listitem, getLastFolderItem(event.target));
       } else {
         listitem.setAttribute("level", event.target.getAttribute("level"));
         listbox.insertBefore(listitem, event.target);
