@@ -9,51 +9,10 @@ function onBookmarksUnload() {
 }
 window.addEventListener("unload", onBookmarksUnload, false);
 
-//var bookmarksToolbar = null;
-
-var bookmarksToolbar = [
-    {
-        "name": "MikeFolder",
-        "folder": [
-            {
-                "name": "MikeItem1",
-                "location": "http://www.yahoo.com"
-            }
-        ]
-    },
-    {
-        "name": "CyndeFolder",
-        "folder": [
-            {
-                "name": "CyndeItem1",
-                "location": "http://www.yahoo.com"
-            },
-            {
-                "name": "CyndeItem2",
-                "location": "http://www.yahoo.com"
-            },
-        ]
-    },
-    {
-        "name": "MichaelaFolder",
-        "folder": [
-        ]
-    },
-    {
-        "name": "ZakItem",
-        "location": "http://www.yahoo.com"
-    },
-    {
-        "name": "AttackItem",
-        "location": "http://www.yahoo.com"
-    }
-];
-
 function setBookmarks(config) {
-//  if ("bookmarks" in config && "toolbar" in config.bookmarks) {
-//    addBookmarks(gBookmarksToolbarListbox, config.bookmarks.toolbar);
-//  }
-  addBookmarks(gBookmarksToolbarListbox, bookmarksToolbar);
+  if ("bookmarks" in config && "toolbar" in config.bookmarks) {
+    addBookmarks(gBookmarksToolbarListbox, config.bookmarks.toolbar);
+  }
 }
 
 function addBookmarks(listbox, bmArray, level) {
@@ -177,12 +136,15 @@ function updateBookmarkListItem(listitem, bookmark) {
   return listitem;
 }
 
-function onDeleteBookmark(listbox) {
-  if (listbox.selectedIndex == -1) {
-    return;
-  }
-  if (listbox.selectedItem.hasAttribute("folder")) {
-    alert("this is a folder");
+function onDeleteBookmark(target) {
+  var listbox = target.parentNode;
+  if (target.hasAttribute("folder")) {
+//    alert("this is a folder");
+    var itemsToDelete = getItemsToMove(target);
+    for (var i=0; i < itemsToDelete.length; i++) {
+      listbox.removeChild(itemsToDelete[i]);
+    }
+
     return;
   }
   listbox.removeChild(listbox.selectedItem);
@@ -314,43 +276,118 @@ function onDrop(event) {
 
 function convertListItemToBookmark(listitem) {
   var bookmark = {};
-  bookmark.name = listitem.childNodes[0].getAttribute("label");
+  if (listitem.childNodes[0]) {
+    bookmark.name = listitem.childNodes[0].getAttribute("label");
+  }
   if (listitem.childNodes[1]) {
     bookmark.location = listitem.childNodes[1].getAttribute("label");
+  }
+  if (listitem.getAttribute("type") == "separator") {
+    bookmark.type = "separator";
   }
   return bookmark;
 }
 
 function onKeyPressBookmarksToolbar(event) {
+  var listbox = event.target;
+  if (listbox.selectedIndex == -1) {
+    return;
+  }
   if (event.keyCode == event.DOM_VK_ENTER ||
       event.keyCode == event.DOM_VK_RETURN) {
-    onEditBookmark(event.target.selectedItem);
+    onEditBookmark(listbox.selectedItem);
   } else if (event.keyCode == event.DOM_VK_DELETE ||
              event.keyCode == event.DOM_VK_BACK_SPACE) {
-    onDeleteBookmark(event.target);
+    onDeleteBookmark(listbox.selectedItem);
   }
 }
 
-function onAddSeparator(event) {
-  alert(document.popupNode.nodeName);
+function onAddSeparator(target) {
+  var listbox;
+  if (target.nodeName == "listbox") {
+    listbox = target;
+  } else {
+    listbox = target.parentNode;
+  }
+  var listitem = document.createElement("listitem");
+  listitem.setAttribute("type", "separator");
+  if (target.nodeName == "listitem") {
+    if (target.hasAttribute("folder")) {
+      // Insert as last item in folder
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10) + 1);
+      listbox.insertBefore(listitem, getLastFolderItem(target));
+    } else {
+      // insert before node at current level
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10));
+      listbox.insertBefore(listitem, target);
+    }
+  } else {
+    listitem.setAttribute("level", "0");
+    listbox.appendChild(listitem);
+  }
 }
 
-function onAddBookmark(listbox) {
+function onAddBookmark(target) {
   var retVals = { name: null, location: null};
   window.openDialog("chrome://cck2wizard/content/bookmarks-dialog.xul", "cck2wizard-bookmark", "modal", retVals);
   if (retVals.cancel) {
     return;
   }
-  addBookmark(listbox, retVals);
+  var listbox;
+  if (target.nodeName == "listbox") {
+    listbox = target;
+  } else {
+    listbox = target.parentNode;
+  }
+  var listitem = createBookmarkListItem(retVals);
+  if (target.nodeName == "listitem") {
+    if (target.hasAttribute("folder")) {
+      // Insert as last item in folder
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10) + 1);
+      listbox.insertBefore(listitem, getLastFolderItem(target));
+    } else {
+      // insert before node at current level
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10));
+      listbox.insertBefore(listitem, target);
+    }
+  } else {
+    addBookmark(target, retVals);
+  }
 }
 
-function onAddFolder(listbox) {
+function onAddFolder(target) {
   var retVals = { name: null, location: null, folder: true};
   window.openDialog("chrome://cck2wizard/content/bookmarks-dialog.xul", "cck2wizard-bookmark", "modal", retVals);
   if (retVals.cancel) {
     return;
   }
-  addBookmark(listbox, retVals);
+  var level = parseInt(target.getAttribute("level"), 10) + 1;
+  if (level > 5) {
+    alert("too deep");
+    return;
+  }
+  var listbox;
+  if (target.nodeName == "listbox") {
+    listbox = target;
+  } else {
+    listbox = target.parentNode;
+  }
+  var listitem = createBookmarkListItem(retVals);
+  listitem.setAttribute("folder", "true");
+  if (target.nodeName == "listitem") {
+    if (target.hasAttribute("folder")) {
+      // Insert as last item in folder
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10) + 1);
+      listbox.insertBefore(listitem, getLastFolderItem(target));
+    } else {
+      // insert before node at current level
+      listitem.setAttribute("level", parseInt(target.getAttribute("level"), 10));
+      listbox.insertBefore(listitem, target);
+    }
+  } else {
+    listitem.setAttribute("level", "0");
+    listbox.appendChild(listitem);
+  }
 }
 
 function onEditBookmark(listitem) {
