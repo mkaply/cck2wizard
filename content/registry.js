@@ -37,7 +37,7 @@ function resetRegistry() {
 
 function onAddRegistryItem() {
   var retVals = { rootkey: null, key: null, name: null, value: null, type: null };
-  window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
+  window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
   }
@@ -113,7 +113,7 @@ function onEditRegistryItem() {
     return;
   }
   var retVals = convertListItemToRegistryItem(gRegistryListbox.selectedItem);
-  window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal", retVals);
+  window.openDialog("chrome://cck2wizard/content/registry-dialog.xul", "cck2wizard-registry", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
   }
