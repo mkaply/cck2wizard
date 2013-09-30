@@ -1,0 +1,45 @@
+.bookmarks-listbox listitem[level="1"] > listcell.listcell-iconic {
+  padding-left: 15px;
+}
+
+.bookmarks-listbox listitem[level="2"] > listcell.listcell-iconic {
+  padding-left: 30px;
+}
+
+
+.bookmarks-listbox listitem[level="3"] > listcell.listcell-iconic {
+  padding-left: 45px;
+}
+
+.bookmarks-listbox listitem[level="4"] > listcell.listcell-iconic {
+  padding-left: 60px;
+}
+
+.bookmarks-listbox listitem[level="5"] > listcell.listcell-iconic {
+  padding-left: 75px;
+}
+
+.bookmarks-listbox listitem[folder="true"] > listcell.listcell-iconic {
+  list-style-image: url("chrome://global/skin/tree/folder.png");
+}
+
+.bookmarks-listbox listitem:not([folder="true"]) > listcell.listcell-iconic {
+  list-style-image: url("chrome://mozapps/skin/places/defaultFavicon.png");
+}
+
+.bookmarks-listbox listitem[type="separator"]:after {
+  content: "----------";
+}
+
+
+.bookmarks-listbox listitem[folder="true"]:-moz-drag-over {
+  border: 1px solid black;
+}
+
+.bookmarks-listbox listitem:-moz-drag-over {
+  border-top: 1px solid black;
+}
+
+listbox:-moz-drag-over {
+  border: 1px solid green;
+}
