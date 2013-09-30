@@ -13,7 +13,13 @@
 <?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
 <!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
-<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cck2wizard-window" title="CCK2" onclose="return onCloseWindow()">
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        id="cck2wizard-window"
+        title="CCK2"
+        onclose="return onCloseWindow()"
+        width="640"
+        height="480"
+        >
   <script type="application/x-javascript;version=1.7" src="util.js" />
   <script type="application/x-javascript;version=1.7" src="cck2wizard.js" />
   <script type="application/x-javascript;version=1.7" src="cckimport.js" />
@@ -38,20 +44,20 @@
       </menupopup>
     </menu>
   </menubar>
-  <deck id="main-deck">
+  <deck id="main-deck" flex="1">
     <vbox align="center" pack="center" flex="1" style="height: 200px;">
       <label>To get started with the CCK2 Wizard, select an option from the file menu.</label>
       <label>If you're starting from scratch, select New.</label>
       <label>If you've used a previous version of the CCK Wizard, select Import.</label>
     </vbox>
     <hbox>
-      <tree id="cck2wizard-tree" hidecolumnpicker="true" seltype="single">
+      <tree id="cck2wizard-tree" hidecolumnpicker="true" seltype="single" flex="!">
         <treecols>
           <treecol hideheader="true" primary="true" flex="1" />
         </treecols>
         <treechildren id="cck2wizard-treechildren"></treechildren>
       </tree>
-      <vbox>
+      <vbox flex="1">
         <groupbox flex="1">
           <deck id="cck2wizard-deck" flex="1"></deck>
         </groupbox>
