@@ -34,6 +34,7 @@
                  ondragenter="return onDragEnter(event);"
                  ondblclick="onEditBookmark(this.selectedItem);"
                  onkeypress="onKeyPressBookmarksToolbar(event);"
+                 context="bookmarks-listbox-contextmenu"
                  flex="1">
           <listhead>
             <listheader label="Name" />
@@ -54,10 +55,15 @@
   <popupset id="mainPopupSet">
     <menupopup id="bookmarks-contextmenu">
       <menuitem label="Edit" oncommand="onEditBookmark(document.popupNode)" />
-      <menuitem label="Delete" oncommand="onDeleteBookmark(event)" />
-      <menuitem label="Add Bookmark..." oncommand="onAddBookmark(event)" />
-      <menuitem label="Add Folder..." oncommand="onAddFolder(event)" />
-      <menuitem label="Add Separator" oncommand="onAddSeparator(event)" />
+      <menuitem label="Delete" oncommand="onDeleteBookmark(document.popupNode)" />
+      <menuitem label="Add Bookmark..." oncommand="onAddBookmark(document.popupNode)" />
+      <menuitem label="Add Folder..." oncommand="onAddFolder(document.popupNode)" />
+      <menuitem label="Add Separator" oncommand="onAddSeparator(document.popupNode)" />
+    </menupopup>
+    <menupopup id="bookmarks-listbox-contextmenu">
+      <menuitem label="Add Bookmark..." oncommand="onAddBookmark(document.popupNode)" />
+      <menuitem label="Add Folder..." oncommand="onAddFolder(document.popupNode)" />
+      <menuitem label="Add Separator" oncommand="onAddSeparator(document.popupNode)" />
     </menupopup>
   </popupset>
 </overlay>
