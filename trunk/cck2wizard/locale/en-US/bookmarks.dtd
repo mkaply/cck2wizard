@@ -1,3 +1,13 @@
 <!ENTITY bookmarks.label "Bookmarks">
 <!ENTITY bookmarks-toolbar.label "Toolbar">
 <!ENTITY bookmarks-window.label "Window">
+
+<!ENTITY bookmarks-addbookmark.label "Add Bookmark...">
+<!ENTITY bookmarks-addfolder.label "Add Folder...">
+<!ENTITY bookmarks-addseparator.label "Add Separator...">
+
+<!ENTITY bookmarks-editbookmark.label "Edit...">
+<!ENTITY bookmarks-deletebookmark.label "Delete">
+
+<!ENTITY bookmarks-name.label "Name">
+<!ENTITY bookmarks-location.label "Location">

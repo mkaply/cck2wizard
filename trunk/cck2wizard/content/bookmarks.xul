@@ -37,8 +37,8 @@
                  context="bookmarks-listbox-contextmenu"
                  flex="1">
           <listhead>
-            <listheader label="Name" />
-            <listheader label="Location" />
+            <listheader label="&bookmarks-name.label;" />
+            <listheader label="&bookmarks-location.label;" />
           </listhead>
           <listcols>
             <listcol flex="1"/>
@@ -46,24 +46,50 @@
           </listcols>
         </listbox>      
       <hbox>
-        <button label="Add Bookmark" oncommand="onAddBookmark(document.getElementById('bookmarks-toolbar-listbox'));" />
-        <button label="Add Folder" oncommand="onAddFolder(document.getElementById('bookmarks-toolbar-listbox'));" />
+        <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-toolbar-listbox'));" />
+        <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-toolbar-listbox'));" />
+        <button label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.getElementById('bookmarks-toolbar-listbox'));" />
       </hbox>
     </vbox>
-    <vbox id="bookmarks-window"></vbox>
+    <vbox id="bookmarks-window">
+        <listbox id="bookmarks-window-listbox"
+                 class="bookmarks-listbox"
+                 ondragstart="onDragStart(event);"
+                 ondrop="onDrop(event);"
+                 ondragover="return onDragOver(event);"
+                 ondragenter="return onDragEnter(event);"
+                 ondblclick="onEditBookmark(this.selectedItem);"
+                 onkeypress="onKeyPressBookmarksToolbar(event);"
+                 context="bookmarks-listbox-contextmenu"
+                 flex="1">
+          <listhead>
+            <listheader label="&bookmarks-name.label;" />
+            <listheader label="&bookmarks-location.label;" />
+          </listhead>
+          <listcols>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+          </listcols>
+        </listbox>      
+      <hbox>
+        <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-window-listbox'));" />
+        <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-window-listbox'));" />
+        <button label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.getElementById('bookmarks-window-listbox'));" />
+      </hbox>
+    </vbox>
   </deck>
   <popupset id="mainPopupSet">
     <menupopup id="bookmarks-contextmenu">
-      <menuitem label="Edit" oncommand="onEditBookmark(document.popupNode)" />
-      <menuitem label="Delete" oncommand="onDeleteBookmark(document.popupNode)" />
-      <menuitem label="Add Bookmark..." oncommand="onAddBookmark(document.popupNode)" />
-      <menuitem label="Add Folder..." oncommand="onAddFolder(document.popupNode)" />
-      <menuitem label="Add Separator" oncommand="onAddSeparator(document.popupNode)" />
+      <menuitem label="&bookmarks-editbookmark.label;" oncommand="onEditBookmark(document.popupNode)" />
+      <menuitem label="&bookmarks-deletebookmark.label;" oncommand="onDeleteBookmark(document.popupNode)" />
+      <menuitem label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.popupNode)" />
+      <menuitem label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.popupNode)" />
+      <menuitem label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.popupNode)" />
     </menupopup>
     <menupopup id="bookmarks-listbox-contextmenu">
-      <menuitem label="Add Bookmark..." oncommand="onAddBookmark(document.popupNode)" />
-      <menuitem label="Add Folder..." oncommand="onAddFolder(document.popupNode)" />
-      <menuitem label="Add Separator" oncommand="onAddSeparator(document.popupNode)" />
+      <menuitem label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.popupNode)" />
+      <menuitem label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.popupNode)" />
+      <menuitem label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.popupNode)" />
     </menupopup>
   </popupset>
 </overlay>
