@@ -152,6 +152,17 @@ function onLockUnlockPreference() {
   }
 }
 
+function onPreferencesPopup(event) {
+  var listitem = gPreferencesListbox.selectedItem;
+  if (listitem.hasAttribute("locked")) {
+    document.getElementById("preferences-lock").hidden = true;
+    document.getElementById("preferences-unlock").hidden = false;
+  } else {
+    document.getElementById("preferences-lock").hidden = false;
+    document.getElementById("preferences-unlock").hidden = true;
+  }
+}
+
 function onEditPreference() {
   if (gPreferencesListbox.selectedIndex == -1) {
     return;

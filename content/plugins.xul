@@ -11,8 +11,12 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="plugins" setconfig="setPlugins" getconfig="getPlugins" resetconfig="resetPlugins">
-      <listbox id="plugins-listbox"></listbox>
-      <button id="plugins-add">Add</button>
+      <listbox id="plugins-listbox"
+               flex="1"
+      />
+      <hbox>
+        <button id="plugins-add" label="&add.label;"/>
+      </hbox>
     </vbox>
   </deck>
 </overlay>

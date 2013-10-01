@@ -5,3 +5,7 @@
 <!ENTITY  regName.label                 "Name">
 <!ENTITY  regNameValue.label            "Name Value">
 <!ENTITY  regType.label                 "Type">
+
+<!ENTITY  add.label                 "Add...">
+<!ENTITY edit.label "Edit...">
+<!ENTITY delete.label "Delete">

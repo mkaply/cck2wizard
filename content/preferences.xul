@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/permissions.dtd">
+<?xml-stylesheet href="chrome://cck2wizard/skin/preferences.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/preferences.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="preferences.js" />
   <treechildren id="cck2wizard-treechildren">
@@ -11,12 +12,16 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="preferences" setconfig="setPreferences" getconfig="getPreferences" resetconfig="resetPreferences">
-        <listbox id="preferences-listbox" ondblclick="onEditPreference();" onkeypress="onKeyPressPreference(event);">
+        <listbox id="preferences-listbox"
+                 ondblclick="onEditPreference();"
+                 onkeypress="onKeyPressPreference(event);"
+                 context="preferences-listbox-contextmenu"
+                 flex="1">
           <listhead>
-            <listheader label="Name" />
-            <listheader label="Status" />
-            <listheader label="Type" />
-            <listheader label="Value" />
+            <listheader label="&name.label;" />
+            <listheader label="&status.label;" />
+            <listheader label="&type.label;" />
+            <listheader label="&value.label;" />
           </listhead>
           <listcols>
             <listcol flex="1"/>
@@ -26,21 +31,25 @@
           </listcols>
         </listbox>
       <hbox>
-        <button label="Add" oncommand="onAddPreference()"/>
+        <button label="&add.label;" oncommand="onAddPreference()"/>
       </hbox>
     </vbox>
   </deck>
     <deck id="cck2wizard-dialog-deck">
       <vbox id="cck2wizard-pref-dialog" onaccept="onNewPanelOK">
-        <label value="Name:"/><textbox id="pref-name" type="autocomplete" autocompletesearch="prefs" onkeyup="prefSetPrefValue();" ontextentered="prefSetPrefValue();"/>
-        <label value="Value:"/><textbox id="pref-value" hidespinbuttons="true"/>
+        <label value="&name.label;:"/><textbox id="pref-name" type="autocomplete" autocompletesearch="prefs" onkeyup="prefSetPrefValue();" ontextentered="prefSetPrefValue();"/>
+        <label value="&value.label;:"/><textbox id="pref-value" hidespinbuttons="true"/>
       </vbox>
     </deck>
     <popupset id="mainPopupSet">
-      <menupopup id="preferences-contextmenu">
-        <menuitem label="Lock/Unlock" oncommand="onLockUnlockPreference()"/>
-        <menuitem label="Edit" oncommand="onEditPreference()"/>
-        <menuitem label="Delete" oncommand="onDeletePreference()"/>
+      <menupopup id="preferences-contextmenu" onpopupshowing="onPreferencesPopup()">
+        <menuitem id="preferences-lock" label="&lock.label;" oncommand="onLockUnlockPreference()"/>
+        <menuitem id="preferences-unlock" label="&unlock.label;" oncommand="onLockUnlockPreference()"/>
+        <menuitem label="&edit.label;" oncommand="onEditPreference()"/>
+        <menuitem label="&delete.label;" oncommand="onDeletePreference()"/>
+      </menupopup>
+      <menupopup id="preferences-listbox-contextmenu">
+        <menuitem id="preferences-lock" label="&add.label;" oncommand="onAddPreference()"/>
       </menupopup>
     </popupset>
 </overlay>
