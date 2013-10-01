@@ -2,8 +2,6 @@ var gSearchEnginesListbox = null;
 
 function onSearchEnginesLoad() {
   gSearchEnginesListbox = document.getElementById("searchengines-listbox");
-  document.getElementById("searchengines-addurl").addEventListener("command", addSearchEngineFromURL, false);
-  document.getElementById("searchengines-addfile").addEventListener("command", addSearchEngineFromFile, false);
 }
 window.addEventListener("load", onSearchEnginesLoad, false);
 
@@ -16,6 +14,7 @@ function setSearchEngines(config) {
         getSearchEngineInfoFromURL(url, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, url);
+            listitem.setAttribute("context", "searchengines-contextmenu");
             listitem.setAttribute("class", "listitem-iconic");
             if (response.image) {
               listitem.setAttribute("class", "listitem-iconic");
@@ -30,6 +29,7 @@ function setSearchEngines(config) {
         getSearchEngineInfoFromFile(searchengineFile, function(response) {
           if (response) {
             var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
+            listitem.setAttribute("context", "searchengines-contextmenu");
             if (response.image) {
               listitem.setAttribute("class", "listitem-iconic");
               listitem.setAttribute("image", response.image);
@@ -66,6 +66,7 @@ function addSearchEngineFromFile() {
   getSearchEngineInfoFromFile(searchengineFile, function(response) {
     if (response) {
       var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
+      listitem.setAttribute("context", "searchengines-contextmenu");
       if (response.image) {
         listitem.setAttribute("class", "listitem-iconic");
         listitem.setAttribute("image", response.image);
@@ -133,10 +134,25 @@ function onSearchEngineURLOK()
   }
   getSearchEngineInfoFromURL(url, function(response) {
     var listitem = gSearchEnginesListbox.appendItem(response.name, url);
+    listitem.setAttribute("context", "searchengines-contextmenu");
     if (response.image) {
       listitem.setAttribute("class", "listitem-iconic");
       listitem.setAttribute("image", response.image);
     }
   });
   return true;
+}
+
+function onDeleteSearchEngine() {
+  if (gSearchEnginesListbox.selectedIndex == -1) {
+    return;
+  }
+  gSearchEnginesListbox.removeChild(gSearchEnginesListbox.selectedItem);
+}
+
+function onKeyPressSearchEngine(event) {
+  if (event.keyCode == event.DOM_VK_DELETE ||
+             event.keyCode == event.DOM_VK_BACK_SPACE) {
+    onDeleteSearchEngine();
+  }
 }

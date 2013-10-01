@@ -14,7 +14,8 @@
         <listbox id="registry-listbox"
                  ondblclick="onEditRegistryItem();"
                  onkeypress="onKeyPressRegistry(event);"
-                 context="registry-listbox-contextmenu">
+                 context="registry-listbox-contextmenu"
+                 flex="1">
           <listhead>
             <listheader label="&regRootKey.label;" />
             <listheader label="&regKey.label;" />

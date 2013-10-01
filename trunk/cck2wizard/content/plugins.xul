@@ -12,11 +12,24 @@
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="plugins" setconfig="setPlugins" getconfig="getPlugins" resetconfig="resetPlugins">
       <listbox id="plugins-listbox"
+               onkeypress="onKeyPressPlugin(event);"
+               context="plugins-listbox-contextmenu"
                flex="1"
       />
       <hbox>
-        <button id="plugins-add" label="&add.label;"/>
+        <button id="plugins-add"
+                label="&add.label;"
+                oncommand="onAddPlugin();"
+                />
       </hbox>
     </vbox>
   </deck>
+      <popupset id="mainPopupSet">
+      <menupopup id="plugins-contextmenu">
+        <menuitem label="&delete.label;" oncommand="onDeletePlugin()"/>
+      </menupopup>
+      <menupopup id="plugins-listbox-contextmenu">
+        <menuitem label="&add.label;" oncommand="onAddPlugin()"/>
+      </menupopup>
+    </popupset>
 </overlay>
