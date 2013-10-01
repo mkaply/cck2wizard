@@ -1,6 +1,6 @@
 <!ENTITY addons.label "Add-ons (Extensions and Themes)">
 
-<!ENTITY addfile.label "Add File">
-<!ENTITY addurl.label "Add URL">
+<!ENTITY addfile.label "Add File...">
+<!ENTITY addurl.label "Add URL...">
 
 
