@@ -186,12 +186,124 @@ function importCCKFile(configFileContent)
     }
   }
   if ("ToolbarFolder1" in configarray) {
+    if (!config.bookmarks) {
+      config.bookmarks = {};
+    }
+    if (!config.bookmarks.toolbar) {
+      config.bookmarks.toolbar = [];
+    }
+    var foldername, i=1;
+    while ((foldername = configarray['ToolbarFolder' + i])) {
+      var folder = {};
+      folder.name = foldername;
+      folder.folder = [];
+      var bookmarkname, j=1;
+      while ((bookmarkname = configarray['ToolbarFolder' + i + ".BookmarkTitle" + j])) {
+        var bookmark = {};
+	if ('ToolbarFolder' + i + ".BookmarkType" + j in configarray) {
+	  var type = configarray['ToolbarFolder' + i + ".BookmarkType" + j];
+	  if (type == "live") {
+	    // NO LIVE BOOKMARKS
+	    j++;
+	    continue;
+	  }
+	  bookmark.type = type;
+	} else {
+          bookmark.name = bookmarkname;
+          bookmark.location = configarray['ToolbarFolder' + i + ".BookmarkURL" + j]
+	}
+        folder.folder.push(bookmark);
+        j++;
+      }
+      config.bookmarks.toolbar.push(folder);
+      i++;
+    }
   }
   if ("ToolbarBookmarkTitle1" in configarray) {
+    if (!config.bookmarks) {
+      config.bookmarks = {};
+    }
+    if (!config.bookmarks.toolbar) {
+      config.bookmarks.toolbar = [];
+    }
+    var bookmarkname, i=1;
+    while ((bookmarkname = configarray["ToolbarBookmarkTitle" + i])) {
+      var bookmark = {};
+      if ("ToolbarBookmarkType" + i in configarray) {
+	var type = configarray["ToolbarBookmarkType" + i];
+	if (type == "live") {
+	  // NO LIVE BOOKMARKS
+	  i++;
+	  continue;
+	}
+	bookmark.type = type;
+      } else {
+	bookmark.name = bookmarkname;
+	bookmark.location = configarray["ToolbarBookmarkURL" + i]
+      }
+      config.bookmarks.toolbar.push(bookmark);
+      i++;
+    }
   }
   if ("BookmarkFolder1" in configarray) {
+    if (!config.bookmarks) {
+      config.bookmarks = {};
+    }
+    if (!config.bookmarks.window) {
+      config.bookmarks.window = [];
+    }
+    var foldername, i=1;
+    while ((foldername = configarray['BookmarkFolder' + i])) {
+      var folder = {};
+      folder.name = foldername;
+      folder.folder = [];
+      var bookmarkname, j=1;
+      while ((bookmarkname = configarray['BookmarkFolder' + i + ".BookmarkTitle" + j])) {
+        var bookmark = {};
+	if ('BookmarkFolder' + i + ".BookmarkType" + j in configarray) {
+	  var type = configarray['BookmarkFolder' + i + ".BookmarkType" + j];
+	  if (type == "live") {
+	    // NO LIVE BOOKMARKS
+	    j++;
+	    continue;
+	  }
+	  bookmark.type = type;
+	} else {
+          bookmark.name = bookmarkname;
+          bookmark.location = configarray['BookmarkFolder' + i + ".BookmarkURL" + j]
+	}
+        folder.folder.push(bookmark);
+        j++;
+      }
+      config.bookmarks.window.push(folder);
+      i++;
+    }
   }
   if ("BookmarkTitle1" in configarray) {
+    if (!config.bookmarks) {
+      config.bookmarks = {};
+    }
+    if (!config.bookmarks.toolbar) {
+      config.bookmarks.window = [];
+    }
+    var bookmarkname, i=1;
+    while ((bookmarkname = configarray["BookmarkTitle" + i])) {
+      var bookmark = {};
+      if ("BookmarkType" + i in configarray) {
+	var type = configarray["BookmarkType" + i];
+	if (type == "live") {
+	  // NO LIVE BOOKMARKS
+	  i++;
+	  continue;
+	}
+	bookmark.type = type;
+      } else {
+	bookmark.name = bookmarkname;
+	bookmark.location = configarray["BookmarkURL" + i]
+      }
+      config.bookmarks.window.push(bookmark);
+      i++;
+    }
   }
   if ("PreferenceName1" in configarray) {
     config.preferences = {};
@@ -218,6 +330,20 @@ function importCCKFile(configFileContent)
     }
   }
   if ("RegName1" in configarray) {
+    if (!config.registry) {
+      config.registry = [];
+    }
+    var registryname, i=1;
+    while ((registryname = configarray["RegName" + i])) {
+      var registryitem = {};
+      registryitem.rootkey = configarray["RootKey" + i]
+      registryitem.key = configarray["Key" + i]
+      registryitem.name = configarray["Name" + i]
+      registryitem.value = configarray["NameValue" + i]
+      registryitem.type = configarray["Type" + i]
+      config.registry.push(registryitem);
+      i++;
+    }
   }
   if ("CertPath1" in configarray) {
   }
