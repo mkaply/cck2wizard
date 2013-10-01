@@ -1,6 +1,4 @@
 <!ENTITY searchengines.label "Search Engines">
 
-<!ENTITY addfile.label "Add File">
-<!ENTITY addurl.label "Add URL">
-
-
+<!ENTITY addfile.label "Add File...">
+<!ENTITY addurl.label "Add URL...">
