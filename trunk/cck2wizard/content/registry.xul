@@ -17,11 +17,11 @@
                  context="registry-listbox-contextmenu"
                  flex="1">
           <listhead>
-            <listheader label="&regRootKey.label;" />
-            <listheader label="&regKey.label;" />
-            <listheader label="&regName.label;" />
-            <listheader label="&regNameValue.label;" />
-            <listheader label="&regType.label;" />
+            <listheader label="&regRootKey.label;" flex="1"/>
+            <listheader label="&regKey.label;" flex="1"/>
+            <listheader label="&regName.label;" flex="1"/>
+            <listheader label="&regNameValue.label;" flex="1"/>
+            <listheader label="&regType.label;" flex="1"/>
           </listhead>
           <listcols>
             <listcol flex="1"/>

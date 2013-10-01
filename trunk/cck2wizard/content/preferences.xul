@@ -18,10 +18,10 @@
                  context="preferences-listbox-contextmenu"
                  flex="1">
           <listhead>
-            <listheader label="&name.label;" />
+            <listheader label="&name.label;" flex="1"/>
             <listheader label="&status.label;" />
             <listheader label="&type.label;" />
-            <listheader label="&value.label;" />
+            <listheader label="&value.label;" flex="1"/>
           </listhead>
           <listcols>
             <listcol flex="1"/>
