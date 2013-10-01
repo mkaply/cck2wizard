@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/webpages.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="webpages.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&webpages.label;" value="webpages" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="webpages" setconfig="setWebPages" getconfig="getWebPages" resetconfig="resetWebPages">
+    <groupbox>
+      <caption label="&homePage.caption;"/>
+      <description>&homePage.description;</description>
+      <hbox align="center">
+        <label control="HomePageURL">&homePage.label;</label>
+        <textbox id="HomePageURL" flex="1"/>
+      </hbox>
+    </groupbox>
+    <groupbox>
+      <caption label="&homePageWelcome.caption;"/>
+      <description>&homePageWelcome.description;</description>
+      <hbox align="center">
+        <label control="HomePageWelcomeURL">&homePageWelcome.label;</label>
+        <textbox id="HomePageWelcomeURL" flex="1"/>
+      </hbox>
+      <hbox align="center">
+        <checkbox id="noWelcomePage" label="&noWelcomePage.label;"/>
+      </hbox>
+    </groupbox>
+    <groupbox>
+      <caption label="&homePageOverride.caption;"/>
+      <description>&homePageOverride.description;</description>
+      <hbox align="center">
+        <label control="HomePageOverrideURL">&homePageOverride.label;</label>
+        <textbox id="HomePageOverrideURL" flex="1"/>
+      </hbox>
+       <hbox align="center">
+         <checkbox id="noOverridePage" label="&noOverridePage.label;"/>
+       </hbox>
+    </groupbox>
+    </vbox>
+  </deck>
+</overlay>

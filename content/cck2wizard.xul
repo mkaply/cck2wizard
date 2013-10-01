@@ -2,6 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://cck2wizard/skin/cck2wizard.css" type="text/css"?>
 <?xul-overlay href="chrome://cck2wizard/content/about.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/webpages.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/permissions.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
