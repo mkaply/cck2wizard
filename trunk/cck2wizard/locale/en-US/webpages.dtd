@@ -1,0 +1,16 @@
+<!ENTITY webpages.label "Web Pages">
+
+<!ENTITY  homePage.caption              "Home Page">
+<!ENTITY  homePage.label                "Default Home Page URL:">
+<!ENTITY  homePage.description          "This page is displayed when users first start the Firefox browser, or when they click the Home button.">
+
+<!ENTITY  homePageWelcome.caption       "Welcome Page">
+<!ENTITY  homePageWelcome.description   "On the very first invocation of Firefox after a new profile is created, a welcome page is displayed. You can choose to replace this page or to not display it at all.">
+<!ENTITY  homePageWelcome.label         "Replacement Welcome Page URL:">
+<!ENTITY  noWelcomePage.label           "Do not display the welcome page">
+
+<!ENTITY  homePageOverride.caption       "Upgrade Page">
+<!ENTITY  homePageOverride.description   "After upgrading to a new version of Firefox, an override page is displayed. You can choose to replace this page or to not display it at all.">
+<!ENTITY  homePageOverride.label         "Upgrade Page URL:">
+<!ENTITY  noOverridePage.label           "Do not display the upgrade page">
+

@@ -28,7 +28,9 @@ function setPreferences(config) {
 
 function getPreferences(config) {
   if (gPreferencesListbox.itemCount > 0) {
-    config.preferences = {};
+    if (!config.preferences) {
+      config.preferences = {};
+    }
   }
   for (var i=0; i < gPreferencesListbox.itemCount; i++) {
     var prefinfo = {};

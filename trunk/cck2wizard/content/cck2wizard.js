@@ -73,6 +73,8 @@ function onOpenRecent(event) {
   setConfig(config);
   gCurrentConfig = config;
   document.getElementById("main-deck").selectedIndex = 1;
+  gTree.view.selection.select(0);
+
 }
 
 function onImport() {
@@ -91,12 +93,14 @@ function onImport() {
           config = getConfig();
           setConfig(config);
           document.getElementById("main-deck").selectedIndex = 1;
+          gTree.view.selection.select(0);
         } catch(e) {
           if (configFileContent.substr(0, 3) == "id=") {
             try {
               var config = importCCKFile(configFileContent);
               setConfig(config);
               document.getElementById("main-deck").selectedIndex = 1;
+              gTree.view.selection.select(0);              
             } catch (e) {
               errorCritical(e);
             }
@@ -140,29 +144,29 @@ function checkToSave() {
   return true;
 }
 
-function onNewPanelOK() {
-  var newID = document.getElementById("cck2wizard-new-id").value;
-  var newName = document.getElementById("cck2wizard-new-name").value;
-  if (!newID || !newName) {
+function onNew() {
+  if (!checkToSave()) {
+    return false;
+  }
+  var retVals = { name: null, id: null};
+  window.openDialog("chrome://cck2wizard/content/new-dialog.xul", "cck2wizard-new", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return false;
+  }
+  if (!retVals.name || !retVals.id) {
     alert("Name and ID are required");
     return false;
   }
-  if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + newID)) {
+  if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + retVals.id)) {
     alert("A config with that ID already exists");
     return false;
   }
-  setConfig({name: newName, id: newID})
+  setConfig({name: retVals.name, id: retVals.id})
   document.getElementById("main-deck").selectedIndex = 1;
   gTree.view.selection.select(0);
   updateNextPreviousButtons();
   return true;
-}
 
-function onNew() {
-  if (!checkToSave()) {
-    return;
-  }
-  openDialog("cck2wizard-new-dialog");
 }
 
 function onCloseWindow() {
