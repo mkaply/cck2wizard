@@ -19,6 +19,7 @@
         <label value="&id.label;"></label>
         <label class="indent" id="id"/>
       </vbox>
+      <separator/>
       <vbox>
         <label value="&description.label;"></label>
         <textbox config="description"></textbox>
