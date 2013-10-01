@@ -414,14 +414,15 @@ function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
 }
 
 function addBookmarks(bookmarks, destination, annotation) {
-  for (var i in bookmarks) {
-    if (typeof bookmarks[i] === "object") {
-      var newFolderId = bmsvc.createFolder(destination, i, bmsvc.DEFAULT_INDEX);
+  for (var i =0; i < bookmarks.length; i++) {
+    if (bookmarks[i].folder) {
+      var newFolderId = bmsvc.createFolder(destination, bookmarks[i].name, bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
-      addBookmarks(bookmarks[i], newFolderId, annotation);
+      addBookmarks(bookmarks[i].folder, newFolderId, annotation);
+    } else if (bookmarks[i].type == "separator") {
+      bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
     } else {
-      //bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
-      var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i]), bmsvc.DEFAULT_INDEX, i);
+      var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, bookmarks[i].name);
       annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
     }
   }
