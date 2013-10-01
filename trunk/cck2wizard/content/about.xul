@@ -13,16 +13,15 @@
     <vbox id="about" setconfig="setAbout" getconfig="getAbout">
       <vbox>
         <label value="&name.label;"></label>
-        <label id="name"/>
+        <label class="indent" id="name"/>
+      </vbox>
+      <vbox>
+        <label value="&id.label;"></label>
+        <label class="indent" id="id"/>
       </vbox>
       <vbox>
         <label value="&description.label;"></label>
         <textbox config="description"></textbox>
-        <description>&id.description;</description>
-      </vbox>
-      <vbox>
-        <label value="&id.label;"></label>
-        <label id="id"/>
       </vbox>
       <vbox>
         <label value="&version.label;"></label>

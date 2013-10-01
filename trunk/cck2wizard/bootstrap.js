@@ -24,7 +24,7 @@ function uninstall(aData, aReason) {
 }
 
 function startup(data, reason) {
-  sss.loadAndRegisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2wizard.css", null, null), sss.AUTHOR_SHEET);
+  sss.loadAndRegisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2toolbar.css", null, null), sss.AUTHOR_SHEET);
   let enumerator = Services.wm.getEnumerator("navigator:browser");
   while (enumerator.hasMoreElements()) {
     let win = enumerator.getNext().QueryInterface(Ci.nsIDOMWindow);
@@ -40,7 +40,7 @@ function startup(data, reason) {
 }
 
 function shutdown(data, reason) {
-  sss.unregisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2wizard.css", null, null), sss.AUTHOR_SHEET);
+  sss.unregisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2toolbar.css", null, null), sss.AUTHOR_SHEET);
   Services.wm.removeListener(windowListener);
 
   let enumerator = Services.wm.getEnumerator("navigator:browser");

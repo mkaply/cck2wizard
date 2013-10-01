@@ -1,0 +1,13 @@
+<!ENTITY preferences.label "Preferences">
+
+<!ENTITY add.label "Add...">
+
+<!ENTITY name.label "Name">
+<!ENTITY status.label "Status">
+<!ENTITY type.label "Type">
+<!ENTITY value.label "Value">
+
+<!ENTITY lock.label "Lock">
+<!ENTITY unlock.label "Unlock">
+<!ENTITY edit.label "Edit...">
+<!ENTITY delete.label "Delete">
