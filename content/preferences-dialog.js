@@ -9,6 +9,10 @@ var gPrefValueInt = null;
 var gPrefValueBool = null;
 var gPrefValueDeck = null;
 
+var preferencesToIgnore = {
+  "browser.startup.homepage": true
+}
+
 function onLoad() {
   prefAutoCompleteFactory = {
     startSearch : function startSearch(searchString, searchParam, previousResult, listener) {
@@ -23,7 +27,7 @@ function onLoad() {
       for (var i = 0; i < prefCount.value; ++i)
       {
         if (prefArray[i].indexOf(searchString) == 0 &&
-            prefArray[i] != "browser.startup.homepage") {
+            !preferencesToIgnore[prefArray[i]]) {
          simpleresult.appendMatch(prefArray[i], "");
         }
       }

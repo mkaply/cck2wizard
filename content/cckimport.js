@@ -98,16 +98,6 @@ function importCCKFile(configFileContent)
   if ("alwaysdefaultbrowser" in configarray) {
     config.alwaysDefaultBrowser = true;
   }
-  if ("HomePageURL" in configarray) {
-  }
-  if ("HomePageWelcomeURL" in configarray) {
-  }
-  if ("noWelcomePage" in configarray) {
-  }
-  if ("HomePageOverrideURL" in configarray) {
-  }
-  if ("noOverridePage" in configarray) {
-  }
   if ("CompanyName" in configarray) {
     config.titlemodifier = configarray.CompanyName
   }
@@ -328,6 +318,17 @@ function importCCKFile(configFileContent)
       config.preferences[preferencename] = prefinfo;
       i++;
     }
+  }
+  // THESE WILL BE SET AS PREFERENCES
+  if ("HomePageURL" in configarray) {
+  }
+  if ("HomePageWelcomeURL" in configarray) {
+  }
+  if ("noWelcomePage" in configarray) {
+  }
+  if ("HomePageOverrideURL" in configarray) {
+  }
+  if ("noOverridePage" in configarray) {
   }
   if ("RegName1" in configarray) {
     if (!config.registry) {
