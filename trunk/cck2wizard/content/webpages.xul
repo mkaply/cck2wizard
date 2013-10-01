@@ -18,6 +18,7 @@
         <label control="HomePageURL">&homePage.label;</label>
         <textbox id="HomePageURL" flex="1"/>
       </hbox>
+      <checkbox id="lockHomePage" label="&lockHomePage.label;"/>
     </groupbox>
     <groupbox>
       <caption label="&homePageWelcome.caption;"/>
@@ -26,9 +27,7 @@
         <label control="HomePageWelcomeURL">&homePageWelcome.label;</label>
         <textbox id="HomePageWelcomeURL" flex="1"/>
       </hbox>
-      <hbox align="center">
-        <checkbox id="noWelcomePage" label="&noWelcomePage.label;"/>
-      </hbox>
+      <checkbox id="noWelcomePage" label="&noWelcomePage.label;"/>
     </groupbox>
     <groupbox>
       <caption label="&homePageOverride.caption;"/>

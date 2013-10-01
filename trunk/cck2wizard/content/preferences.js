@@ -15,10 +15,17 @@ window.addEventListener("unload", onPreferencesUnload, false);
 
 //boolean, integer, string
 
+var preferencesToIgnore = {
+  "browser.startup.homepage": true
+}
+
 
 function setPreferences(config) {
   if ("preferences" in config) {
     for (var preference in config.preferences) {
+      if (preferencesToIgnore[preference]) {
+        continue;
+      }
       addPreference(preference, config.preferences[preference].value,
                        typeof config.preferences[preference].value,
                        config.preferences[preference].locked)
