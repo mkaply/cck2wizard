@@ -2,3 +2,5 @@
 
 <!ENTITY addfile.label "Add File...">
 <!ENTITY addurl.label "Add URL...">
+
+<!ENTITY delete.label "Delete">

@@ -2,14 +2,14 @@ var gPluginsListbox = null;
 
 function onPluginsLoad() {
   gPluginsListbox = document.getElementById("plugins-listbox");
-  document.getElementById("plugins-add").addEventListener("command", addPlugin, false);
 }
 window.addEventListener("load", onPluginsLoad, false);
 
 function setPlugins(config) {
   if ("plugins" in config) {
     for (var i=0; i < config.plugins.length; i++) {
-      gPluginsListbox.appendItem(config.plugins[i]);
+      var listitem = gPluginsListbox.appendItem(config.plugins[i]);
+      listitem.setAttribute("context", "plugins-contextmenu")
     }
   }
 }
@@ -30,7 +30,23 @@ function resetPlugins() {
   }
 }
 
-function addPlugin() {
+function onAddPlugin() {
   var pluginFile = chooseFile(window);
-  gPluginsListbox.appendItem(pluginFile.path);
+  var listitem = gPluginsListbox.appendItem(pluginFile.path);
+  listitem.setAttribute("context", "plugins-contextmenu")
+}
+
+function onDeletePlugin() {
+  if (gPluginsListbox.selectedIndex == -1) {
+    return;
+  }
+  gPluginsListbox.removeChild(gPluginsListbox.selectedItem);
+}
+
+
+function onKeyPressPlugin(event) {
+  if (event.keyCode == event.DOM_VK_DELETE ||
+      event.keyCode == event.DOM_VK_BACK_SPACE) {
+    onDeletePlugin();
+  }
 }
