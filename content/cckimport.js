@@ -61,60 +61,60 @@ function importCCKFile(configFileContent)
   config.extension.id = configarray['id'];
   config.extension.name = config.name;
   config.extension.version = configarray['name'];
-  if ("description" in configarray) {
+  if (configarray.hasOwnProperty("description")) {
     config.description = configarray['description'];
     config.extension.description = config.description;
   }
-  if ("homepageURL" in configarray) {
+  if (configarray.hasOwnProperty("homepageURL")) {
     config.extension.homepageURL = configarray['homepageURL'];
   }
-  if ("updateURL" in configarray) {
+  if (configarray.hasOwnProperty("updateURL")) {
     config.extension.updateURL = configarray['updateURL'];
   }
-  if ("updateKey" in configarray) {
+  if (configarray.hasOwnProperty("updateKey")) {
     config.extension.updateKey = configarray['updateKey'];
   }
-  if ("iconURL" in configarray) {
+  if (configarray.hasOwnProperty("iconURL")) {
     config.extension.icon = configarray['iconURL'];
   }
-  if ("filename" in configarray) {
+  if (configarray.hasOwnProperty("filename")) {
     config.extension.filename = configarray['filename'];
   }
-  if ("hidden" in configarray) {
+  if (configarray.hasOwnProperty("hidden")) {
     config.extension.hidden = true;
   }
-  if ("noaboutconfig" in configarray) {
+  if (configarray.hasOwnProperty("noaboutconfig")) {
     config.disableAboutConfig = true;
   }
-  if ("noprivatebrowsing" in configarray) {
+  if (configarray.hasOwnProperty("noprivatebrowsing")) {
     config.disablePrivateBrowsing = true;
   }
-  if ("nosync" in configarray) {
+  if (configarray.hasOwnProperty("nosync")) {
     config.disableSync = true;
   }
-  if ("noamo" in configarray) {
+  if (configarray.hasOwnProperty("noamo")) {
     config.noGetAddons = true;
   }
-  if ("alwaysdefaultbrowser" in configarray) {
+  if (configarray.hasOwnProperty("alwaysdefaultbrowser")) {
     config.alwaysDefaultBrowser = true;
   }
-  if ("CompanyName" in configarray) {
+  if (configarray.hasOwnProperty("CompanyName")) {
     config.titlemodifier = configarray.CompanyName
   }
-  if ("HelpMenuCommandName" in configarray) {
+  if (configarray.hasOwnProperty("HelpMenuCommandName")) {
     config.helpMenu = {};
     config.helpMenu.label = configarray.HelpMenuCommandName;
-    if ("HelpMenuCommandURL" in configarray) {
+    if (configarray.hasOwnProperty("HelpMenuCommandURL")) {
       config.helpMenu.url = configarray.HelpMenuCommandURL;
     }
-    if ("HelpMenuCommandAccesskey" in configarray) {
+    if (configarray.hasOwnProperty("HelpMenuCommandAccesskey")) {
       config.helpMenu.accesskey = configarray.HelpMenuCommandAccesskey;
     }
   }
-  if ("bookmarksbar" in configarray) {
+  if (configarray.hasOwnProperty("bookmarksbar")) {
     config.displayBookmarksToolbar = true;
   }
-  if ("menubar" in configarray) {
+  if (configarray.hasOwnProperty("menubar")) {
     config.displayMenuBar = true;
   }
   function addPermissions(type, action, sites) {
@@ -124,31 +124,31 @@ function importCCKFile(configFileContent)
       config.permissions[type] = {};
     config.permissions[type][action] = sites.split(',');
   }
-  if ("PopupAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("PopupAllowedSites")) {
     addPermissions("popup", "allow", configarray.PopupAllowedSites);
   }
-  if ("InstallAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("InstallAllowedSites")) {
     addPermissions("install", "allow", configarray.InstallAllowedSites);
   }
-  if ("CookieAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("CookieAllowedSites")) {
     addPermissions("cookie", "allow", configarray.CookieAllowedSites);
   }
-  if ("PluginAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("PluginAllowedSites")) {
     addPermissions("plugins", "allow", configarray.PluginAllowedSites);
   }
-  if ("PopupAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("PopupAllowedSites")) {
     addPermissions("popup", "deny", configarray.PopupAllowedSites);
   }
-  if ("InstallAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("InstallAllowedSites")) {
     addPermissions("install", "deny", configarray.InstallAllowedSites);
   }
-  if ("CookieAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("CookieAllowedSites")) {
     addPermissions("cookie", "deny", configarray.CookieAllowedSites);
   }
-  if ("PluginAllowedSites" in configarray) {
+  if (configarray.hasOwnProperty("PluginAllowedSites")) {
     addPermissions("plugins", "deny", configarray.PluginAllowedSites);
   }
-  if ("BrowserPluginPath1" in configarray) {
+  if (configarray.hasOwnProperty("BrowserPluginPath1")) {
     config.plugins = [];
     var pluginname, i=1;
     while ((pluginname = configarray['BrowserPluginPath' + i])) {
@@ -156,7 +156,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("SearchEngine1" in configarray) {
+  if (configarray.hasOwnProperty("SearchEngine1")) {
     config.searchplugins = [];
     var searchpluginname, i=1;
     while ((searchpluginname = configarray['SearchEngine' + i])) {
@@ -164,10 +164,10 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("DefaultSearchEngine" in configarray) {
+  if (configarray.hasOwnProperty("DefaultSearchEngine")) {
     config.defaultSearchEngine = configarray["DefaultSearchEngine"];
   }
-  if ("BundlePath1" in configarray) {
+  if (configarray.hasOwnProperty("BundlePath1")) {
     config.addons = [];
     var addonname, i=1;
     while ((addonname = configarray['BundlePath' + i])) {
@@ -175,7 +175,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("ToolbarFolder1" in configarray) {
+  if (configarray.hasOwnProperty("ToolbarFolder1")) {
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
@@ -190,7 +190,7 @@ function importCCKFile(configFileContent)
       var bookmarkname, j=1;
       while ((bookmarkname = configarray['ToolbarFolder' + i + ".BookmarkTitle" + j])) {
         var bookmark = {};
-	if ('ToolbarFolder' + i + ".BookmarkType" + j in configarray) {
+	if (configarray.hasOwnProperty('ToolbarFolder' + i + ".BookmarkType" + j)) {
 	  var type = configarray['ToolbarFolder' + i + ".BookmarkType" + j];
 	  if (type == "live") {
 	    // NO LIVE BOOKMARKS
@@ -209,7 +209,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("ToolbarBookmarkTitle1" in configarray) {
+  if (configarray.hasOwnProperty("ToolbarBookmarkTitle1")) {
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
@@ -219,7 +219,7 @@ function importCCKFile(configFileContent)
     var bookmarkname, i=1;
     while ((bookmarkname = configarray["ToolbarBookmarkTitle" + i])) {
       var bookmark = {};
-      if ("ToolbarBookmarkType" + i in configarray) {
+      if (configarray.hasOwnProperty("ToolbarBookmarkType" + i)) {
 	var type = configarray["ToolbarBookmarkType" + i];
 	if (type == "live") {
 	  // NO LIVE BOOKMARKS
@@ -235,7 +235,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("BookmarkFolder1" in configarray) {
+  if (configarray.hasOwnProperty("BookmarkFolder1")) {
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
@@ -250,7 +250,7 @@ function importCCKFile(configFileContent)
       var bookmarkname, j=1;
       while ((bookmarkname = configarray['BookmarkFolder' + i + ".BookmarkTitle" + j])) {
         var bookmark = {};
-	if ('BookmarkFolder' + i + ".BookmarkType" + j in configarray) {
+	if (configarray.hasOwnProperty('BookmarkFolder' + i + ".BookmarkType" + j)) {
 	  var type = configarray['BookmarkFolder' + i + ".BookmarkType" + j];
 	  if (type == "live") {
 	    // NO LIVE BOOKMARKS
@@ -269,7 +269,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("BookmarkTitle1" in configarray) {
+  if (configarray.hasOwnProperty("BookmarkTitle1")) {
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
@@ -279,7 +279,7 @@ function importCCKFile(configFileContent)
     var bookmarkname, i=1;
     while ((bookmarkname = configarray["BookmarkTitle" + i])) {
       var bookmark = {};
-      if ("BookmarkType" + i in configarray) {
+      if (configarray.hasOwnProperty("BookmarkType" + i)) {
 	var type = configarray["BookmarkType" + i];
 	if (type == "live") {
 	  // NO LIVE BOOKMARKS
@@ -295,7 +295,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("PreferenceName1" in configarray) {
+  if (configarray.hasOwnProperty("PreferenceName1")) {
     config.preferences = {};
     var preferencename, i=1;
     while ((preferencename = configarray['PreferenceName' + i])) {
@@ -312,7 +312,7 @@ function importCCKFile(configFileContent)
 	default:
 	  prefinfo.value = configarray['PreferenceValue' + i];
       }
-      if ("PreferenceLock1" in configarray) {
+      if (configarray.hasOwnProperty("PreferenceLock1")) {
 	prefinfo.locked = true;
       }
       config.preferences[preferencename] = prefinfo;
@@ -320,17 +320,17 @@ function importCCKFile(configFileContent)
     }
   }
   // THESE WILL BE SET AS PREFERENCES
-  if ("HomePageURL" in configarray) {
+  if (configarray.hasOwnProperty("HomePageURL")) {
   }
-  if ("HomePageWelcomeURL" in configarray) {
+  if (configarray.hasOwnProperty("HomePageWelcomeURL")) {
   }
-  if ("noWelcomePage" in configarray) {
+  if (configarray.hasOwnProperty("noWelcomePage")) {
   }
-  if ("HomePageOverrideURL" in configarray) {
+  if (configarray.hasOwnProperty("HomePageOverrideURL")) {
   }
-  if ("noOverridePage" in configarray) {
+  if (configarray.hasOwnProperty("noOverridePage")) {
   }
-  if ("RegName1" in configarray) {
+  if (configarray.hasOwnProperty("RegName1")) {
     if (!config.registry) {
       config.registry = [];
     }
@@ -346,7 +346,7 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  if ("CertPath1" in configarray) {
+  if (configarray.hasOwnProperty("CertPath1")) {
   }
   return config;
 
