@@ -11,11 +11,23 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="addons" setconfig="setAddons" getconfig="getAddons" resetconfig="resetAddons">
-      <listbox id="addons-listbox" flex="1"/>
+      <listbox id="addons-listbox"
+               context="addons-listbox-contextmenu"
+               onkeypress="onKeyPressAddon(event);"
+               flex="1"/>
       <hbox>
-        <button id="addons-addfile" label="&addfile.label;"/>
-        <button id="addons-addurl" label="&addurl.label;"/>
+        <button id="addons-addfile" label="&addfile.label;" oncommand="onAddAddonFromFile();"/>
+        <button id="addons-addurl" label="&addurl.label;" oncommand="onAddAddonFromURL();"/>
       </hbox>
     </vbox>
   </deck>
+      <popupset id="mainPopupSet">
+      <menupopup id="addons-contextmenu">
+        <menuitem label="&delete.label;" oncommand="onDeleteAddon()"/>
+      </menupopup>
+      <menupopup id="addons-listbox-contextmenu">
+        <menuitem label="&addfile.label;" oncommand="onAddAddonFromFile()"/>
+        <menuitem label="&addurl.label;" oncommand="onAddAddonFromURL()"/>
+      </menupopup>
+    </popupset>
 </overlay>

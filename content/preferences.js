@@ -16,7 +16,10 @@ window.addEventListener("unload", onPreferencesUnload, false);
 //boolean, integer, string
 
 var preferencesToIgnore = {
-  "browser.startup.homepage": true
+  "browser.startup.homepage": true,
+  "startup.homepage_welcome_url": true,
+  "browser.startup.homepage_override.mstone": true,
+  "startup.homepage_override_url": true
 }
 
 

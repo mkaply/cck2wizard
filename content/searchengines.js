@@ -58,7 +58,27 @@ function resetSearchEngines() {
 }
 
 function addSearchEngineFromURL() {
-  openDialog("cck2wizard-urldialog", "onSearchEngineURLOK");
+  var retVals = { name: null, location: null};
+  window.openDialog("chrome://cck2wizard/content/url-dialog.xul", "cck2wizard-bookmark", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return;
+  }
+  var url = retVals.url;
+  try {
+    Services.io.newURI(url, null, null);
+  } catch (ex) {
+    showErrorMessage("invalidurl");
+    return;
+  }
+  getSearchEngineInfoFromURL(url, function(response) {
+    var listitem = gSearchEnginesListbox.appendItem(response.name, url);
+    listitem.setAttribute("context", "searchengines-contextmenu");
+    if (response.image) {
+      listitem.setAttribute("class", "listitem-iconic");
+      listitem.setAttribute("image", response.image);
+    }
+  });
+  return;
 }
 
 function addSearchEngineFromFile() {
@@ -121,26 +141,6 @@ function getSearchEngineInfoFromURL(url, successCallback) {
     showErrorMessage("invalidurl")
   }
   request.send();
-}
-
-function onSearchEngineURLOK()
-{
-  var url = document.getElementById("cck2wizard-urldialog-url").value;
-  try {
-    Services.io.newURI(url, null, null);
-  } catch (ex) {
-    showErrorMessage("invalidurl");
-    return false;
-  }
-  getSearchEngineInfoFromURL(url, function(response) {
-    var listitem = gSearchEnginesListbox.appendItem(response.name, url);
-    listitem.setAttribute("context", "searchengines-contextmenu");
-    if (response.image) {
-      listitem.setAttribute("class", "listitem-iconic");
-      listitem.setAttribute("image", response.image);
-    }
-  });
-  return true;
 }
 
 function onDeleteSearchEngine() {

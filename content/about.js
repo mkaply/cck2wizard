@@ -13,11 +13,7 @@ function setAbout(config) {
 }
 
 function getAbout(config) {
-  if (gName.value) {
-    config.name = gName.value;
-  }
-  if (gID.value) {
-    config.id = gID.value;
-  }
+  config.name = gName.value;
+  config.id = gID.value;
   return config;
 }
