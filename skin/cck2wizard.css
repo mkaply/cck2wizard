@@ -1,3 +1,9 @@
+#cck2wizard-window {
+  min-width: 640px;
+  min-height: 480px;
+  
+}
+
 #cck2wizard-tree {
   min-width: 150px;
 }
