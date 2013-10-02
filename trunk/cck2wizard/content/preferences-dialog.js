@@ -10,7 +10,10 @@ var gPrefValueBool = null;
 var gPrefValueDeck = null;
 
 var preferencesToIgnore = {
-  "browser.startup.homepage": true
+  "browser.startup.homepage": true,
+  "startup.homepage_welcome_url": true,
+  "browser.startup.homepage_override.mstone": true,
+  "startup.homepage_override_url": true
 }
 
 function onLoad() {

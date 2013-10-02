@@ -2,13 +2,11 @@ var gAddonsListbox = null;
 
 function onAddonsLoad() {
   gAddonsListbox = document.getElementById("addons-listbox");
-  document.getElementById("addons-addurl").addEventListener("command", addAddonFromURL, false);
-  document.getElementById("addons-addfile").addEventListener("command", addAddonFromFile, false);
 }
 window.addEventListener("load", onAddonsLoad, false);
 
 function setAddons(config) {
-  if ("addons" in config) {
+  if (config.hasOwnProperty("addons")) {
     for (var i=0; i < config.addons.length; i++) {
       gAddonsListbox.appendItem(config.addons[i]);
     }
@@ -31,23 +29,42 @@ function resetAddons() {
   }
 }
 
-function addAddonFromURL() {
-  openDialog("cck2wizard-urldialog", "onAddonURLOK");  
-}
-
-function addAddonFromFile() {
-  var addonfile = chooseFile(window);
-  gAddonsListbox.appendItem(addonfile.path);
-}
-
-function onAddonURLOK() {
-  var url = document.getElementById("cck2wizard-urldialog-url").value;
+function onAddAddonFromURL() {
+  var retVals = { name: null, location: null};
+  window.openDialog("chrome://cck2wizard/content/url-dialog.xul", "cck2wizard-bookmark", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return;
+  }
+  var url = retVals.url;
   try {
     Services.io.newURI(url, null, null);
   } catch (ex) {
     showErrorMessage("invalidurl");
-    return false;
+    return;
   }
-  gAddonsListbox.appendItem(url);
-  return true;
+  var listitem = gAddonsListbox.appendItem(url);
+  listitem.setAttribute("context", "addons-contextmenu");
+}
+
+function onAddAddonFromFile() {
+  var addonfile = chooseFile(window);
+  if (!addonfile) {
+    return;
+  }
+  var listitem = gAddonsListbox.appendItem(addonfile.path);
+  listitem.setAttribute("context", "addons-contextmenu");
+}
+
+function onDeleteAddon() {
+  if (gAddonsListbox.selectedIndex == -1) {
+    return;
+  }
+  gAddonsListbox.removeChild(gAddonsListbox.selectedItem);
+}
+
+function onKeyPressAddon(event) {
+  if (event.keyCode == event.DOM_VK_DELETE ||
+             event.keyCode == event.DOM_VK_BACK_SPACE) {
+    onDeleteAddon();
+  }
 }

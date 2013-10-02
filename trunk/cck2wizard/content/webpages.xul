@@ -27,7 +27,7 @@
         <label control="HomePageWelcomeURL">&homePageWelcome.label;</label>
         <textbox id="HomePageWelcomeURL" flex="1"/>
       </hbox>
-      <checkbox id="noWelcomePage" label="&noWelcomePage.label;"/>
+      <checkbox id="noWelcomePage" label="&noWelcomePage.label;" oncommand="enableDisableWelcomePage(this.checked);"/>
     </groupbox>
     <groupbox>
       <caption label="&homePageOverride.caption;"/>

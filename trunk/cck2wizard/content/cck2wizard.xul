@@ -24,7 +24,6 @@
   <script type="application/x-javascript;version=1.7" src="util.js" />
   <script type="application/x-javascript;version=1.7" src="cck2wizard.js" />
   <script type="application/x-javascript;version=1.7" src="cckimport.js" />
-  <script type="application/x-javascript;version=1.7" src="cck2dialogs.js" />
   <menubar id="menubarid">
     <menu id="menuid" label="&file.label;">
       <menupopup onpopupshowing="onFilePopup(event)">
