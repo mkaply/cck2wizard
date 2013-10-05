@@ -59,6 +59,13 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 	  /^chrome:\/\/browser\/content\/abouthome\/aboutHome.xhtml/.test(doc.location.href))) {
 	remove(E("sync", doc));
       }
+      /* Remove the addons button from about:home */
+      if ((config && config.disableAddonsManager) &&
+         (/^about:home/.test(doc.location.href) ||
+          /^chrome:\/\/browser\/content\/abouthome\/aboutHome.xhtml/.test(doc.location.href))) {
+        remove(E("addons", doc));
+      }
+
       /* If health reporter upload is locked, remove the activation widget */
       if (Preferences.locked("datareporting.healthreport.uploadEnabled", false) &&
 	 (/^about:healthreport/.test(doc.location.href) ||
