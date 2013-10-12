@@ -91,7 +91,9 @@ var CCK2 = {
       }
       if (config.permissions) {
         for (var i in config.permissions) {
-          updatePermissions(i, config.permissions[i]);
+          for (var j in config.permissions[i]) {
+            Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
+          }
         }
       }
       if (config.preferences) {
@@ -426,31 +428,6 @@ function addBookmarks(bookmarks, destination, annotation) {
       annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
     }
   }
-}
-
-/**
- * Update the permissions with the given info
- *
- * @param {String} type of permission - popup, cookie, plugin
- * @returns {Object} object with the allow/deny for given domains
- */
-function updatePermissions(type, permissions) {
-  if (permissions.allow) {
-    for (var i=0; i < permissions.allow.length; i++) {
-      try {
-        Services.perms.add(NetUtil.newURI("http://" + permissions.allow[i]),
-                           type, Services.perms.ALLOW_ACTION);
-      } catch (ex) {}
-    }
-  }
-  if (permissions.deny) {
-    for (var i=0; i < permissions.deny.length; i++) {
-      try {
-        Services.perms.add(NetUtil.newURI("http://" + permissions.deny[i]),
-                           type, Services.perms.DENY_ACTION);
-      } catch (ex) {}
-    }
-  }        
 }
 
 function errorCritical(e) {

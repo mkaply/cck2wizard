@@ -65,12 +65,6 @@ function addRegistryItem(registryitem, update) {
   gRegistryListbox.appendChild(createRegistryListItem(registryitem));
 }
 
-function createListCell(label) {
-  var listcell = document.createElement("listcell");
-  listcell.setAttribute("label", label);
-  return listcell;
-}
-
 function createRegistryListItem(registryitem) {
   var listitem = document.createElement("listitem");
   listitem.appendChild(createListCell(registryitem.rootkey));

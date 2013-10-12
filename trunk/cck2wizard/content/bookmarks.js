@@ -125,12 +125,6 @@ function addBookmark(listbox, bookmark) {
   return listitem;
 }
 
-function createListCell(label) {
-  var listcell = document.createElement("listcell");
-  listcell.setAttribute("label", label);
-  return listcell;
-}
-
 function createBookmarkListItem(bookmark) {
   var listitem = document.createElement("listitem");
   if ("name" in bookmark) {

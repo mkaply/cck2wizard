@@ -67,6 +67,12 @@
           </row>
           <row align="center">
             <vbox align="right">
+              <label />
+            </vbox>
+            <description>&extension-updatekey.description;</description>
+          </row>
+          <row align="center">
+            <vbox align="right">
               <label value="&extension-icon.label;" />
             </vbox>
             <hbox align="center">
