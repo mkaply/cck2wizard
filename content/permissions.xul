@@ -3,45 +3,46 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="permissions.js" />
   <treechildren id="cck2wizard-treechildren">
-    <!-- Make sure to set container="true" -->
-    <treeitem container="true" open="true">
+    <treeitem>
       <treerow>
         <treecell label="&permissions.label;" value="permissions" />
       </treerow>
-      <treechildren>
-        <treeitem>
-          <treerow>
-            <treecell label="&popups.label;" value="popups" />
-          </treerow>
-        </treeitem>
-        <treeitem>
-          <treerow>
-            <treecell label="&cookies.label;" value="cookies" />
-          </treerow>
-        </treeitem>
-      </treechildren>
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
-    <vbox id="popups" setconfig="setPopupPermissions" getconfig="getPopupPermissions" resetconfig="resetPopupPermissions">
-      <description control="PopupAllowedSites">&popupAllowedSites.label;</description>
-      <vbox>
-        <textbox id="PopupAllowedSites" flex="1" />
-      </vbox>
-      <description control="PopupDeniedSites">&popupDeniedSites.label;</description>
-      <vbox>
-        <textbox id="PopupDeniedSites" flex="1" />
-      </vbox>
-    </vbox>
-    <vbox id="cookies" setconfig="setCookiePermissions" getconfig="getCookiePermissions" resetconfig="resetCookiePermissions">
-      <description control="CookieAllowedSites">&cookieAllowedSites.label;</description>
-      <vbox>
-        <textbox id="CookieAllowedSites" flex="1" />
-      </vbox>
-      <description control="CookieDeniedSites">&cookieDeniedSites.label;</description>
-      <vbox>
-        <textbox id="CookieDeniedSites" flex="1" />
-      </vbox>
+    <vbox id="permissions" setconfig="setPermissions" getconfig="getPermissions" resetconfig="resetPermissions">
+        <listbox id="permissions-listbox"
+                 ondblclick="onEditPermissionsItem();"
+                 onkeypress="onKeyPressPermissions(event);"
+                 context="permissions-listbox-contextmenu"
+                 flex="1">
+          <listhead>
+            <listheader label="&site.label;" flex="1"/>
+            <listheader label="&popup.label;" flex="1"/>
+            <listheader label="&install.label;" flex="1"/>
+            <listheader label="&cookie.label;" flex="1"/>
+            <listheader label="&plugins.label;" flex="1"/>
+          </listhead>
+          <listcols>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+            <listcol flex="1"/>
+          </listcols>
+        </listbox>
+      <hbox>
+        <button label="&add.label;" oncommand="onAddPermissionsItem()"/>
+      </hbox>
     </vbox>
   </deck>
+    <popupset id="mainPopupSet">
+      <menupopup id="permissions-contextmenu">
+        <menuitem label="&edit.label;" oncommand="onEditPermissionsItem()"/>
+        <menuitem label="&delete.label;" oncommand="onDeletePermissionsItem()"/>
+      </menupopup>
+      <menupopup id="permissions-listbox-contextmenu">
+        <menuitem label="&add.label;" oncommand="onEditPermissionsItem()"/>
+      </menupopup>
+    </popupset>
 </overlay>

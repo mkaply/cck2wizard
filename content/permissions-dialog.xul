@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE registry-dialog SYSTEM "chrome://cck2wizard/locale/permissions.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog title="&permissions.label;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons="accept,cancel" ondialogaccept="return onOK()"
+        ondialogcancel="return onCancel()"
+        onload="onLoad();">
+  <script src="chrome://cck2wizard/content/permissions-dialog.js" />
+  <vbox>
+    <label control="host">&site.label;:</label>
+    <textbox id="host" onchange="checkToEnableOKButton();" onkeyup="checkToEnableOKButton();" />
+    <grid>
+      <columns>
+        <column />
+        <column flex="1" />
+      </columns>
+      <rows>
+        <row align="center">
+          <label control="popups">&popup.label;:</label>
+          <menulist id="popups" oncommand="checkToEnableOKButton();">
+            <menupopup>
+              <menuitem label="" value="" />
+              <menuitem label="&allow.label;" value="1" />
+              <menuitem label="&block.label;" value="2" />
+            </menupopup>
+          </menulist>
+        </row>
+        <row align="center">
+          <label control="install">&install.label;:</label>
+          <menulist id="install" oncommand="checkToEnableOKButton();">
+            <menupopup>
+              <menuitem label="" value="" />
+              <menuitem label="&allow.label;" value="1" />
+              <menuitem label="&block.label;" value="2" />
+            </menupopup>
+          </menulist>
+        </row>
+        <row align="center">
+          <label control="cookie">&cookie.label;:</label>
+          <menulist id="cookie" oncommand="checkToEnableOKButton();">
+            <menupopup>
+              <menuitem label="" value="" />
+              <menuitem label="&allow.label;" value="1" />
+              <menuitem label="&block.label;" value="2" />
+            </menupopup>
+          </menulist>
+        </row>
+        <row align="center">
+          <label control="plugins">&plugins.label;:</label>
+          <menulist id="plugins" oncommand="checkToEnableOKButton();">
+            <menupopup>
+              <menuitem label="" value="" />
+              <menuitem label="&allow.label;" value="1" />
+              <menuitem label="&block.label;" value="2" />
+            </menupopup>
+          </menulist>
+        </row>
+      </rows>
+    </grid>
+  </vbox>
+</dialog>

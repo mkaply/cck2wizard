@@ -43,3 +43,12 @@ function readFile(file, successCallback, errorCallback) {
 function $(id) {
   return document.getElementById(id);
 }
+
+function createListCell(label, value) {
+  var listcell = document.createElement("listcell");
+  listcell.setAttribute("label", label);
+  if (value) {
+    listcell.setAttribute("value", value);
+  }
+  return listcell;
+}
