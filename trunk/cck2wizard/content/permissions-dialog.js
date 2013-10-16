@@ -52,6 +52,5 @@ function onCancel() {
 }
 
 function checkToEnableOKButton() {
-  alert(!gPlugins.value);
   document.documentElement.getButton("accept").setAttribute( "disabled", !(!!gHost.value && (!gPopups.value || !gInstall.value || !gCookie.value || !gPlugins.value)));
 }
