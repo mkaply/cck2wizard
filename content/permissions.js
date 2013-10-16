@@ -1,3 +1,11 @@
+// Other permissions:
+// cookie: 1 - Allow, 8 - Allow for Session, 9 - Allow First Party Only, 2 - Block
+// password: 1 - Allow, 2 - Block
+// geo: 0 - Always Ask, 1 - Allow, 2 - Block
+// indexedDB: 0 - Always Ask, 1 - Allow, 2 - Block
+// fullscreen: 0 - Always Ask, 1 - Allow, 2 - Block
+// plugins : 0 - Always Ask, 1 - Allow, 2 - Block
+
 var gPermissionsListbox = null;
 
 function onPermissionsLoad() {
@@ -39,7 +47,7 @@ function resetPermissions() {
 }
 
 function onAddPermissionsItem() {
-  var retVals = { host: null, popups: null };
+  var retVals = { host: null, popups: null, install: null, cookie: null, plugins: null };
   window.openDialog("chrome://cck2wizard/content/permissions-dialog.xul", "cck2wizard-permissions", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
