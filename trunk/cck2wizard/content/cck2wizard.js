@@ -249,9 +249,16 @@ function setConfig(config) {
     // using that value.
     var checkboxes = gDeck.querySelectorAll("checkbox[config]");
     for (var i=0; i < checkboxes.length; i++) {
-      var configValue = checkboxes[i].getAttribute("config");
-      if (configValue in config) {
-        checkboxes[i].checked = config[configValue];
+      var configPath = checkboxes[i].getAttribute("config").split('.');
+      if (configPath.length > 1) {
+        if (configPath[0] in config &&
+            [configPath[1]] in config[configPath[0]]) {
+          checkboxes[i].checked = config[configPath[0]][configPath[1]];
+        }
+      } else {
+        if (configPath[0] in config) {
+          checkboxes[i].checked = config[configPath[0]];
+        }
       }
     }
     var textboxes = gDeck.querySelectorAll("textbox[config]");
@@ -293,20 +300,38 @@ function getConfig(destdir) {
     var checkboxes = gDeck.querySelectorAll("checkbox[config]");
     for (var i=0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked) {
-        config[checkboxes[i].getAttribute("config")] = true;
+        var configPath = checkboxes[i].getAttribute("config").split('.');
+        if (configPath.length > 1) {
+          if (!(configPath[0] in config)) {
+            config[configPath[0]] = {};
+          }
+          config[configPath[0]][configPath[1]] = true;
+        } else {
+          config[configPath[0]] = true;
+        }
       }
     }
     var textboxes = gDeck.querySelectorAll("textbox[config]");
     for (var i=0; i < textboxes.length; i++) {
       if (textboxes[i].value) {
+        var value;
+        if (textboxes[i].type == "number") {
+          value = parseInt(textboxes[i].value, 10);
+          // Ignore numeric 0 values.
+          if (value == 0) {
+            continue;
+          }
+        } else {
+          value = textboxes[i].value;
+        }
         var configPath = textboxes[i].getAttribute("config").split('.');
         if (configPath.length > 1) {
           if (!(configPath[0] in config)) {
             config[configPath[0]] = {};
           }
-          config[configPath[0]][configPath[1]] = textboxes[i].value;
+          config[configPath[0]][configPath[1]] = value;
         } else {
-          config[configPath[0]] = textboxes[i].value;
+          config[configPath[0]] = value;
         }
       }
     }
