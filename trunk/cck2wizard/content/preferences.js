@@ -15,20 +15,9 @@ window.addEventListener("unload", onPreferencesUnload, false);
 
 //boolean, integer, string
 
-var preferencesToIgnore = {
-  "browser.startup.homepage": true,
-  "startup.homepage_welcome_url": true,
-  "browser.startup.homepage_override.mstone": true,
-  "startup.homepage_override_url": true
-}
-
-
 function setPreferences(config) {
   if ("preferences" in config) {
     for (var preference in config.preferences) {
-      if (preferencesToIgnore[preference]) {
-        continue;
-      }
       addPreference(preference, config.preferences[preference].value,
                        typeof config.preferences[preference].value,
                        config.preferences[preference].locked)
