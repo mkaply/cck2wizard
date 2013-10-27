@@ -28,6 +28,13 @@
         <label value="&version.label;"></label>
         <textbox config="version"></textbox>
       </vbox>
+      <hbox>
+        <button id="about-delete"
+                label="&delete.label;"
+                oncommand="deleteConfig();"
+                />
+      </hbox>
+
     </vbox>
   </deck>
 </overlay>

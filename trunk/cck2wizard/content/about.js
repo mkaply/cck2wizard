@@ -17,3 +17,27 @@ function getAbout(config) {
   config.id = gID.value;
   return config;
 }
+
+function deleteConfig() {
+  var buttonFlags = (Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_YES) +
+                    (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_NO) +
+                    Services.prompt.BUTTON_POS_1_DEFAULT;
+  var check = {value: true};
+  var confirm = Services.prompt.confirmEx(window,
+                                        gStringBundle.getString("titlebar"),
+                                        gStringBundle.getString("confirmdelete"),
+                                        buttonFlags,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        {});
+  if (confirm == 1) {
+    // Cancel or Escape pressed
+    return;
+  }
+  Services.prefs.clearUserPref("extensions.cck2wizard.configs." + gCurrentConfig.id);
+  gCurrentConfig = null;
+  resetConfig();
+  document.getElementById("main-deck").selectedIndex = 0;
+}
