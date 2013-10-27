@@ -251,11 +251,10 @@ var CCK2 = {
           proxyAutoConfig: "network.proxy.autoconfig_url",
           shareAllProxies: "network.proxy.share_proxy_settings"
         }
-        for (var i in config.network) {
-          if (!prefMapping[i]) {
-            continue;
+        for (var i in prefMapping) {
+          if (config.network[i]) {
+            Preferences.defaults.set(prefMapping[i], config.network[i]);
           }
-          Preferences.defaults.set(prefMapping[i], config.network[i]);
           if (config.network.locked) {
             Preferences.lock(prefMapping[i]);
           }
