@@ -235,6 +235,36 @@ var CCK2 = {
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.3.shown", true);
       }
+      if (config.network) {
+        var prefMapping = {
+          proxyType: "network.proxy.type",
+          proxyHTTP: "network.proxy.http",
+          proxyHTTPPort: "network.proxy.http_port",
+          proxySSL: "network.proxy.ssl",
+          proxySSLPort: "network.proxy.ssl_port",
+          proxyFTP: "network.proxy.ftp",
+          proxyFTPPort: "network.proxy.ftp_port",
+          proxySOCKS: "network.proxy.socks",
+          proxySOCKSPort: "network.proxy.socks_port",
+          proxySocksVersion: "network.proxy.socks_version",
+          proxyNone: "network.proxy.no_proxies_on",
+          proxyAutoConfig: "network.proxy.autoconfig_url",
+          shareAllProxies: "network.proxy.share_proxy_settings"
+        }
+        var lockNetworkPrefs = false;
+        if (config.network.locked) {
+          lockNetworkPrefs = true;
+          for (var i in config.network) {
+            if (!prefMapping[i]) {
+              continue;
+            }
+            Preferences.defaults.set(prefMapping[i], config.network[i]);
+            if (lockNetworkPrefs) {
+              Preferences.lock(prefMapping[i]);
+            }
+          }
+        }
+      }
       if (config.certs) {
         if (config.certs.ca) {
           for (var i=0; i < config.certs.ca.length; i++) {

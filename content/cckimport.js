@@ -299,8 +299,16 @@ function importCCKFile(configFileContent)
     config.preferences = {};
     var preferencename, i=1;
     while ((preferencename = configarray['PreferenceName' + i])) {
+      if (!configarray['PreferenceName' + i]) {
+	// LOCK ONLY PREF. JUST CONTINUE FOR NOW
+	// WE SHOULD CHECK FOR SPECIFIC PREFS AND SET
+	// THEIR SEPARATE LOCKING
+        i++;
+	continue;
+      }
       // CHECK TYPE IN SYSTEM. USE IT FIRST.
       // THEN USE VALUE
+      // THERE MIGHT BE NO VALUE IF IT IS A LOCK ONLY
       var prefinfo = {};
       switch (configarray['PreferenceType' + i]) {
 	case "integer":
@@ -347,6 +355,92 @@ function importCCKFile(configFileContent)
     }
   }
   if (configarray.hasOwnProperty("CertPath1")) {
+  }
+  if ("networkProxyType" in configarray && configarray.networkProxyType != "100") {
+    if (!config.network) {
+      config.network = {};
+    }
+    if (configarray.networkProxyType == "10") {
+      // Stored autoproxy file
+      if ("autoproxyfile" in configarray) {
+        config.network.proxyAutoConfig = configarray.autoproxyfile;
+      }
+      config.network.proxyType = 2;
+    } else if (configarray.networkProxyType == "2") {
+      // autoproxy URL
+      if ("networkProxyAutoconfigURL" in configarray) {
+        config.network.proxyAutoConfig = configarray.networkProxyAutoconfigURL;
+      }
+      config.network.proxyType = 2;
+    } else {
+      config.network.proxyType = parseInt(configarray.networkProxyType, 10);
+    }
+  }
+  if ("networkProxyHTTP" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxyHTTP = configarray.networkProxyHTTP;
+  }
+  if ("networkProxyHTTP_Port" in configarray && configarray.networkProxyHTTP_Port != 0) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxyHTTPPort = parseInt(configarray.networkProxyHTTP_Port, 10);
+  }
+  if ("networkProxySSL" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxySSL = configarray.networkProxySSL;
+  }
+  if ("networkProxySSL_Port" in configarray && configarray.networkProxySSL_Port != 0) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxySSLPort = parseInt(configarray.networkProxySSL_Port, 10);
+  }
+  if ("networkProxyFTP" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxyFTP = configarray.networkProxyFTP;
+  }
+  if ("networkProxyFTP_Port" in configarray && configarray.networkProxyFTP_Port != 0) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxyFTPPort = parseInt(configarray.networkProxyFTP_Port, 10);
+  }
+  if ("networkProxySOCKS" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxySOCKS = configarray.networkProxySOCKS;
+  }
+  if ("networkProxySOCKS_Port" in configarray && configarray.networkProxySOCKS_Port != 0) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxySOCKSPort = parseInt(configarray.networkProxySOCKS_Port, 10);
+  }
+  if ("networkProxySOCKSVersion") {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxySOCKSVersion = parseInt(configarray.networkProxySOCKSVersion, 10);
+  }
+  if ("networkProxyNone" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.proxyNone = configarray.networkProxyNone;
+  }
+  if ("shareAllProxies" in configarray) {
+    if (!config.network) {
+      config.network = {};
+    }
+    config.network.shareAllProxies = JSON.parse(configarray.shareAllProxies);
   }
   return config;
 

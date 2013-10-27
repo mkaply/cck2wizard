@@ -12,6 +12,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/registry.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/network.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
 <!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

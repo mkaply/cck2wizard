@@ -1,0 +1,19 @@
+<!ENTITY network.label "Network">
+<!ENTITY  dontChange.label "Don't change">
+<!ENTITY  noProxy.label "No proxy">
+<!ENTITY  system.label "Use system proxy settings">
+<!ENTITY  WPAD.label "Auto-detect proxy settings for this network">
+<!ENTITY  manual.label "Manual proxy configuration">
+<!ENTITY  auto.label "Automatic proxy configuration">
+
+<!ENTITY  choosefile.label "Choose file...">
+<!ENTITY  chooseurl.label "Choose URL...">
+
+<!ENTITY networkProxyTypeDontChange.description "Choose this if you don't want to modify the proxy settings at all.">
+<!ENTITY networkProxyTypeNoProxy.description "Choose this if you don't want to use a proxy. ">
+<!ENTITY networkProxyTypeSystem.description " Choose this if you want to use the proxy settings configured for your operating system. This is the default setting.">
+<!ENTITY networkProxyTypeWPAD.description "Choose this if you want Firefox to automatically detect the proxy settings for your network.">
+<!ENTITY networkProxyTypeManual.description "Choose this if you have a list of one or more proxy servers. ">
+<!ENTITY networkProxyTypeAuto.description "Choose this if you have a proxy configuration (.pac) file.">
+
+<!ENTITY  networkLock.label "Do not allow the user to change the network preferences.">

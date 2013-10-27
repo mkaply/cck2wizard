@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE network [
+  <!ENTITY % connectionDTD SYSTEM "chrome://browser/locale/preferences/connection.dtd">
+  %connectionDTD;
+  <!ENTITY % cck2networkDTD SYSTEM "chrome://cck2wizard/locale/network.dtd">
+  %cck2networkDTD;
+]>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="network.js" />
+  <treechildren id="cck2wizard-treechildren">
+    <treeitem>
+      <treerow>
+        <treecell label="&network.label;" value="network" />
+      </treerow>
+    </treeitem>
+  </treechildren>
+  <deck id="cck2wizard-deck" flex="1">
+    <vbox id="network" setconfig="setNetwork" getconfig="getNetwork" resetconfig="resetNetwork">
+      <hbox pack="center">
+        <menulist id="networkProxyType" oncommand="onProxyType(event)">
+          <menupopup>
+            <menuitem label="&dontChange.label;"/>
+            <menuitem label="&noProxy.label;" value="0"/>
+            <menuitem label="&system.label;" value="5"/>
+            <menuitem label="&WPAD.label;" value="4"/>
+            <menuitem label="&manual.label;" value="1"/>
+            <menuitem label="&auto.label;" value="2"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+      <deck id="networkProxyTypeDeck">
+        <vbox id="networkProxyTypeDontChange">
+          <description>&networkProxyTypeDontChange.description;</description>
+        </vbox>
+        <vbox id="networkProxyTypeNoProxy">
+          <description>&networkProxyTypeNoProxy.description;</description>
+        </vbox>
+        <vbox id="networkProxyTypeSystem">
+          <description>&networkProxyTypeSystem.description;</description>
+        </vbox>
+        <vbox id="networkProxyTypeWPAD">
+          <description>&networkProxyTypeWPAD.description;</description>
+        </vbox>
+        <vbox id="networkProxyTypeManual">
+          <grid class="indent" flex="1">
+            <columns>
+              <column/>
+              <column flex="1"/>
+            </columns>
+            <rows>
+              <row align="center">
+                <hbox pack="end">
+                  <label value="&http.label;" accesskey="&http.accesskey;" control="networkProxyHTTP"/>
+                </hbox>
+                <hbox align="center">
+                  <textbox id="networkProxyHTTP" flex="1"
+                           config="network.proxyHTTP"/>
+                  <label value="&port.label;" accesskey="&HTTPport.accesskey;" control="networkProxyHTTP_Port"/>
+                  <textbox id="networkProxyHTTP_Port" type="number" max="65535" size="5"
+                           config="network.proxyHTTPPort"/>
+                </hbox>
+              </row> 
+              <row>
+                <hbox/>
+                <hbox>
+                  <checkbox id="shareAllProxies" label="&shareproxy.label;" accesskey="&shareproxy.accesskey;"
+                            config="network.shareAllProxies"
+                            oncommand="updateProtocols(this);"/>
+                </hbox>
+              </row>
+              <row align="center">
+                <hbox pack="end">
+                  <label value="&ssl.label;" accesskey="&ssl.accesskey;" control="networkProxySSL"/>
+                </hbox>
+                <hbox align="center">
+                  <textbox id="networkProxySSL" flex="1" config="network.proxySSL"/>
+                  <label value="&port.label;" accesskey="&SSLport.accesskey;" control="networkProxySSL_Port"/>
+                  <textbox id="networkProxySSL_Port" type="number" max="65535" size="5" config="network.proxySSLPort"/>
+                </hbox>
+              </row>
+              <row align="center">
+                <hbox pack="end">
+                  <label value="&ftp.label;" accesskey="&ftp.accesskey;" control="networkProxyFTP"/>
+                </hbox>
+                <hbox align="center">
+                  <textbox id="networkProxyFTP" flex="1" config="network.proxyFTP"/>
+                  <label value="&port.label;" accesskey="&FTPport.accesskey;" control="networkProxyFTP_Port"/>
+                  <textbox id="networkProxyFTP_Port" type="number" max="65535" size="5" config="network.proxyFTPPort"/>
+                </hbox>
+              </row>
+              <row align="center">
+                <hbox pack="end">
+                  <label value="&socks.label;" accesskey="&socks.accesskey;" control="networkProxySOCKS"/>
+                </hbox>
+                <hbox align="center">
+                  <textbox id="networkProxySOCKS" flex="1" config="network.proxySOCKS"/>
+                  <label value="&port.label;" accesskey="&SOCKSport.accesskey;" control="networkProxySOCKS_Port"/>
+                  <textbox id="networkProxySOCKS_Port" type="number" max="65535" size="5" config="network.proxySOCKSPort"/>
+                </hbox>
+              </row>
+              <row>
+                <spacer/>
+                <radiogroup id="networkProxySOCKSVersion" orient="horizontal"
+                            preference="network.proxy.socks_version">
+                  <radio id="networkProxySOCKSVersion4" value="4" label="&socks4.label;" accesskey="&socks4.accesskey;" />
+                  <radio id="networkProxySOCKSVersion5" value="5" label="&socks5.label;" accesskey="&socks5.accesskey;" />
+                </radiogroup>
+              </row>
+  
+              <row align="center"> 
+                <hbox align="center" pack="end">
+                  <label value="&noproxy.label;" accesskey="&noproxy.accesskey;" control="networkProxyNone"/>
+                </hbox>
+                <textbox id="networkProxyNone" config="network.proxyNone"/>
+              </row>
+              <row>
+                <spacer/>
+                <label value="&noproxyExplain.label;" control="networkProxyNone"/>
+              </row>
+            </rows>
+          </grid>
+        </vbox>
+        <vbox id="networkProxyTypeAuto">
+          <description>&networkProxyTypeAuto.description;</description>
+          <hbox><textbox flex="1" config="network.proxyAutoConfig" readonly="true"/></hbox>
+          <hbox>
+            <button id="network-choosefile"
+                    label="&choosefile.label;"
+                    oncommand="chooseProxyConfigFile();"
+                    />
+            <button id="network-chooseurl"
+                    label="&chooseurl.label;"
+                    oncommand="chooseProxyConfigURL();"
+                    />
+          </hbox>
+        </vbox>
+      </deck>
+      <vbox flex="1"></vbox>
+      <checkbox id="networkLock" label="&networkLock.label;" accesskey="&shareproxy.accesskey;"
+                            config="network.locked"/>
+    </vbox>
+  </deck>
+</overlay>
