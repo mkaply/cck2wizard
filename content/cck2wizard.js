@@ -203,6 +203,18 @@ function onExport() {
   }
 }
 
+function selectPane(name) {
+  var tbo = gTree.treeBoxObject;
+  for (var i=0; i < gTree.view.rowCount; i++) {
+    var cellValue = gTree.view.getCellValue(i, tbo.columns.getColumnAt(0));
+    if (cellValue == name) {
+      gTree.view.selection.select(i); 
+      break;
+    }
+  }
+  gDeck.selectedPanel = document.getElementById(name);
+}
+
 function onPaneSelected() {
   try {
     var tbo = gTree.treeBoxObject;
