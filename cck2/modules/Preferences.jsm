@@ -326,7 +326,7 @@ Preferences.prototype = {
   lock: function(prefName, prefValue) {
     if (isArray(prefName))
       prefName.map(this.lock, this);
-    else if (prefValue != "undefined")
+    else if (typeof prefValue != "undefined")
       this.defaults.set(prefName, prefValue);
 
     this._prefSvc.lockPref(prefName);
