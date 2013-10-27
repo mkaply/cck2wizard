@@ -92,6 +92,10 @@ function packageCCK2(type) {
       return;
     }
   }
+
+
+  var config = getConfig();
+  
   dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
   zipwriter = new zipwritera();
@@ -99,14 +103,16 @@ function packageCCK2(type) {
   if (type == "distribution") {
     zipfile.append("autoconfig.zip");
   } else {
-    zipfile.append("foo.xpi");
+    if (config.extension && config.extension.filename) {
+      zipfile.append("config.extension.filename");
+    } else {
+      zipfile.append(config.id + ".xpi");
+    }
   }
   if (zipfile.exists()) {
     zipfile.remove(false);
   }
   zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
-
-  var config = getConfig();
   
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
