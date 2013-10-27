@@ -42,6 +42,7 @@
           <description>&networkProxyTypeWPAD.description;</description>
         </vbox>
         <vbox id="networkProxyTypeManual">
+          <description>&networkProxyTypeManual.description;</description>
           <grid class="indent" flex="1">
             <columns>
               <column/>
