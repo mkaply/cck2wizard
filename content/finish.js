@@ -1,9 +1,3 @@
-function onLoad() {
-  document.getElementById("finish-autoconfig").addEventListener("command", onFinishAutoconfig, false);
-  document.getElementById("finish-extension").addEventListener("command", onFinishExtension, false);
-}
-window.addEventListener("load", onLoad, false);
-
 const cck2Files = [
   "chrome.manifest",
   "chrome/content/about.xhtml",
@@ -79,7 +73,6 @@ function onFinishExtension() {
 var zipwriter;
 
 function packageCCK2(type) {
-  var type = "distribution"
   var numFilesToWrite = 0;
   var basedir = chooseDir(window);
   if (!basedir) {
@@ -115,11 +108,6 @@ function packageCCK2(type) {
 
   var config = getConfig();
   
-  if (type == "distribution") {
-    var autoconfigFile = dir.clone();
-    autoconfigFile.append("cck2.cfg");
-    writeFile(autoconfigFile, autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2)), addFileToZip(zipwriter));
-  }
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
     installRDF = installRDF.replace("%name%", config.extension.name);
@@ -229,6 +217,19 @@ function packageCCK2(type) {
       }
     }
   }
+  if ("network" in config) {
+    if ("proxyAutoConfig" in config.network) {
+      if (!/^https?:/.test(config.network.proxyAutoConfig)) {
+        var proxyAutoConfigDir = resourceDir.clone();
+        proxyAutoConfigDir.append("proxyautoconfig");
+        proxyAutoConfigDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+        var proxyAutoConfigFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        proxyAutoConfigFile.initWithPath(config.network.proxyAutoConfig);
+        copyAndAddFileToZip(zipwriter, proxyAutoConfigFile, proxyAutoConfigDir, null);
+        config.network.proxyAutoConfig = "resource://" + config.id + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
+      }
+    }
+  }
 
   // certs in resources/certs
   // extension in resources/extensions
@@ -252,6 +253,11 @@ function packageCCK2(type) {
     preferencesFile.append("autoconfig.js");
     numFilesToWrite += 1;
     writeFile(preferencesFile, autoconfigPrefs, addFileToZip(zipwriter));
+  }
+  if (type == "distribution") {
+    var autoconfigFile = dir.clone();
+    autoconfigFile.append("cck2.cfg");
+    writeFile(autoconfigFile, autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2)), addFileToZip(zipwriter));
   }
 
   function copyAndAddFileToZip(zipwriter, file, destdir, filename) {
