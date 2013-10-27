@@ -73,6 +73,15 @@ function onFinishExtension() {
 var zipwriter;
 
 function packageCCK2(type) {
+  var config = getConfig();
+  if (!config.extension || !config.extension.id || !config.extension.version) {
+    showErrorMessage("noextension");
+    selectPane("extension");
+    return;
+  }
+  
+
+
   var numFilesToWrite = 0;
   var basedir = chooseDir(window);
   if (!basedir) {
@@ -93,9 +102,6 @@ function packageCCK2(type) {
     }
   }
 
-
-  var config = getConfig();
-  
   dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
   zipwriter = new zipwritera();
