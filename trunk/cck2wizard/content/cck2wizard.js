@@ -16,6 +16,7 @@ function onLoad() {
     gDeck = document.getElementById("cck2wizard-deck");
     gTree.addEventListener("select", onPaneSelected, false);
     gStringBundle = document.getElementById("cck2wizard-string-bundle");
+    document.getElementById("cck2wizard-browser").setAttribute("src", "http://mike.kaply.com/cck2-window/");
   } catch(e) {
     errorCritical(e);
   }
