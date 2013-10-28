@@ -12,11 +12,11 @@
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="about" setconfig="setAbout" getconfig="getAbout">
       <vbox>
-        <label value="&name.label;"></label>
+        <label value="&name.label;:"></label>
         <label class="indent" id="name"/>
       </vbox>
       <vbox>
-        <label value="&id.label;"></label>
+        <label value="&id.label;:"></label>
         <label class="indent" id="id"/>
       </vbox>
       <separator/>
