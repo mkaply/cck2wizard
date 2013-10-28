@@ -9,7 +9,6 @@ const cck2Files = [
   "chrome/content/cck2-extensions-overlay.xul",
   "chrome/content/cck2.js",
   "chrome/content/util.js",
-  "components/CCK2Service.js",
   "modules/CCK2.jsm",
   "modules/Preferences.jsm",
   "modules/Timer.jsm",
@@ -42,6 +41,42 @@ const installRDFTemplate = [
 const chromeManifestTemplate = [
 'resource %id% resources/',
 'manifest cck2/chrome.manifest',
+''].join("\n");
+
+const chromeManifestComponentTemplate = [
+'',
+'component %uuid% components/CCK2Service.js',
+'contract @kaply.com/cck2-%id%-service;1 %uuid%',
+'category profile-after-change CCK2%id-nodashes%Service @kaply.com/cck2-%id%-service;1',
+''].join("\n");
+
+const CCK2ServiceTemplate = [
+'const {classes: Cc, interfaces: Ci, utils: Cu} = Components;',
+'',
+'Cu.import("resource://gre/modules/Services.jsm");',
+'Cu.import("resource://gre/modules/XPCOMUtils.jsm");',
+'',
+'var config = %config%;',
+'',
+'function CCK2%id-nodashes%Service() {}',
+'',
+'CCK2%id-nodashes%Service.prototype = {',
+'  observe: function(aSubject, aTopic, aData) {',
+'    switch(aTopic) {',
+'      case "profile-after-change":',
+'        Components.utils.import("resource://cck2/CCK2.jsm");',
+'        CCK2.init(config);',
+'        break;',
+'    }',
+'  },',
+'  classDescription: "CCK2 %id% Service",',
+'  contractID: "@kaply.com/cck2-%id%-service;1",',
+'  classID: Components.ID("%uuid%"),',
+'  QueryInterface: XPCOMUtils.generateQI([Ci.nsIObserver]),',
+'  _xpcom_categories: [{category: "profile-after-change"}]',
+'}',
+'',
+'var NSGetFactory = XPCOMUtils.generateNSGetFactory([CCK2%id-nodashes%Service]);',
 ''].join("\n");
 
 const defaultPrefsTemplate = [
@@ -80,8 +115,6 @@ function packageCCK2(type) {
     return;
   }
   
-
-
   var numFilesToWrite = 0;
   var basedir = chooseDir(window);
   if (!basedir) {
@@ -157,7 +190,16 @@ function packageCCK2(type) {
     numFilesToWrite += 1;
     writeFile(installRDFFile, installRDF, addFileToZip(zipwriter));
   }
-  var chromeManifest = chromeManifestTemplate.replace("%id%", config.id);
+  var uuidGenerator = Cc["@mozilla.org/uuid-generator;1"].getService(Ci.nsIUUIDGenerator);
+  var uuid = uuidGenerator.generateUUID().toString();
+  var chromeManifest = chromeManifestTemplate;
+  if (type == "extension") {
+    chromeManifest += chromeManifestComponentTemplate;
+  }
+  chromeManifest = chromeManifest.replace(/%id%/g, config.id);
+  chromeManifest = chromeManifest.replace(/%id-nodashes%/g, config.id.replace("-","_"));
+  chromeManifest = chromeManifest.replace(/%uuid%/g, uuid);
+  
   var chromeManifestFile = dir.clone();
   if (type == "distribution") {
     chromeManifestFile.append("distribution");
@@ -172,6 +214,7 @@ function packageCCK2(type) {
   chromeManifestFile.append("chrome.manifest");
   numFilesToWrite += 1;
   writeFile(chromeManifestFile, chromeManifest, addFileToZip(zipwriter));
+  
   var cck2Dir = dir.clone();
   if (type == "distribution") {
     cck2Dir.append("distribution");
@@ -246,17 +289,6 @@ function packageCCK2(type) {
   // certs in resources/certs
   // extension in resources/extensions
   // proxy config file in resources/proxyconfig
-  if (type != "distribution") {
-    var preferencesFile = dir.clone();
-    preferencesFile.append("defaults");
-    preferencesFile.append("preferences");
-    preferencesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    preferencesFile.append("prefs.js");
-    delete config.extension;
-    var defaultPrefs = defaultPrefsTemplate.replace("%config%", JSON.stringify(config).replace(/"/g, "\\\""));
-    numFilesToWrite += 1;
-    writeFile(preferencesFile, defaultPrefs, addFileToZip(zipwriter));
-  }
   if (type == "distribution") {
     var preferencesFile = dir.clone();
     preferencesFile.append("defaults");
@@ -271,9 +303,33 @@ function packageCCK2(type) {
     autoconfigFile.append("cck2.cfg");
     writeFile(autoconfigFile, autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2)), addFileToZip(zipwriter));
   }
+  if (type == "extension") {
+    var CCK2Service = CCK2ServiceTemplate;
+    CCK2Service = CCK2Service.replace(/%id%/g, config.id);
+    CCK2Service = CCK2Service.replace(/%id-nodashes%/g, config.id.replace("-","_"));
+    CCK2Service = CCK2Service.replace(/%uuid%/g, uuid);
+    CCK2Service = CCK2Service.replace("%config%", JSON.stringify(config, null, 2))
+    var CCK2ServiceFile = dir.clone();
+    CCK2ServiceFile.append("components");
+    if (!CCK2ServiceFile.exists()) {
+      CCK2ServiceFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    }
+    CCK2ServiceFile.append("CCK2Service.js");
+    numFilesToWrite += 1;
+    writeFile(CCK2ServiceFile, CCK2Service, addFileToZip(zipwriter));
+  }  
 
   function copyAndAddFileToZip(zipwriter, file, destdir, filename) {
-    file.copyTo(destdir, filename);
+    try {
+      file.copyTo(destdir, filename);
+    } catch (ex) {
+      if (filename) {
+        alert("Unable to copy file " + filename + " to " + destdir.path);
+      } else {
+        alert("Unable to copy file " + file.leafName + " to " + destdir.path);
+      }
+      return;
+    }
     var destfile = destdir.clone();
     if (filename) {
       destfile.append(filename);
@@ -308,6 +364,7 @@ var observer = {
   onStopRequest: function(request, context, status)
   {
     zipwriter.close();
+    alert('done');
   }
 };
 
