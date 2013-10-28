@@ -12,6 +12,12 @@ function onOK() {
   var retVals = window.arguments[0];
   retVals.name = document.getElementById('name').value;
   retVals.id = document.getElementById('id').value;
+  var alphaExp = /^[0-9a-zA-Z\-\_]+$/;
+  if (!alphaExp.test(retVals.id)) {
+    alert("ID can't contain spaces");
+    return false;
+  }
+  return true;
 }
 
 function onCancel() {
