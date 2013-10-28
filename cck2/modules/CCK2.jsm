@@ -449,8 +449,10 @@ function addBookmarks(bookmarks, destination, annotation) {
     } else if (bookmarks[i].type == "separator") {
       bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
     } else {
-      var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, bookmarks[i].name);
-      annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
+      try {
+        var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, bookmarks[i].name);
+        annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
+      } catch(e) {}
     }
   }
 }
