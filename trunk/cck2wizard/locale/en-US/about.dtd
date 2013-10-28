@@ -1,7 +1,7 @@
 <!ENTITY about.label "About">
 
-<!ENTITY name.label "Name:">
-<!ENTITY id.label "Identifer:">
+<!ENTITY name.label "Name">
+<!ENTITY id.label "Identifer">
 <!ENTITY id.description "This is an internal identifier used by CCK2. It can only contain letters, numbers, undercores and dashes. This is not the same as the extension ID.">
 <!ENTITY description.label "Description:">
 <!ENTITY version.label "Version:">
