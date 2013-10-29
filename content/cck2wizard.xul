@@ -68,28 +68,6 @@
       </vbox>
     </hbox>
   </deck>
-  <popupset id="mainPopupSet">
-    <panel id="cck2wizard-dialog-panel" width="640" height="480" pack="center" align="center" noautohide="true">
-      <vbox id="cck2wizard-dialog">
-        <deck id="cck2wizard-dialog-deck">
-          <vbox id="cck2wizard-new-dialog" onaccept="onNewPanelOK">
-            <label value="Name" />
-            <textbox id="cck2wizard-new-name" />
-            <label value="ID" />
-            <textbox id="cck2wizard-new-id" />
-          </vbox>
-          <vbox id="cck2wizard-urldialog">
-            <label value="URL:" />
-            <textbox id="cck2wizard-urldialog-url" />
-          </vbox>
-        </deck>
-        <hbox>
-          <button id="cck2wizard-dialog-accept" oncommand="onOK()" label="OK" />
-          <button id="cck2wizard-dialog-cancel" oncommand="onCancel()" label="Cancel" />
-        </hbox>
-      </vbox>
-    </panel>
-  </popupset>
   <stringbundleset id="stringbundleset">
     <stringbundle id="cck2wizard-string-bundle" src="chrome://cck2wizard/locale/cck2wizard.properties" />
   </stringbundleset>
