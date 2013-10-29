@@ -227,7 +227,7 @@ var CCK2 = {
         Preferences.lock("devtools.errorconsole.enabled", false);
       }
       if (config.homePage) {
-        Preferences.defaults.set("browser.startup.homepage", config.homePage);
+        Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
       }
       if (config.lockHomePage) {
         Preferences.lock("browser.startup.homepage");
