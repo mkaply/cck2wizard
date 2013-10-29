@@ -5,6 +5,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/webpages.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/permissions.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/ui.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/plugins.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/addons.xul"?>

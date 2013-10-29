@@ -1,0 +1,4 @@
+<!ENTITY ui.label "User Interface">
+<!ENTITY displayMenuBar.label "Display the menu bar by default">
+<!ENTITY disableDeveloperTools.label "Remove the Web Developer menu">
+<!ENTITY disableSetDesktopBackground.label "Remove the 'Set As Desktop Background' menuitem">
