@@ -327,16 +327,20 @@ function importCCKFile(configFileContent)
       i++;
     }
   }
-  // THESE WILL BE SET AS PREFERENCES
   if (configarray.hasOwnProperty("HomePageURL")) {
+    config.homePage = configarray["HomePageURL"];
   }
   if (configarray.hasOwnProperty("HomePageWelcomeURL")) {
+    config.welcomePage = configarray["HomePageWelcomeURL"];
   }
   if (configarray.hasOwnProperty("noWelcomePage")) {
+    config.noWelcomePage = JSON.parse(configarray["noWelcomePage"]);
   }
   if (configarray.hasOwnProperty("HomePageOverrideURL")) {
+    config.upgradePage = configarray["HomePageOverrideURL"];
   }
   if (configarray.hasOwnProperty("noOverridePage")) {
+    config.noUpgradePage = JSON.parse(configarray["noOverridePage"]);
   }
   if (configarray.hasOwnProperty("RegName1")) {
     if (!config.registry) {

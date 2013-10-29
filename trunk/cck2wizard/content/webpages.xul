@@ -16,28 +16,28 @@
       <description>&homePage.description;</description>
       <hbox align="center">
         <label control="HomePageURL">&homePage.label;</label>
-        <textbox id="HomePageURL" flex="1"/>
+        <textbox id="HomePageURL" config="homePage" flex="1"/>
       </hbox>
-      <checkbox id="lockHomePage" label="&lockHomePage.label;"/>
+      <checkbox id="lockHomePage" config="lockHomePage" label="&lockHomePage.label;"/>
     </groupbox>
     <groupbox>
       <caption label="&homePageWelcome.caption;"/>
       <description>&homePageWelcome.description;</description>
       <hbox align="center">
         <label control="HomePageWelcomeURL">&homePageWelcome.label;</label>
-        <textbox id="HomePageWelcomeURL" flex="1"/>
+        <textbox id="HomePageWelcomeURL" config="welcomePage" flex="1"/>
       </hbox>
-      <checkbox id="noWelcomePage" label="&noWelcomePage.label;" oncommand="enableDisableWelcomePage(this.checked);"/>
+      <checkbox id="noWelcomePage" config="noWelcomePage" label="&noWelcomePage.label;" oncommand="document.getElementById('HomePageWelcomeURL').disabled = this.checked;"/>
     </groupbox>
     <groupbox>
       <caption label="&homePageOverride.caption;"/>
       <description>&homePageOverride.description;</description>
       <hbox align="center">
         <label control="HomePageOverrideURL">&homePageOverride.label;</label>
-        <textbox id="HomePageOverrideURL" flex="1"/>
+        <textbox id="HomePageOverrideURL" config="upgradePage" flex="1"/>
       </hbox>
        <hbox align="center">
-         <checkbox id="noOverridePage" label="&noOverridePage.label;"/>
+         <checkbox id="noOverridePage" config="noUpgradePage" label="&noOverridePage.label;" oncommand="document.getElementById('HomePageOverrideURL').disabled = this.checked;"/>
        </hbox>
     </groupbox>
     </vbox>
