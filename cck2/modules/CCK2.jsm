@@ -226,11 +226,21 @@ var CCK2 = {
         Preferences.lock("devtools.inspector.enabled", false);
         Preferences.lock("devtools.errorconsole.enabled", false);
       }
-      if (config.noUpgradePage) {
-        Preferences.lock("browser.startup.homepage_override.mstone", "ignore");
+      if (config.homePage) {
+        Preferences.defaults.set("browser.startup.homepage", config.homePage);
+      }
+      if (config.lockHomePage) {
+        Preferences.lock("browser.startup.homepage");
       }
       if (config.noWelcomePage) {
         Preferences.lock("startup.homepage_welcome_url", "");
+      } else if (config.welcomePage) {
+        Preferences.lock("startup.homepage_welcome_url", config.welcomePage);
+      }
+      if (config.noUpgradePage) {
+        Preferences.lock("browser.startup.homepage_override.mstone", "ignore");
+      } else if (config.upgradePage) {
+        Preferences.lock("startup.homepage_override_url", config.upgradePage);
       }
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.3.shown", true);

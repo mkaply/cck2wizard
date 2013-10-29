@@ -260,20 +260,6 @@ function setConfig(config) {
     resetConfig();
     // If items have a config value, they can be saved directly into the config
     // using that value.
-    var checkboxes = gDeck.querySelectorAll("checkbox[config]");
-    for (var i=0; i < checkboxes.length; i++) {
-      var configPath = checkboxes[i].getAttribute("config").split('.');
-      if (configPath.length > 1) {
-        if (configPath[0] in config &&
-            [configPath[1]] in config[configPath[0]]) {
-          checkboxes[i].checked = config[configPath[0]][configPath[1]];
-        }
-      } else {
-        if (configPath[0] in config) {
-          checkboxes[i].checked = config[configPath[0]];
-        }
-      }
-    }
     var textboxes = gDeck.querySelectorAll("textbox[config]");
     for (var i=0; i < textboxes.length; i++) {
       var configPath = textboxes[i].getAttribute("config").split('.');
@@ -285,6 +271,20 @@ function setConfig(config) {
       } else {
         if (configPath[0] in config) {
           textboxes[i].value = config[configPath[0]];
+        }
+      }
+    }
+    var checkboxes = gDeck.querySelectorAll("checkbox[config]");
+    for (var i=0; i < checkboxes.length; i++) {
+      var configPath = checkboxes[i].getAttribute("config").split('.');
+      if (configPath.length > 1) {
+        if (configPath[0] in config &&
+            [configPath[1]] in config[configPath[0]]) {
+          checkboxes[i].checked = config[configPath[0]][configPath[1]];
+        }
+      } else {
+        if (configPath[0] in config) {
+          checkboxes[i].checked = config[configPath[0]];
         }
       }
     }
@@ -310,20 +310,6 @@ function getConfig(destdir) {
     var config = {};
     // If items have a config value, they can be saved directly into the config
     // using that value.
-    var checkboxes = gDeck.querySelectorAll("checkbox[config]");
-    for (var i=0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked) {
-        var configPath = checkboxes[i].getAttribute("config").split('.');
-        if (configPath.length > 1) {
-          if (!(configPath[0] in config)) {
-            config[configPath[0]] = {};
-          }
-          config[configPath[0]][configPath[1]] = true;
-        } else {
-          config[configPath[0]] = true;
-        }
-      }
-    }
     var textboxes = gDeck.querySelectorAll("textbox[config]");
     for (var i=0; i < textboxes.length; i++) {
       if (textboxes[i].value) {
@@ -345,6 +331,20 @@ function getConfig(destdir) {
           config[configPath[0]][configPath[1]] = value;
         } else {
           config[configPath[0]] = value;
+        }
+      }
+    }
+    var checkboxes = gDeck.querySelectorAll("checkbox[config]");
+    for (var i=0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked) {
+        var configPath = checkboxes[i].getAttribute("config").split('.');
+        if (configPath.length > 1) {
+          if (!(configPath[0] in config)) {
+            config[configPath[0]] = {};
+          }
+          config[configPath[0]][configPath[1]] = true;
+        } else {
+          config[configPath[0]] = true;
         }
       }
     }
