@@ -1,12 +1,12 @@
 var gHost = null;
-var gPopups = null;
+var gPopup = null;
 var gInstall = null;
 var gCookie = null;
 var gPlugins = null;
 
 function onLoad() {
   gHost = document.getElementById("host");
-  gPopups = document.getElementById("popups");
+  gPopup = document.getElementById("popup");
   gInstall = document.getElementById("install");
   gCookie = document.getElementById("cookie");
   gPlugins = document.getElementById("plugins");
@@ -14,8 +14,8 @@ function onLoad() {
   if (initVals.hasOwnProperty("host")) {
     gHost.value = initVals.host;
   }
-  if (initVals.hasOwnProperty("popups")) {
-    gPopups.value = initVals.popups;
+  if (initVals.hasOwnProperty("popup")) {
+    gPopup.value = initVals.popup;
   }
   if (initVals.hasOwnProperty("install")) {
     gInstall.value = initVals.install;
@@ -32,8 +32,8 @@ function onLoad() {
 function onOK() {
   var retVals = window.arguments[0];
   retVals.host = gHost.value;
-  if (gPopups.value) {
-    retVals.popups = gPopups.value;
+  if (gPopup.value) {
+    retVals.popup = gPopup.value;
   }
   if (gInstall.value) {
     retVals.install = gInstall.value;
@@ -52,5 +52,5 @@ function onCancel() {
 }
 
 function checkToEnableOKButton() {
-  document.documentElement.getButton("accept").setAttribute( "disabled", !(!!gHost.value && (!gPopups.value || !gInstall.value || !gCookie.value || !gPlugins.value)));
+  document.documentElement.getButton("accept").setAttribute( "disabled", !(!!gHost.value && (!gPopup.value || !gInstall.value || !gCookie.value || !gPlugins.value)));
 }

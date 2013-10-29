@@ -17,8 +17,8 @@
       </columns>
       <rows>
         <row align="center">
-          <label control="popups">&popup.label;:</label>
-          <menulist id="popups" oncommand="checkToEnableOKButton();">
+          <label control="popup">&popup.label;:</label>
+          <menulist id="popup" oncommand="checkToEnableOKButton();">
             <menupopup>
               <menuitem label="" value="" />
               <menuitem label="&allow.label;" value="1" />
