@@ -8,9 +8,9 @@
 <!ENTITY extension-description.label "Description:">
 <!ENTITY extension-homepageurl.label "Homepage URL:">
 <!ENTITY extension-updateurl.label "Update URL:">
-<!ENTITY extension-updateurl.description "TALKE ABOTU UPDATEURL">
+<!ENTITY extension-updateurl.description "">
 <!ENTITY extension-updatekey.label "Update Public Key:">
-<!ENTITY extension-updatekey.description "TALKE ANPUT BPUPDATE KE Whafds fds fds fsd fds fds fds fds f sdf dsf sdf sf s fs Y">
+<!ENTITY extension-updatekey.description "Firefox requires a public key if your extension does not provide a secure update.">
 <!ENTITY extension-icon.label "Icon:">
 <!ENTITY choosefile.label "Choose File...">
 <!ENTITY extension-filename.label "Filename:">
