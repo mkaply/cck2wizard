@@ -89,6 +89,7 @@
           </row>
         </rows>
       </grid>
+      <checkbox config="extension.hide" label="&hideExtension.label;" />
     </vbox>
   </deck>
 </overlay>
