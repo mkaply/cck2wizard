@@ -231,6 +231,9 @@ var CCK2 = {
       }
       if (config.lockHomePage) {
         Preferences.lock("browser.startup.homepage");
+        Preferences.lock("pref.browser.homepage.disable_button.current_page", true);
+        Preferences.lock("pref.browser.homepage.disable_button.bookmark_page", true);
+        Preferences.lock("pref.browser.homepage.disable_button.restore_default", true);
       }
       if (config.noWelcomePage) {
         Preferences.lock("startup.homepage_welcome_url", "");
