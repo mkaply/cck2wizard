@@ -14,9 +14,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     try {
       window.removeEventListener("load", startup, false);
       var config = CCK2.getConfig();
-      if (config && config.hideCCK) {
+      if (config && "extension" in config && config.extension.hide) {
 	window.addEventListener("ViewChanged", function() {
-	  var richlistitem = document.querySelector("richlistitem[value='cck2@kaply.com']");
+	  var richlistitem = document.querySelector("richlistitem[value='" + config.extension.id + "']");
 	  if (richlistitem)
 	    richlistitem.hidden = true;
 	} , false)
