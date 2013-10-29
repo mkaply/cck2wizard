@@ -180,6 +180,11 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       if (config.titlemodifier) {
 	document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
       }
+      if (config.disableSetDesktopBackground) {
+	// Because this is on a context menu, we can't use "hidden"
+	if (E("context-setDesktopBackground"))
+	  E("context-setDesktopBackground").setAttribute("style", "display: none;");
+      }
       if (config.hideMenus) {
 	for (var i=0; i < config.hideMenus.length; i++) {
 	  var menu = document.querySelector(config.hideMenus[i]);

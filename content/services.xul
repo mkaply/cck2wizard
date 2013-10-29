@@ -16,6 +16,10 @@
       <checkbox config="disableSync" label="&disablesync.label;" />
       <checkbox config="noGetAddons" label="&noGetAddons.label;" />
       <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
+      <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
+      <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
+      <checkbox config="dontShowRights" label="&dontShowRights.label;" />
+      <checkbox config="disableFirefoxHealthReport" label="&disableFirefoxHealthReport.label;" />
     </vbox>
   </deck>
 </overlay>
