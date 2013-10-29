@@ -47,7 +47,7 @@ function resetPermissions() {
 }
 
 function onAddPermissionsItem() {
-  var retVals = { host: null, popups: null, install: null, cookie: null, plugins: null };
+  var retVals = { host: null, popup: null, install: null, cookie: null, plugins: null };
   window.openDialog("chrome://cck2wizard/content/permissions-dialog.xul", "cck2wizard-permissions", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
@@ -74,8 +74,8 @@ function createPermissionsListItem(permissionsitem, host) {
   } else {
     listitem.appendChild(createListCell(permissionsitem.host));
   }
-  listitem.appendChild(createListCell(convertValueToLabel(permissionsitem.popups),
-                       permissionsitem.popups));
+  listitem.appendChild(createListCell(convertValueToLabel(permissionsitem.popup),
+                       permissionsitem.popup));
   listitem.appendChild(createListCell(convertValueToLabel(permissionsitem.install),
                        permissionsitem.install));
   listitem.appendChild(createListCell(convertValueToLabel(permissionsitem.cookie),
@@ -88,8 +88,8 @@ function createPermissionsListItem(permissionsitem, host) {
 
 function updatePermissionsListItem(listitem, permissionsitem) {
   listitem.childNodes[0].setAttribute("label", permissionsitem.host);
-  listitem.childNodes[1].setAttribute("label", convertValueToLabel(permissionsitem.popups));
-  listitem.childNodes[1].setAttribute("value", permissionsitem.popups);
+  listitem.childNodes[1].setAttribute("label", convertValueToLabel(permissionsitem.popup));
+  listitem.childNodes[1].setAttribute("value", permissionsitem.popup);
   listitem.childNodes[2].setAttribute("label", convertValueToLabel(permissionsitem.install));
   listitem.childNodes[2].setAttribute("value", permissionsitem.install);
   listitem.childNodes[3].setAttribute("label", convertValueToLabel(permissionsitem.cookie));
@@ -120,7 +120,7 @@ function convertListItemToPermissionsItem(listitem) {
   var permissionsitem = {};
   permissionsitem.host = listitem.childNodes[0].getAttribute("label");
   if (listitem.childNodes[1].hasAttribute("value")) {
-    permissionsitem.popups = parseInt(listitem.childNodes[1].getAttribute("value"), 10);
+    permissionsitem.popup = parseInt(listitem.childNodes[1].getAttribute("value"), 10);
   }
   if (listitem.childNodes[2].hasAttribute("value")) {
     permissionsitem.install = parseInt(listitem.childNodes[2].getAttribute("value"), 10);
