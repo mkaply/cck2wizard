@@ -7,7 +7,7 @@
     <!-- Make sure to set container="true" -->
     <treeitem container="true" open="true">
       <treerow>
-        <treecell label="&bookmarks.label;" value="booknarks" />
+        <treecell label="&bookmarks.label;" value="bookmarks" />
       </treerow>
       <treechildren>
         <treeitem>
@@ -24,7 +24,11 @@
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
-    <vbox id="bookmarks" setconfig="setBookmarks" getconfig="getBookmarks" resetconfig="resetBookmarks"></vbox>
+    <vbox id="bookmarks" setconfig="setBookmarks" getconfig="getBookmarks" resetconfig="resetBookmarks">
+      <checkbox config="displayBookmarksToolbar" label="&displayBookmarksToolbar.label;" />
+      <checkbox config="removeSmartBookmarks" label="&removeSmartBookmarks.label;" />
+      <checkbox config="removeDefaultBookmarks" label="&removeDefaultBookmarks.label;" />
+    </vbox>
     <vbox id="bookmarks-toolbar">
         <listbox id="bookmarks-toolbar-listbox"
                  class="bookmarks-listbox"
