@@ -331,6 +331,45 @@ var CCK2 = {
             } catch (ex) {}
           }
         }
+        if (config.removeDefaultBookmarks) {
+          var firefoxFolder = bmsvc.getIdForItemAt(bmsvc.bookmarksMenuFolder, 3);
+          if ((firefoxFolder != -1) && (bmsvc.getItemType(firefoxFolder) == bmsvc.TYPE_FOLDER)) {
+            var aboutMozilla = bmsvc.getIdForItemAt(firefoxFolder, 3);
+            if (aboutMozilla != -1 &&
+                bmsvc.getItemType(aboutMozilla) == bmsvc.TYPE_BOOKMARK &&
+                /https?:\/\/www.mozilla.(com|org)\/.*\/about/.test(bmsvc.getBookmarkURI(aboutMozilla).spec)) {
+              bmsvc.removeItem(firefoxFolder);
+            }
+          }
+          var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
+          var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
+          var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
+          if (bookmarks.length == 0) {
+            bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/firefox/central/"));
+          }
+          if (bookmarks.length > 0) {
+            bmsvc.removeItem(bookmarks[0])
+          }
+          var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/about/"));
+          if (bookmarks.length == 0) {
+            bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/about/"));
+          }
+          if (bookmarks.length > 0) {
+            var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
+            if (mozillaFolder) {
+              var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
+              var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
+              bmsvc.removeItem(mozillaFolder);
+              if (config.removeSmartBookmarks) {
+                var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
+                if (separator) {
+                  bmsvc.removeItem(separator);
+                }
+              }
+            }
+          }
+        }
+
         // If this is an upgrade, remove the previous version's bookmarks
         if (this.installedVersion != config.version) {
           var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + this.installedVersion, {});
