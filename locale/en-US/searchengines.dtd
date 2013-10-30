@@ -4,3 +4,6 @@
 <!ENTITY addurl.label "Add URL...">
 
 <!ENTITY delete.label "Delete">
+
+<!ENTITY defaultSearchEngine.label "Default Search Engine">
+<!ENTITY browserDefault.label "(use the browser default)">

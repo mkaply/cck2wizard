@@ -25,6 +25,14 @@
                 oncommand="addSearchEngineFromURL();"
                 />
       </hbox>
+      <hbox align="center">
+        <label control="defaultSearchEngine" value="&defaultSearchEngine.label;" />
+         <menulist id="defaultSearchEngine">
+           <menupopup id="searchengines-default-popup" onpopupshowing="onDefaultEnginePopup(event)">
+            <menuitem label="&browserDefault.label;"/>
+           </menupopup>
+         </menulist>
+      </hbox>
     </vbox>
   </deck>
       <popupset id="mainPopupSet">
