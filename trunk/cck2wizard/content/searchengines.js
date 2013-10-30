@@ -8,8 +8,7 @@ window.addEventListener("load", onSearchEnginesLoad, false);
 function setSearchEngines(config) {
   if ("searchplugins" in config) {
     for (var i=0; i < config.searchplugins.length; i++) {
-      try {
-        Services.io.newURI(config.searchplugins[i], null, null);
+      if (/^https?:/.test(config.searchplugins[i])) {
         var url = config.searchplugins[i];
         getSearchEngineInfoFromURL(url, function(response) {
           if (response) {
@@ -22,13 +21,13 @@ function setSearchEngines(config) {
             }
           }
         });        
-      } catch (e) {
+      } else {
         // Filename
         var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
         searchengineFile.initWithPath(config.searchplugins[i]);
-        getSearchEngineInfoFromFile(searchengineFile, function(response) {
+        getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
           if (response) {
-            var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
+            var listitem = gSearchEnginesListbox.appendItem(response.name + path, path);
             listitem.setAttribute("context", "searchengines-contextmenu");
             if (response.image) {
               listitem.setAttribute("class", "listitem-iconic");
@@ -39,6 +38,12 @@ function setSearchEngines(config) {
       }
     }
   }
+  if (config.defaultSearchEngine) {
+    var menulist = document.getElementById("defaultSearchEngine")
+    menulist.appendItem(config.defaultSearchEngine, config.defaultSearchEngine);
+
+    menulist.value = config.defaultSearchEngine;
+  }
 }
 
 function getSearchEngines(config) {
@@ -48,6 +53,7 @@ function getSearchEngines(config) {
       config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i).value);
     }
   }
+  config.defaultSearchEngine = document.getElementById("defaultSearchEngine").value;
   return config;
 }
 
@@ -101,7 +107,7 @@ function getSearchEngineInfoFromFile(file, successCallback) {
     try {
       var xml = parser.parseFromString(data, "text/xml");
       if (xml.documentElement.nodeName != "parsererror") {
-        successCallback(getEngineInfoFromXML(xml));
+        successCallback(getEngineInfoFromXML(xml), file.path);
       } else {
         showErrorMessage("searchengine-invalid");
       }
@@ -152,7 +158,30 @@ function onDeleteSearchEngine() {
 
 function onKeyPressSearchEngine(event) {
   if (event.keyCode == event.DOM_VK_DELETE ||
-             event.keyCode == event.DOM_VK_BACK_SPACE) {
+      event.keyCode == event.DOM_VK_BACK_SPACE) {
     onDeleteSearchEngine();
   }
+}
+
+function onDefaultEnginePopup(event) {
+  var menulist = event.target.parentNode;
+  var currentEngine = menulist.value;
+  while (menulist.itemCount > 1) {
+    menulist.removeItemAt(1);
+  }
+  var menuSearchEngines = [];
+  for (var i=0; i < gSearchEnginesListbox.itemCount; i++) {
+    var menulistitem = gSearchEnginesListbox.getItemAtIndex(i);
+    menuSearchEngines.push(menulistitem.getAttribute("label"));
+  }
+  var engines = Services.search.getVisibleEngines({ });
+  for (var i=0; i < engines.length; i++) {
+    if (menuSearchEngines.indexOf(engines[i].name) == -1) {
+      menuSearchEngines.push(engines[i].name);
+    }
+  }
+  menuSearchEngines.forEach(function(enginename) {
+      menulist.appendItem(enginename, enginename);
+  });
+  menulist.value = currentEngine;
 }
