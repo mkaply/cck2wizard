@@ -27,7 +27,7 @@ function setSearchEngines(config) {
         searchengineFile.initWithPath(config.searchplugins[i]);
         getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
           if (response) {
-            var listitem = gSearchEnginesListbox.appendItem(response.name + path, path);
+            var listitem = gSearchEnginesListbox.appendItem(response.name, path);
             listitem.setAttribute("context", "searchengines-contextmenu");
             if (response.image) {
               listitem.setAttribute("class", "listitem-iconic");
