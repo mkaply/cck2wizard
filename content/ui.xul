@@ -10,6 +10,30 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="ui">
+      <groupbox>
+        <caption label="&titlemodifier.caption;"/>
+        <description>&titlemodifier.description;</description>
+        <hbox align="center">
+          <label control="titlemodifer">&titlemodifier.label;</label>
+          <textbox id="titlemodifier" config="titlemodifier" flex="1"/>
+        </hbox>
+      </groupbox>
+      <groupbox>
+        <caption label="&helpMenu.caption;"/>
+        <description>&helpMenu.description;</description>
+        <vbox>
+          <label control="HelpMenuCommandName">&helpMenuText.label;</label>
+          <textbox id="HelpMenuCommandName" config="helpMenu.label" flex="1"/>
+        </vbox>
+        <vbox>
+          <label control="HelpMenuCommandURL">&helpMenuURL.label;</label>
+          <textbox id="HelpMenuCommandURL" config="helpMenu.url" flex="1"/>
+        </vbox>
+        <vbox>
+          <label control="HelpMenuCommandAccessKey">&helpMenuAccesskey.label;</label>
+          <textbox id="HelpMenuCommandAccesskey" config="helpMenu.accesskey" flex="1"/>
+        </vbox>
+      </groupbox>
       <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
       <checkbox config="disableDeveloperTools" label="&disableDeveloperTools.label;" />
       <checkbox config="disableSetDesktopBackground" label="&disableSetDesktopBackground.label;" />

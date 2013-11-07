@@ -1,5 +1,7 @@
-<!ENTITY plugins.label "Plug-ins">
-
+<!ENTITY plugins.label "Plugins">
+<!ENTITY plugins.description "Plugins are software that allow Firefox to view content it is not designed to process.
+These include Adobe Flash, Java, Adobe Reader and others.">
+<!ENTITY plugins.description2 "If you are including a plugin, you need to select the DLL (Windows), dylib (Mac) or so (Linux) that you want to include.">
 <!ENTITY add.label "Add...">
 
 <!ENTITY delete.label "Delete">

@@ -11,6 +11,9 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="plugins" setconfig="setPlugins" getconfig="getPlugins" resetconfig="resetPlugins">
+      <label class="cck2wizard-heading" value="&plugins.label;"/>
+      <description class="cck2wizard-description">&plugins.description;</description>
+      <description class="cck2wizard-description">&plugins.description2;</description>
       <listbox id="plugins-listbox"
                onkeypress="onKeyPressPlugin(event);"
                context="plugins-listbox-contextmenu"

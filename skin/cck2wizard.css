@@ -29,3 +29,14 @@ description {
   margin-bottom: 2px;
   margin-left: 6px;
 }
+
+.cck2wizard-heading {
+  font-size: large;
+  margin-bottom: 5px;
+}
+
+.cck2wizard-description {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+}

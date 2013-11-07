@@ -1,5 +1,7 @@
 <!ENTITY permissions.label "Permissions">
 
+<!ENTITY permissions.description "You can preset website preferences, like always allowing popups or blocking cookies.">
+
 <!ENTITY  site.label              "Site">
 <!ENTITY  popup.label                  "Popups">
 <!ENTITY  install.label                 "Installs">
