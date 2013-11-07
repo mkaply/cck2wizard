@@ -2,6 +2,8 @@ const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
+const XMLHttpRequest = Components.Constructor("@mozilla.org/xmlextras/xmlhttprequest;1");
+
 XPCOMUtils.defineLazyGetter(this, "sss", function () {
   return Cc["@mozilla.org/content/style-sheet-service;1"]
            .getService(Ci.nsIStyleSheetService);
@@ -10,20 +12,62 @@ XPCOMUtils.defineLazyGetter(this, "sss", function () {
 var prefsPrefix = "extensions.cck2wizard.";
 var idPrefix = "cck2wizard-";
 
+function showInstallPanel(doc, callback) {
+  var panel = doc.getElementById(idPrefix + "install-panel");
+  if (panel) {
+    callback(panel);
+    return;
+  }
+  var panel = doc.createElement("panel");
+  panel.setAttribute("id", idPrefix + "login-panel");
+  panel.setAttribute("width", "300");
+  panel.setAttribute("orient", "vertical");
+  panel.setAttribute("type", "arrow");
+  var popupset = doc.getElementById("mainPopupSet");
+  popupset.appendChild(panel);
+  var request = new XMLHttpRequest();
+  request.mozBackgroundRequest = true;
+  request.open("GET", "chrome://cck2wizard/content/install-panel.xul");
+  request.onload = function() {
+    var installDialog = doc.importNode(request.responseXML.documentElement, true);
+    panel.appendChild(installDialog);
+    callback(panel);
+  };
+  request.send();
+
+}
+
 function install(aData, aReason) {
   Services.prefs.setCharPref(prefsPrefix + "toolbarID", "nav-bar");
-  var win = Services.wm.getMostRecentWindow("navigator:browser");
-  if (win) {
-    win.openUILinkIn("LANDINGPAGEFORCCK", "tab");
-  }
 }
 
 function uninstall(aData, aReason) {
   Services.prefs.clearUserPref(prefsPrefix + "toolbarID");
   Services.prefs.clearUserPref(prefsPrefix + "nextSiblingID");
+  // CCK2 configs are NOT removed
 }
 
-function startup(data, reason) {
+function startup(aData, aReason) {
+  var win = Services.wm.getMostRecentWindow("navigator:browser");
+  var url;
+  switch (aReason) {
+    case 5: // ADDON_INSTALL
+      showInstallPanel(win.document, function(panel) {
+        panel.addEventListener("click", function() {
+          win.document.getElementById(idPrefix + "button").click();
+        }, false);
+        panel.openPopup(win.document.getElementById(idPrefix + "button"), "", 0, 0, false, false, null);
+      });
+      url = "http://mike.kaply.com/addons/cck2/install/";
+      break;
+    case 7: // ADDON_UPGRADE
+      url = "http://mike.kaply.com/addons/cck2/upgrade/";
+      break;
+  }
+  if (url) {
+    win.openUILinkIn(url, "tab");
+  }
+
   sss.loadAndRegisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2toolbar.css", null, null), sss.AUTHOR_SHEET);
   let enumerator = Services.wm.getEnumerator("navigator:browser");
   while (enumerator.hasMoreElements()) {
@@ -104,9 +148,22 @@ function unloadFromWindow(window) {
   if (!window || doc.documentElement.getAttribute("windowtype") != "navigator:browser")
     return;
   let button = doc.getElementById(idPrefix + "button");
-  if (button)
+  if (button) {
     button.parentNode.removeChild(button);
-  // TODO REMOVE FRMO PALETTE
+  } else {
+    var toolbox = doc.getElementById("navigator-toolbox");
+    if (toolbox && toolbox.palette) {
+      var element = toolbox.palette.querySelector("#" + buttonID);
+      if (element) {
+        element.parentNode.removeChild(element);
+      }
+    }
+  }
+  let panel = doc.getElementById(idPrefix + "install-panel");
+  if (panel) {
+    panel.parentNode.removeChild(panel);
+  }
+
   window.removeEventListener("aftercustomization", saveButtonPosition, false);
   window.removeEventListener("command", onCommand, false);
 }
