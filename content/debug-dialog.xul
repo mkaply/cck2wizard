@@ -8,7 +8,7 @@
         width="640"
         height="480"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="chrome://cck2wizard/content/debug.js"/>
+  <script type="application/x-javascript" src="chrome://cck2wizard/content/debug-dialog.js"/>
   <tabbox id="debug.tabs" flex="1">
     <tabs>
       <tab label="Original Config"/>
