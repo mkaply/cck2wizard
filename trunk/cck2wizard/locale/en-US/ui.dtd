@@ -1,4 +1,16 @@
 <!ENTITY ui.label "User Interface">
+
+<!ENTITY titlemodifier.caption "Browser Window's Title Bar Text">
+<!ENTITY titlemodifier.label "Custom Title Bar Text:">
+<!ENTITY titlemodifier.description "The text you enter (for example, your company name) appears after the page title in the title bar.
+It is recommended that you use the format Mozilla Firefox: Companyname Edition">
+
 <!ENTITY displayMenuBar.label "Display the menu bar by default">
 <!ENTITY disableDeveloperTools.label "Remove the Web Developer menu">
 <!ENTITY disableSetDesktopBackground.label "Remove the 'Set As Desktop Background' menuitem">
+
+<!ENTITY helpMenu.caption "Help Menu">
+<!ENTITY helpMenu.description "You can add an item to the Help Menu which provides a link to your online customer support page.">
+<!ENTITY helpMenuText.label "Menu Item Text:">
+<!ENTITY helpMenuURL.label "Help Menu Item URL:">
+<!ENTITY helpMenuAccesskey.label "Help Menu Item Accesskey:">

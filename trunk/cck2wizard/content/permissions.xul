@@ -11,6 +11,8 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="permissions" setconfig="setPermissions" getconfig="getPermissions" resetconfig="resetPermissions">
+      <label class="cck2wizard-heading" value="&plugins.label;"/>
+      <description class="cck2wizard-description">&permissions.description;</description>
         <listbox id="permissions-listbox"
                  ondblclick="onEditPermissionsItem();"
                  onkeypress="onKeyPressPermissions(event);"
