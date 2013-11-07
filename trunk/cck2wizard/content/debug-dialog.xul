@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog title=""
+	orient="vertical"
+	autostretch="always"
+        buttons="accept"
+        onload="onLoad();"
+        width="640"
+        height="480"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://cck2wizard/content/debug.js"/>
+  <tabbox id="debug.tabs" flex="1">
+    <tabs>
+      <tab label="Original Config"/>
+      <tab label="Current Config"/>
+    </tabs>
+    <tabpanels flex="1">
+      <tabpanel>
+        <textbox id="original_config" multiline="true" readonly="true" flex="1"/>
+      </tabpanel>
+      <tabpanel>
+        <textbox id="current_config" multiline="true" readonly="true" flex="1"/> 
+      </tabpanel>
+    </tabpanels>
+  </tabbox>
+</dialog>
+

@@ -37,12 +37,7 @@
         <menuitem id="export-menuitem" label="&export.label;" oncommand="onExport()" />
         <menuitem label="&import.label;" oncommand="onImport()" />
         <menuitem label="&close.label;" oncommand="onClose()" />
-        <menu id="debug-menu" label="Debug">
-          <menupopup>
-            <menuitem label="View Original Config" oncommand="onViewOriginalConfig()"/>
-            <menuitem label="View Current Config" oncommand="onViewCurrentConfig()"/>
-          </menupopup>
-        </menu>
+        <menuitem id="debug-menu" label="Debug" oncommand="onDebug()"/>
       </menupopup>
     </menu>
   </menubar>
