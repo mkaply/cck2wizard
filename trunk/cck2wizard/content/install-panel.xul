@@ -1,0 +1,6 @@
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <hbox pack="center" align="center">
+        <image src="chrome://cck2wizard/skin/icon.png"/>
+        <description>Click here to create a CCK2 configuration.</description>
+    </hbox>
+</vbox>
