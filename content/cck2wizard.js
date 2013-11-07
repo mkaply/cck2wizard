@@ -213,12 +213,8 @@ function onSave() {
   return true;
 }
 
-function onViewCurrentConfig() {
-  alert(JSON.stringify(getConfig(), null, 2));
-}
-
-function onViewOriginalConfig() {
-  alert(JSON.stringify(gCurrentConfig, null, 2));
+function onDebug() {
+  window.openDialog("chrome://cck2wizard/content/debug-dialog.xul", "cck2wizard-debug", "modal,centerscreen", gCurrentConfig, getConfig());
 }
 
 function onExport() {
