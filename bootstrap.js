@@ -68,7 +68,6 @@ function startup(aData, aReason) {
     win.openUILinkIn(url, "tab");
   }
 
-  sss.loadAndRegisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2toolbar.css", null, null), sss.AUTHOR_SHEET);
   let enumerator = Services.wm.getEnumerator("navigator:browser");
   while (enumerator.hasMoreElements()) {
     let win = enumerator.getNext().QueryInterface(Ci.nsIDOMWindow);
@@ -84,7 +83,6 @@ function startup(aData, aReason) {
 }
 
 function shutdown(data, reason) {
-  sss.unregisterSheet(Services.io.newURI("chrome://cck2wizard/skin/cck2toolbar.css", null, null), sss.AUTHOR_SHEET);
   Services.wm.removeListener(windowListener);
 
   let enumerator = Services.wm.getEnumerator("navigator:browser");
@@ -128,6 +126,7 @@ function loadIntoWindow(window) {
     let button = doc.createElement("toolbarbutton");
     button.setAttribute("id", idPrefix + "button");
     button.setAttribute("label", "CCK2 Wizard");
+    button.setAttribute("image", "chrome://cck2wizard/skin/icon16.png");
     button.setAttribute("class", "toolbarbutton-1 chromeclass-toolbar-additional");
     toolbox.palette.appendChild(button);
     if (Services.prefs.prefHasUserValue(prefsPrefix + "toolbarID")) {
