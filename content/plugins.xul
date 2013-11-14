@@ -27,7 +27,7 @@
       </hbox>
     </vbox>
   </deck>
-      <popupset id="mainPopupSet">
+      <popupset>
       <menupopup id="plugins-contextmenu">
         <menuitem label="&delete.label;" oncommand="onDeletePlugin()"/>
       </menupopup>

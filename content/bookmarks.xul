@@ -82,7 +82,7 @@
       </hbox>
     </vbox>
   </deck>
-  <popupset id="mainPopupSet">
+  <popupset>
     <menupopup id="bookmarks-contextmenu">
       <menuitem label="&bookmarks-editbookmark.label;" oncommand="onEditBookmark(document.popupNode)" />
       <menuitem label="&bookmarks-deletebookmark.label;" oncommand="onDeleteBookmark(document.popupNode)" />
