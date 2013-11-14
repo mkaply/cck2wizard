@@ -12,6 +12,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/bookmarks.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/registry.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/certificates.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/network.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
@@ -43,7 +44,12 @@
   </menubar>
   <deck id="main-deck" flex="1">
     <vbox>
-      <browser id="cck2wizard-browser" flex="1" width="100%" height="100%" type="content"/>
+      <browser id="cck2wizard-browser"
+               flex="1"
+               width="100%"
+               height="100%"
+               disablehistory="true"
+               type="content"/>
     </vbox>
     <hbox>
       <tree id="cck2wizard-tree" hidecolumnpicker="true" seltype="single" flex="!">
