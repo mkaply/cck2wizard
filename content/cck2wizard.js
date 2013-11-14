@@ -44,6 +44,7 @@ function onRecentPopup(event) {
   if (configs.length > 0) {
     for (var i=0; i < configs.length; i++) {
       var menuitem = document.createElement("menuitem");
+      menuitem.setAttribute("type", "checkbox");
       try {
         config = JSON.parse(Services.prefs.getCharPref(configs[i]))
         menuitem.setAttribute("label", config.name);
