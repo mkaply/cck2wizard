@@ -11,6 +11,9 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="addons" setconfig="setAddons" getconfig="getAddons" resetconfig="resetAddons">
+      <label class="cck2wizard-heading" value="&addons.label;"/>
+      <description class="cck2wizard-description">&addons.description;</description>
+      <description class="cck2wizard-description">&addons.description2;</description>
       <listbox id="addons-listbox"
                context="addons-listbox-contextmenu"
                onkeypress="onKeyPressAddon(event);"

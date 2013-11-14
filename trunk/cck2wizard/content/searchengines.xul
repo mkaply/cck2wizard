@@ -11,6 +11,9 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="searchengines" setconfig="setSearchEngines" getconfig="getSearchEngines" resetconfig="resetSearchEngines">
+      <label class="cck2wizard-heading" value="&searchengines.label;"/>
+      <description class="cck2wizard-description">&searchengines.description;</description>
+      <description class="cck2wizard-description">&searchengines.description2;</description>
       <listbox id="searchengines-listbox"
                context="searchengines-listbox-contextmenu"
                onkeypress="onKeyPressSearchEngine(event);"

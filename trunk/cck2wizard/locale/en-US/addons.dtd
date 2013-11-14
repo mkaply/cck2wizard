@@ -1,4 +1,8 @@
-<!ENTITY addons.label "Add-ons (Extensions and Themes)">
+<!ENTITY addons.label "Add-ons">
+
+<!ENTITY addons.description "Add-ons are small pieces of software that add new features or functionality to your installation of Firefox.">
+<!ENTITY addons.description2 "If you are including an add-on, select the XPI (extension) or JAR (theme) that you want to include.">
+<!ENTITY add.label "Add...">
 
 <!ENTITY addfile.label "Add File...">
 <!ENTITY addurl.label "Add URL...">

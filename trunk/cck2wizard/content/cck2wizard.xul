@@ -3,18 +3,18 @@
 <?xml-stylesheet href="chrome://cck2wizard/skin/cck2wizard.css" type="text/css"?>
 <?xul-overlay href="chrome://cck2wizard/content/about.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/webpages.xul"?>
-<?xul-overlay href="chrome://cck2wizard/content/permissions.xul"?>
-<?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/ui.xul"?>
-<?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/services.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/permissions.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/plugins.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/addons.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/bookmarks.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/preferences.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/registry.xul"?>
-<?xul-overlay href="chrome://cck2wizard/content/searchengines.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/certificates.xul"?>
-<?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/network.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
 <!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

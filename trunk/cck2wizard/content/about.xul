@@ -28,13 +28,16 @@
         <label value="&version.label;"></label>
         <textbox config="version"></textbox>
       </vbox>
-      <hbox>
+      <vbox align="center" pack="center" flex="1">
         <button id="about-delete"
                 label="&delete.label;"
                 oncommand="deleteConfig();"
                 />
-      </hbox>
-
+        <button id="about-copy"
+                label="&copy.label;"
+                oncommand="copyConfig();"
+                />
+      </vbox>
     </vbox>
   </deck>
 </overlay>

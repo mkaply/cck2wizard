@@ -11,29 +11,56 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="certificates" setconfig="setCertificates" getconfig="getCertificates" resetconfig="resetCertificates">
-      <listbox id="certificates-listbox"
-               context="certificates-listbox-contextmenu"
-               onkeypress="onKeyPressCertificate(event);"
-               flex="1"/>
-      <hbox>
-        <button id="certificates-addfile"
-                label="&addfile.label;"
-                oncommand="addCertificateFromFile();"
-                />
-        <button id="certificates-addurl"
-                label="&addurl.label;"
-                oncommand="addCertificateFromURL();"
-                />
-      </hbox>
+      <label class="cck2wizard-heading" value="&certificates.label;"/>
+      <description class="cck2wizard-description">&certificates.description;</description>
+      <tabbox id="advancedPrefs" flex="1" onselect="">
+        <tabs>
+          <tab label="&certificateAuthorties.label;" />
+          <tab label="&serverCertificatesTab.label;" />
+          <tab label="&certificateOverrides.label;" />
+        </tabs>
+        <tabpanels flex="1">
+          <tabpanel orient="vertical">
+            <description class="cck2wizard-description">&certificateAuthorties.description;</description>
+            <listbox id="certificates-listbox" context="certificates-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
+            <hbox>
+              <button id="certificates-addfile" label="&addfile.label;" oncommand="addCertificateFromFile();" />
+              <button id="certificates-addurl" label="&addurl.label;" oncommand="addCertificateFromURL();" />
+            </hbox>
+          </tabpanel>
+          <tabpanel orient="vertical">
+            <description class="cck2wizard-description">&serverCertificates.description;</description>
+            <listbox id="servercerts-listbox" context="servercerts-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
+            <hbox>
+              <button id="servercerts-addfile" label="&addfile.label;" oncommand="addServerCertificateFromFile();" />
+              <button id="servercerts-addurl" label="&addurl.label;" oncommand="addServerCertificateFromURL();" />
+            </hbox>
+          </tabpanel>
+          <tabpanel orient="vertical">
+            <description class="cck2wizard-description">&certificateOverrides.description;</description>
+            <listbox id="certoverrides-listbox" context="certoverrides-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
+            <hbox>
+              <button id="certoverrides-addfile" label="&adddomain.label;" oncommand="addCertificateOverride();" />
+            </hbox>
+          </tabpanel>
+        </tabpanels>
+      </tabbox>
     </vbox>
   </deck>
-      <popupset id="mainPopupSet">
-      <menupopup id="certificates-contextmenu">
-        <menuitem label="&delete.label;" oncommand="onDeleteCertificate()"/>
-      </menupopup>
-      <menupopup id="certificates-listbox-contextmenu">
-        <menuitem label="&addfile.label;" oncommand="addCertificateFromFile()"/>
-        <menuitem label="&addurl.label;" oncommand="addCertificateFromURL()"/>
-      </menupopup>
-    </popupset>
+  <popupset id="mainPopupSet">
+    <menupopup id="certificate-contextmenu">
+      <menuitem label="&delete.label;" oncommand="onDeleteCertificate()" />
+    </menupopup>
+    <menupopup id="certificates-listbox-contextmenu">
+      <menuitem label="&addfile.label;" oncommand="addCertificateFromFile()" />
+      <menuitem label="&addurl.label;" oncommand="addCertificateFromURL()" />
+    </menupopup>
+    <menupopup id="servercert-contextmenu">
+      <menuitem label="&delete.label;" oncommand="onDeleteServerCertificate()" />
+    </menupopup>
+    <menupopup id="servercerts-listbox-contextmenu">
+      <menuitem label="&addfile.label;" oncommand="addServerCertificateFromFile()" />
+      <menuitem label="&addurl.label;" oncommand="addServerCertificateFromURL()" />
+    </menupopup>
+  </popupset>
 </overlay>

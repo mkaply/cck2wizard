@@ -1,4 +1,4 @@
-<!ENTITY registry.label "Registry (Windows only)">
+<!ENTITY registry.label "Windows Registry">
 
 <!ENTITY  regRootKey.label              "Root Key">
 <!ENTITY  regKey.label                  "Key">
