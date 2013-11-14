@@ -41,3 +41,28 @@ function deleteConfig() {
   resetConfig();
   document.getElementById("main-deck").selectedIndex = 0;
 }
+
+function copyConfig() {
+  var retVals = { name: gCurrentConfig.name, id: gCurrentConfig.id};
+  window.openDialog("chrome://cck2wizard/content/new-dialog.xul", "cck2wizard-new", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return false;
+  }
+  if (!retVals.name || !retVals.id) {
+    alert("Name and ID are required");
+    return false;
+  }
+  if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + retVals.id)) {
+    alert("A config with that ID already exists");
+    return false;
+  }
+  var newConfig = getConfig();
+  newConfig.name = retVals.name;
+  newConfig.id = retVals.id;
+  Services.prefs.setCharPref(prefsPrefix + "configs." + retVals.id, JSON.stringify(newConfig))
+  setConfig(newConfig);
+  document.getElementById("main-deck").selectedIndex = 1;
+  gTree.view.selection.select(0);
+  updateNextPreviousButtons();
+  return true;
+}

@@ -1,4 +1,6 @@
 <!ENTITY searchengines.label "Search Engines">
+<!ENTITY searchengines.description "Search Engines are added to the search box in the upper right in Firefox.">
+<!ENTITY searchengines.description2 "If you are including a search engine, you need to select the XML file for the search engine.">
 
 <!ENTITY addfile.label "Add File...">
 <!ENTITY addurl.label "Add URL...">
