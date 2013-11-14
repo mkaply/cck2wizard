@@ -143,7 +143,7 @@ function packageCCK2(type) {
     zipfile.append("autoconfig.zip");
   } else {
     if (config.extension && config.extension.filename) {
-      zipfile.append("config.extension.filename");
+      zipfile.append(config.extension.filename + ".xpi");
     } else {
       zipfile.append(config.id + ".xpi");
     }
@@ -272,6 +272,19 @@ function packageCCK2(type) {
       }
     }
   }
+  if ("certs" in config && "ca" in config.certs) {
+    var certsDir = resourceDir.clone();
+    certsDir.append("certs");
+    certsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    for (var i=0; i < config.certs.ca.length; i++) {
+      if (!/^https?:/.test(config.certs.ca[i].url)) {
+        var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        certFile.initWithPath(config.certs.ca[i].url);
+        copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
+        config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+      }
+    }
+  }
   if ("network" in config) {
     if ("proxyAutoConfig" in config.network) {
       if (!/^https?:/.test(config.network.proxyAutoConfig)) {
@@ -364,7 +377,7 @@ var observer = {
   onStopRequest: function(request, context, status)
   {
     zipwriter.close();
-    alert('done');
+    alert("CCK2 Creation is complete and available at: " + zipwriter.file.path);
   }
 };
 
