@@ -34,7 +34,7 @@ function getNetwork(config) {
 
 function resetNetwork() {
   $("networkProxyType").selectedIndex = 0;
-  selectProxyPanel(0);
+  selectProxyPanel();
 }
 
 function onProxyType(event) {
