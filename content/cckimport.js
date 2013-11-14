@@ -359,6 +359,30 @@ function importCCKFile(configFileContent)
     }
   }
   if (configarray.hasOwnProperty("CertPath1")) {
+    if (!config.certs) {
+      config.certs = {};
+    }
+    var certpath, i=1;
+    while ((certpath = configarray["CertPath" + i])) {
+      var cert = {};
+      cert.url = configarray["CertPath" + i];
+      if (configarray["CertTrust" + i]) {
+	cert.trust = configarray["CertTrust" + i];
+      }
+      if (configarray["CertType" + i] &&
+	  configarray["CertType" + i] == "server") {
+	if (!config.certs.server) {
+	  config.certs.server = [];
+	}
+	config.certs.server.push(cert.url);
+      } else {
+	if (!config.certs.ca) {
+	  config.certs.ca = [];
+	}
+	config.certs.ca.push(cert);
+      }
+      i++;
+    }
   }
   if ("networkProxyType" in configarray && configarray.networkProxyType != "100") {
     if (!config.network) {
@@ -446,6 +470,7 @@ function importCCKFile(configFileContent)
     }
     config.network.shareAllProxies = JSON.parse(configarray.shareAllProxies);
   }
+  
   return config;
 
   // handle prefs
