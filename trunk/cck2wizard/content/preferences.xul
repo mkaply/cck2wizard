@@ -41,7 +41,7 @@
         <label value="&value.label;:"/><textbox id="pref-value" hidespinbuttons="true"/>
       </vbox>
     </deck>
-    <popupset id="mainPopupSet">
+    <popupset>
       <menupopup id="preferences-contextmenu" onpopupshowing="onPreferencesPopup()">
         <menuitem id="preferences-lock" label="&lock.label;" oncommand="onLockUnlockPreference()"/>
         <menuitem id="preferences-unlock" label="&unlock.label;" oncommand="onLockUnlockPreference()"/>

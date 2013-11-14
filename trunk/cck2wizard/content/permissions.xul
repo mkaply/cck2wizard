@@ -38,7 +38,7 @@
       </hbox>
     </vbox>
   </deck>
-    <popupset id="mainPopupSet">
+    <popupset>
       <menupopup id="permissions-contextmenu">
         <menuitem label="&edit.label;" oncommand="onEditPermissionsItem()"/>
         <menuitem label="&delete.label;" oncommand="onDeletePermissionsItem()"/>

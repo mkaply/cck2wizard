@@ -38,7 +38,7 @@
       </hbox>
     </vbox>
   </deck>
-      <popupset id="mainPopupSet">
+      <popupset>
       <menupopup id="searchengines-contextmenu">
         <menuitem label="&delete.label;" oncommand="onDeleteSearchEngine()"/>
       </menupopup>

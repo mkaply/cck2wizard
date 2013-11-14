@@ -24,7 +24,7 @@
       </hbox>
     </vbox>
   </deck>
-      <popupset id="mainPopupSet">
+      <popupset>
       <menupopup id="addons-contextmenu">
         <menuitem label="&delete.label;" oncommand="onDeleteAddon()"/>
       </menupopup>

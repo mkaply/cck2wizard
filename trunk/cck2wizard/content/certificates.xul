@@ -47,7 +47,7 @@
       </tabbox>
     </vbox>
   </deck>
-  <popupset id="mainPopupSet">
+  <popupset>
     <menupopup id="certificate-contextmenu">
       <menuitem label="&delete.label;" oncommand="onDeleteCertificate()" />
     </menupopup>

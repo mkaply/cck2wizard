@@ -36,7 +36,7 @@
       </hbox>
     </vbox>
   </deck>
-    <popupset id="mainPopupSet">
+    <popupset>
       <menupopup id="registry-contextmenu">
         <menuitem label="&edit.label;" oncommand="onEditRegistryItem()"/>
         <menuitem label="&delete.label;" oncommand="onDeleteRegistryItem()"/>
