@@ -90,35 +90,16 @@ function getBookmarks(config) {
   return config;
 }
 
-function processBookmarks(startIndex) {
-  var listitem = gBookmarksToolbarListbox.getItemAtIndex(i);
-  
-}
-
 function resetBookmarks() {
   while (gBookmarksToolbarListbox.itemCount > 0) {
     gBookmarksToolbarListbox.removeItemAt(0);
   }
+  while (gBookmarksWindowListbox.itemCount > 0) {
+    gBookmarksWindowListbox.removeItemAt(0);
+  }
 }
 
 function addBookmark(listbox, bookmark) {
-  //for (var i=0; i < gRegistryListbox.itemCount; i++) {
-  //  var listitem = gRegistryListbox.getItemAtIndex(i);
-  //  var label = listitem.firstChild.getAttribute("label");
-  //  if (label == name) {
-  //    if (!update) {
-  //      alert("duplicate");
-  //      return;
-  //    }
-  //    updateRegistryListItem(listitem, name, value, type, locked);
-  //    return;
-  //  }
-  //  if (label > name) {
-  //    gRegistryListbox.insertBefore(createRegistryListItem(name, value, type, locked),
-  //                                     listitem);
-  //    return;
-  //  }
-  //}
   var listitem = createBookmarkListItem(bookmark);
   listitem.setAttribute("level", "0");
   listbox.appendChild(listitem);
