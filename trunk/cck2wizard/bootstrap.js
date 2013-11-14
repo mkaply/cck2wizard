@@ -53,8 +53,9 @@ function startup(aData, aReason) {
   switch (aReason) {
     case 5: // ADDON_INSTALL
       showInstallPanel(win.document, function(panel) {
-        panel.addEventListener("click", function() {
+        panel.addEventListener("click", function(event) {
           win.document.getElementById(idPrefix + "button").click();
+          win.document.getElementById(idPrefix + "install-panel").hidePopup();
         }, false);
         panel.openPopup(win.document.getElementById(idPrefix + "button"), "", 0, 0, false, false, null);
       });
