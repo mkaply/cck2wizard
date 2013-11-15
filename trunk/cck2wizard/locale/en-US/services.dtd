@@ -8,4 +8,4 @@
 <!ENTITY disableCrashReporter.label "Disable the crash reporter">
 <!ENTITY disableTelemetry.label "Disable telemetry">
 <!ENTITY dontShowRights.label "Don't show the rights notification">
-<!ENTITY disableFirefoxHealthReport.label "Disable Firefox Health Report">
+<!ENTITY disableFirefoxHealthReport.label "Disable Firefox Health Report upload">
