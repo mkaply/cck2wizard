@@ -203,6 +203,7 @@ function packageCCK2(type) {
   var chromeManifestFile = dir.clone();
   if (type == "distribution") {
     chromeManifestFile.append("distribution");
+    chromeManifestFile.append("bundles");
     chromeManifestFile.append(config.id);
     if (!chromeManifestFile.exists()) {
       chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -218,6 +219,7 @@ function packageCCK2(type) {
   var cck2Dir = dir.clone();
   if (type == "distribution") {
     cck2Dir.append("distribution");
+    cck2Dir.append("bundles");
   }
   cck2Dir.append("cck2");
   cck2Dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -241,6 +243,7 @@ function packageCCK2(type) {
     var pluginsDir = dir.clone();
     if (type == "distribution") {
       pluginsDir.append("distribution");
+      pluginsDir.append("bundles");
       pluginsDir.append(config.id);
     }
     pluginsDir.append("plugins");
@@ -255,6 +258,7 @@ function packageCCK2(type) {
   var resourceDir = dir.clone();
   if (type == "distribution") {
     resourceDir.append("distribution");
+    resourceDir.append("bundles");
     resourceDir.append(config.id);
   }
   resourceDir.append("resources");
