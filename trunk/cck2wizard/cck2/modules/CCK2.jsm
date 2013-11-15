@@ -366,13 +366,13 @@ var CCK2 = {
           }
           if (bookmarks.length > 0) {
             var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
-            if (mozillaFolder) {
+            if (mozillaFolder != -1) {
               var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
               var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
               bmsvc.removeItem(mozillaFolder);
               if (config.removeSmartBookmarks) {
                 var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
-                if (separator) {
+                if (separator != -1) {
                   bmsvc.removeItem(separator);
                 }
               }
