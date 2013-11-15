@@ -1,9 +1,9 @@
 var gBookmarksToolbarListbox = null;
-var gBookmarksWindowListbox = null;
+var gBookmarksMenuListbox = null;
 
 function onBookmarksLoad() {
   gBookmarksToolbarListbox = document.getElementById("bookmarks-toolbar-listbox");
-  gBookmarksWindowListbox = document.getElementById("bookmarks-window-listbox");
+  gBookmarksMenuListbox = document.getElementById("bookmarks-menu-listbox");
 }
 window.addEventListener("load", onBookmarksLoad, false);
 
@@ -15,8 +15,8 @@ function setBookmarks(config) {
   if ("bookmarks" in config && "toolbar" in config.bookmarks) {
     addBookmarks(gBookmarksToolbarListbox, config.bookmarks.toolbar);
   }
-  if ("bookmarks" in config && "window" in config.bookmarks) {
-    addBookmarks(gBookmarksWindowListbox, config.bookmarks.window);
+  if ("bookmarks" in config && "menu" in config.bookmarks) {
+    addBookmarks(gBookmarksMenuListbox, config.bookmarks.menu);
   }
 }
 
@@ -72,18 +72,18 @@ function getBookmarks(config) {
     }
   }
   var currentItem = 0;
-  if (gBookmarksWindowListbox.itemCount > 0) {
+  if (gBookmarksMenuListbox.itemCount > 0) {
     if (!("bookmarks" in config)) {
       config.bookmarks = {};
     }
-    config.bookmarks.window = [];
-    while (currentItem < gBookmarksWindowListbox.itemCount) {
-      var listitem1 = gBookmarksWindowListbox.getItemAtIndex(currentItem);
+    config.bookmarks.menu = [];
+    while (currentItem < gBookmarksMenuListbox.itemCount) {
+      var listitem1 = gBookmarksMenuListbox.getItemAtIndex(currentItem);
       var bookmark1 = convertListItemToBookmark(listitem1);
       if (listitem1.hasAttribute("folder")) {
-        bookmark1.folder = handleFolder(parseInt(listitem1.getAttribute("level"), 10), gBookmarksWindowListbox);
+        bookmark1.folder = handleFolder(parseInt(listitem1.getAttribute("level"), 10), gBookmarksMenuListbox);
       }
-      config.bookmarks.window.push(bookmark1);
+      config.bookmarks.menu.push(bookmark1);
       currentItem++;
     }
   }
@@ -94,8 +94,8 @@ function resetBookmarks() {
   while (gBookmarksToolbarListbox.itemCount > 0) {
     gBookmarksToolbarListbox.removeItemAt(0);
   }
-  while (gBookmarksWindowListbox.itemCount > 0) {
-    gBookmarksWindowListbox.removeItemAt(0);
+  while (gBookmarksMenuListbox.itemCount > 0) {
+    gBookmarksMenuListbox.removeItemAt(0);
   }
 }
 

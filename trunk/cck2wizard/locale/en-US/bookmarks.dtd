@@ -4,7 +4,7 @@
 
 <!ENTITY bookmarks.label "Bookmarks">
 <!ENTITY bookmarks-toolbar.label "Toolbar">
-<!ENTITY bookmarks-window.label "Window">
+<!ENTITY bookmarks-menu.label "Menu">
 
 <!ENTITY bookmarks-addbookmark.label "Add Bookmark...">
 <!ENTITY bookmarks-addfolder.label "Add Folder...">
