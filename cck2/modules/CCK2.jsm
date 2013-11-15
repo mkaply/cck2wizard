@@ -226,11 +226,15 @@ var CCK2 = {
         Preferences.lock("devtools.inspector.enabled", false);
         Preferences.lock("devtools.errorconsole.enabled", false);
       }
-      if (config.homePage) {
+      if (config.homePage && !config.lockHomePage) {
         Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
       }
       if (config.lockHomePage) {
-        Preferences.lock("browser.startup.homepage");
+        if (config.homePage) {
+          Preferences.lock("browser.startup.homepage", config.homePage);
+        } else {
+          Preferences.lock("browser.startup.homepage");
+        }
         Preferences.lock("pref.browser.homepage.disable_button.current_page", true);
         Preferences.lock("pref.browser.homepage.disable_button.bookmark_page", true);
         Preferences.lock("pref.browser.homepage.disable_button.restore_default", true);
@@ -247,6 +251,9 @@ var CCK2 = {
       }
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.3.shown", true);
+      }
+      if (config.disableFirefoxHealthReport) {
+        Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
       if (config.network) {
         var prefMapping = {
@@ -386,8 +393,8 @@ var CCK2 = {
           if (config.bookmarks.toolbar) {
             addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version);
           }
-          if (config.bookmarks.folder) {
-            addBookmarks(config.bookmarks.folder, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
+          if (config.bookmarks.menu) {
+            addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
           }
         }
         // Should probably only be done on firstrun or installedVersion changed

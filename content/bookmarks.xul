@@ -17,7 +17,7 @@
         </treeitem>
         <treeitem>
           <treerow>
-            <treecell label="&bookmarks-window.label;" value="bookmarks-window" />
+            <treecell label="&bookmarks-menu.label;" value="bookmarks-menu" />
           </treerow>
         </treeitem>
       </treechildren>
@@ -55,8 +55,8 @@
         <button label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.getElementById('bookmarks-toolbar-listbox'));" />
       </hbox>
     </vbox>
-    <vbox id="bookmarks-window">
-        <listbox id="bookmarks-window-listbox"
+    <vbox id="bookmarks-menu">
+        <listbox id="bookmarks-menu-listbox"
                  class="bookmarks-listbox"
                  ondragstart="onDragStart(event);"
                  ondrop="onDrop(event);"
@@ -76,9 +76,9 @@
           </listcols>
         </listbox>      
       <hbox>
-        <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-window-listbox'));" />
-        <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-window-listbox'));" />
-        <button label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.getElementById('bookmarks-window-listbox'));" />
+        <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-menu-listbox'));" />
+        <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-menu-listbox'));" />
+        <button label="&bookmarks-addseparator.label;" oncommand="onAddSeparator(document.getElementById('bookmarks-menu-listbox'));" />
       </hbox>
     </vbox>
   </deck>
