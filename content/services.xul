@@ -19,7 +19,7 @@
       <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
       <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
       <checkbox config="dontShowRights" label="&dontShowRights.label;" />
-      <checkbox config="disableFirefoxHealthReport" label="&disableFirefoxHealthReport.label;" />
+      <checkbox config="disableFirefoxHealthReportUpload" label="&disableFirefoxHealthReport.label;" />
     </vbox>
   </deck>
 </overlay>
