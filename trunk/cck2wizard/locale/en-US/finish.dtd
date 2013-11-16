@@ -1,6 +1,5 @@
 <!ENTITY finish.label "Finish">
-<!ENTITY autoconfig.label "Use Autoconfig">
-<!ENTITY autoconfig.description "The autoconfig option creates a ZIP file that you unzip into the Firefox directory and make part of your distribution.">
 <!ENTITY extension.description "This option creates a standalone extension.">
 <!ENTITY extension.label "Create an Extension">
-
+<!ENTITY autoconfig.label "Use Autoconfig">
+<!ENTITY autoconfig.description "The autoconfig option creates a ZIP file that you unzip into the Firefox directory and make part of your distribution.">
