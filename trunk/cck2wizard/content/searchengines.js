@@ -53,7 +53,9 @@ function getSearchEngines(config) {
       config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i).value);
     }
   }
-  config.defaultSearchEngine = document.getElementById("defaultSearchEngine").value;
+  if (document.getElementById("defaultSearchEngine").value) {
+    config.defaultSearchEngine = document.getElementById("defaultSearchEngine").value;
+  }
   return config;
 }
 
