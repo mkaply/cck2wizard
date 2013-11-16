@@ -252,7 +252,7 @@ var CCK2 = {
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.3.shown", true);
       }
-      if (config.disableFirefoxHealthReport) {
+      if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
       if (config.network) {
