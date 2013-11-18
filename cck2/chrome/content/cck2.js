@@ -16,68 +16,28 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     try {
       var doc = event.target;
       var win = doc.defaultView;
-      // ignore frame loads
-      if (win != win.top) {
+      if (!doc.location) {
 	return;
-      }
-      if (!doc.location || (!/^about:/.test(doc.location.href) && !/^chrome:/.test(doc.location.href))) {
-	return;
-      }
-      /* If chrome://browser/content/preferences/in-content/preferences.xul is loaded explicitly,
-	just make it blank */
-      if (/^chrome:\/\/browser\/content\/preferences\/in-content\/preferences\.xul/.test(doc.location.href)) {
-	doc.documentElement.innerHTML = "";
-      }
-
-      /* If chrome://global/content/aboutTelemetry.xhtml is loaded explicitly,
-	just make it blank */
-      if ((config && config.disableTelemetry) &&
-	  /^chrome:\/\/global\/content\/aboutTelemetry.xhtml/.test(doc.location.href)) {
-	doc.documentElement.innerHTML = "";
-      }
-      /* If chrome://global/content/config.xul is loaded explicitly,
-	just make it blank */
-      if ((config && config.disableAboutConfig) &&
-	  /^chrome:\/\/global\/content\/config.xul/.test(doc.location.href)) {
-	doc.documentElement.innerHTML = "";
-      }
-      /* If chrome://browser/content/aboutPrivateBrowsing.xhtml is loaded explicitly,
-	just make it blank */
-      if (!Preferences.get("browser.privatebrowsing.enabled", true) &&
-	  /^chrome:\/\/browser\/content\/aboutPrivateBrowsing.xhtml/.test(doc.location.href)) {
-	doc.documentElement.innerHTML = "";
-      }
-      /* If chrome://mozapps/content/extensions/extensions.xul is loaded explicitly,
-	just make it blank */
-      if ((config && config.disableAddonsManager) &&
-	  /^chrome:\/\/mozapps\/content\/extensions\/extensions.xul/.test(doc.location.href)) {
-	doc.documentElement.innerHTML = "";
       }
       /* Remove the sync button from about:home */
       if (!Preferences.get("services.sync.enabled", true) &&
-	 (/^about:home/.test(doc.location.href) ||
-	  /^chrome:\/\/browser\/content\/abouthome\/aboutHome.xhtml/.test(doc.location.href))) {
+	 /^about:home/.test(doc.location.href)) {
 	remove(E("sync", doc));
       }
       /* Remove the addons button from about:home */
       if ((config && config.disableAddonsManager) &&
-         (/^about:home/.test(doc.location.href) ||
-          /^chrome:\/\/browser\/content\/abouthome\/aboutHome.xhtml/.test(doc.location.href))) {
+         /^about:home/.test(doc.location.href)) {
         remove(E("addons", doc));
       }
 
       /* If health reporter upload is locked, remove the activation widget */
-      if (Preferences.locked("datareporting.healthreport.uploadEnabled", false) &&
-	 (/^about:healthreport/.test(doc.location.href) ||
-	  /^https:\/\/fhr.cdn.mozilla.net\//.test(doc.location.href))) {
-	var remoteReport = doc.getElementById("remote-report");
-	remoteReport.addEventListener("load", function(event) {
-	  var activationWidget = event.target.contentDocument.querySelector(".activationWidget");
-	  if (activationWidget) {
-	    remove(activationWidget);
-	    event.target.removeEventListener("load", arguments.callee, false);
-	  }
-	}, false);
+      if (Preferences.locked("datareporting.healthreport.uploadEnabled", false)) {
+	if (/^https:\/\/fhr.cdn.mozilla.net\//.test(doc.location.href)) {
+          var activationWidget = event.target.querySelector(".activationWidget");
+          if (activationWidget) {
+            remove(activationWidget);
+          }
+	}
       }
     } catch (e) {
       errorCritical(e);
