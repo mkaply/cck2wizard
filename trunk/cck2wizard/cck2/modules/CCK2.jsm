@@ -63,15 +63,15 @@ var CCK2 = {
       this.initialized = true;
   
       // We don't handle in content preferences right now, so make sure they
-      // can't be used
+      // can't be used. We redirect this to an invalid about: page so
+      // it doesn't look like the admin disabled it.
       Preferences.lock("browser.preferences.inContent", false);
       var aboutPreferences = {};
       aboutPreferences.classID = Components.ID(uuid.generateUUID().toString());
       aboutPreferences.factory = disableAbout(aboutPreferences.classID,
-                                              "Disable about:preference - CCK",
+                                              "",
                                               "preferences");
       CCK2.aboutFactories.push(aboutPreferences);
-
   
       // We want to know if this is the first run of Firefox. We do that by
       // testing for the existing of extensions.ini
@@ -650,7 +650,10 @@ var SSLExceptions = {
 function disableAbout(aClass, aClassName, aboutType) {
   var gAbout = {
     newChannel : function (aURI) {
-      var url = "chrome://cck2/content/about.xhtml?aboutType";
+      var url = "chrome://cck2/content/about.xhtml";
+      if (aboutType == "preferences") {
+        url = "about:preferences-no";
+      }
       var channel = Services.io.newChannel(url, null, null);
       channel.originalURI = aURI;
       return channel;
