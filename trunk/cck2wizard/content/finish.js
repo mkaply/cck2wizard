@@ -48,7 +48,7 @@ const chromeManifestComponentTemplate = [
 '',
 'component %uuid% components/CCK2Service.js',
 'contract @kaply.com/cck2-%id%-service;1 %uuid%',
-'category profile-after-change CCK2%id-nodashes%Service @kaply.com/cck2-%id%-service;1',
+'category profile-after-change CCK2%id-nospecialchars%Service @kaply.com/cck2-%id%-service;1',
 ''].join("\n");
 
 const CCK2ServiceTemplate = [
@@ -59,9 +59,9 @@ const CCK2ServiceTemplate = [
 '',
 'var config = %config%;',
 '',
-'function CCK2%id-nodashes%Service() {}',
+'function CCK2%id-nospecialchars%Service() {}',
 '',
-'CCK2%id-nodashes%Service.prototype = {',
+'CCK2%id-nospecialchars%Service.prototype = {',
 '  observe: function(aSubject, aTopic, aData) {',
 '    switch(aTopic) {',
 '      case "profile-after-change":',
@@ -77,7 +77,7 @@ const CCK2ServiceTemplate = [
 '  _xpcom_categories: [{category: "profile-after-change"}]',
 '}',
 '',
-'var NSGetFactory = XPCOMUtils.generateNSGetFactory([CCK2%id-nodashes%Service]);',
+'var NSGetFactory = XPCOMUtils.generateNSGetFactory([CCK2%id-nospecialchars%Service]);',
 ''].join("\n");
 
 const defaultPrefsTemplate = [
@@ -204,7 +204,8 @@ function packageCCK2(type) {
     chromeManifest += chromeManifestComponentTemplate;
   }
   chromeManifest = chromeManifest.replace(/%id%/g, config.id);
-  chromeManifest = chromeManifest.replace(/%id-nodashes%/g, config.id.replace("-","_"));
+  // Remove all special characters from ID so it can be used for JavaScript
+  chromeManifest = chromeManifest.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
   chromeManifest = chromeManifest.replace(/%uuid%/g, uuid);
   
   var chromeManifestFile = dir.clone();
@@ -330,7 +331,7 @@ function packageCCK2(type) {
   if (type == "extension") {
     var CCK2Service = CCK2ServiceTemplate;
     CCK2Service = CCK2Service.replace(/%id%/g, config.id);
-    CCK2Service = CCK2Service.replace(/%id-nodashes%/g, config.id.replace("-","_"));
+    CCK2Service = CCK2Service.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
     CCK2Service = CCK2Service.replace(/%uuid%/g, uuid);
     CCK2Service = CCK2Service.replace("%config%", JSON.stringify(config, null, 2))
     var CCK2ServiceFile = dir.clone();
