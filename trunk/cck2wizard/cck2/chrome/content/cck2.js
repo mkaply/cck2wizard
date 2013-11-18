@@ -126,7 +126,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     disable(E("Tools:Addons"));
   }
 
-  function disableDeveloperTools() {
+  function removeDeveloperTools() {
     hide(E("webDeveloperMenu"));
     document.getElementById("Tools:webconsole").removeAttribute("oncommand");
     document.getElementById("Tools:timeline").removeAttribute("oncommand");
@@ -169,9 +169,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       if (config.disableAddonsManager) {
 	disableAddonsManager();
       }
-      if (config.disableDeveloperTools) {
+      if (config.removeDeveloperTools) {
         Services.tm.mainThread.dispatch(function() {
-	  disableDeveloperTools();
+	  removeDeveloperTools();
         }, Ci.nsIThread.DISPATCH_NORMAL);
       }
       if (config.disableErrorConsole) {
@@ -180,7 +180,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       if (config.titlemodifier) {
 	document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
       }
-      if (config.disableSetDesktopBackground) {
+      if (config.removeSetDesktopBackground) {
 	// Because this is on a context menu, we can't use "hidden"
 	if (E("context-setDesktopBackground"))
 	  E("context-setDesktopBackground").setAttribute("style", "display: none;");
