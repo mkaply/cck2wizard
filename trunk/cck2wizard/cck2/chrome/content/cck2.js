@@ -29,6 +29,16 @@ Components.utils.import("resource://cck2/CCK2.jsm");
          /^about:home/.test(doc.location.href)) {
         remove(E("addons", doc));
       }
+      /* Remove the addons button from about:home */
+      if ((config && config.removeSnippets) &&
+         /^about:home/.test(doc.location.href)) {
+        remove(E("snippets", doc));
+      }
+      /* Remove the reset button from about:support */
+      if ((config && config.disableResetFirefox) &&
+         /^about:support/.test(doc.location.href)) {
+        remove(E("reset-box", doc));
+      }
 
       /* If health reporter upload is locked, remove the activation widget */
       if (Preferences.locked("datareporting.healthreport.uploadEnabled", false)) {
