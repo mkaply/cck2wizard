@@ -109,7 +109,13 @@ var zipwriter;
 
 function packageCCK2(type) {
   var config = getConfig();
-  if (!config.extension || !config.extension.id || !config.extension.version) {
+  if (!config.version) {
+    showErrorMessage("noversion");
+    selectPane("about");
+    return;
+  }
+  if (type == "extension" &&
+      (!config.extension || !config.extension.id || !config.extension.version)) {
     showErrorMessage("noextension");
     selectPane("extension");
     return;
