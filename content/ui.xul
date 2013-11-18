@@ -35,8 +35,8 @@
         </vbox>
       </groupbox>
       <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
-      <checkbox config="disableDeveloperTools" label="&disableDeveloperTools.label;" />
-      <checkbox config="disableSetDesktopBackground" label="&disableSetDesktopBackground.label;" />
+      <checkbox config="removeDeveloperTools" label="&removeDeveloperTools.label;" />
+      <checkbox config="removeSetDesktopBackground" label="&removeSetDesktopBackground.label;" />
     </vbox>
   </deck>
 </overlay>
