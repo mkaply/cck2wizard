@@ -9,6 +9,7 @@ const cck2Files = [
   "chrome/content/cck2-extensions-overlay.xul",
   "chrome/content/cck2.js",
   "chrome/content/util.js",
+  "components/CCK2FileBlockService.js",
   "modules/CCK2.jsm",
   "modules/Preferences.jsm",
   "modules/Timer.jsm",
