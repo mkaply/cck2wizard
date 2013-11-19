@@ -175,7 +175,7 @@ function onNew() {
   if (!checkToSave()) {
     return false;
   }
-  var retVals = { name: null, id: null};
+  var retVals = { name: null, id: null, stringbundle: gStringBundle};
   window.openDialog("chrome://cck2wizard/content/new-dialog.xul", "cck2wizard-new", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return false;

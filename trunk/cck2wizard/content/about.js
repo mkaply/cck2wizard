@@ -43,7 +43,7 @@ function deleteConfig() {
 }
 
 function copyConfig() {
-  var retVals = { name: gCurrentConfig.name, id: gCurrentConfig.id};
+  var retVals = { name: gCurrentConfig.name, id: gCurrentConfig.id, stringbundle: gStringBundle};
   window.openDialog("chrome://cck2wizard/content/new-dialog.xul", "cck2wizard-new", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return false;
