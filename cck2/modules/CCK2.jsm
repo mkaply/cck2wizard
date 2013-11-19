@@ -86,9 +86,11 @@ var CCK2 = {
       if (!this.firstrun) {
         this.installedVersion = Preferences.get("extensions.cck2." + config.id + ".installedVersion");
       }
-      if ("version" in config) {
-        Preferences.set("extensions.cck2." + config.id + ".installedVersion", config.version);
-      }
+      Preferences.set("extensions.cck2." + config.id + ".installedVersion", config.version);
+      Preferences.lock("distribution.id", config.id);
+      Preferences.lock("distribution.version", config.version + " (CCK2)");
+//      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
+
       if (config.permissions) {
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
