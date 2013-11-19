@@ -66,7 +66,7 @@ function onLoad() {
   };
 
   var registrar = Components.manager.QueryInterface(Ci.nsIComponentRegistrar);
-  registrar.registerFactory(Components.ID("{f0747ed9-764a-4501-a7e5-4d1493605430}"),
+  registrar.registerFactory(Components.ID("{c4ce4c59-6a17-4751-8bf0-5cddeb7e1904}"),
                             "Preference Auto Complete Search",
                             "@mozilla.org/autocomplete/search;1?name=cck2prefs", prefAutoCompleteFactory);
 
@@ -101,7 +101,7 @@ function onLoad() {
 
 function onUnload() {
   var registrar = Components.manager.QueryInterface(Ci.nsIComponentRegistrar);
-  registrar.unregisterFactory(Components.ID("{f0747ed9-764a-4501-a7e5-4d1493605430}"), prefAutoCompleteFactory);
+  registrar.unregisterFactory(Components.ID("{c4ce4c59-6a17-4751-8bf0-5cddeb7e1904}"), prefAutoCompleteFactory);
 }
 
 function onOK() {
