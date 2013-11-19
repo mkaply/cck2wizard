@@ -284,16 +284,28 @@ function packageCCK2(type) {
       }
     }
   }
-  if ("certs" in config && "ca" in config.certs) {
+  if ("certs" in config && ("ca" in config.certs || "server" in config.certs)) {
     var certsDir = resourceDir.clone();
     certsDir.append("certs");
     certsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    for (var i=0; i < config.certs.ca.length; i++) {
-      if (!/^https?:/.test(config.certs.ca[i].url)) {
-        var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-        certFile.initWithPath(config.certs.ca[i].url);
-        copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
-        config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+    if ("ca" in config.certs) {
+      for (var i=0; i < config.certs.ca.length; i++) {
+        if (!/^https?:/.test(config.certs.ca[i].url)) {
+          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+          certFile.initWithPath(config.certs.ca[i].url);
+          copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
+          config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+        }
+      }
+    }
+    if ("server" in config.certs) {
+      for (var i=0; i < config.certs.server.length; i++) {
+        if (!/^https?:/.test(config.certs.server[i])) {
+          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+          certFile.initWithPath(config.certs.server[i]);
+          copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
+          config.certs.server[i] = "resource://" + config.id + "/certs/" + certFile.leafName;
+        }
       }
     }
   }
