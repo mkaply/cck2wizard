@@ -1,3 +1,8 @@
+const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
+Cu.import("resource://gre/modules/Services.jsm");
+
+var gStringBundle;
+
 function onLoad() {
   var initVals = window.arguments[0];
   if (initVals.name) {
@@ -6,15 +11,21 @@ function onLoad() {
   if (initVals.id) {
     document.getElementById('id').value = initVals.id;
   }
+  if (initVals.stringbundle) {
+    gStringBundle = initVals.stringbundle;
+  }
 }
 
 function onOK() {
   var retVals = window.arguments[0];
   retVals.name = document.getElementById('name').value;
   retVals.id = document.getElementById('id').value;
-  var alphaExp = /^[0-9a-zA-Z\-\_]+$/;
-  if (!alphaExp.test(retVals.id)) {
-    alert("ID can't contain spaces");
+  // Make sure ID doesn't contain spaces or slashes
+  var alphaExp = /[//\\\s]/;
+  if (alphaExp.test(retVals.id)) {
+    Services.prompt.alert(window,
+                          gStringBundle.getString("titlebar"),
+                          gStringBundle.getString("invalidid"));
     return false;
   }
   return true;
