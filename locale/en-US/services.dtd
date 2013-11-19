@@ -10,3 +10,6 @@
 <!ENTITY dontShowRights.label "Don't show the rights notification">
 <!ENTITY disableFirefoxHealthReportUpload.label "Disable Firefox Health Report upload">
 <!ENTITY disableAddonsManager.label "Disable the Add-ons Manager">
+
+<!ENTITY removeSnippets.label "Don't show snippets on about:home">
+<!ENTITY disableResetFirefox.label "Don't allow Firefox to be reset on about:support">
