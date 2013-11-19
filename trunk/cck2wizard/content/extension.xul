@@ -37,12 +37,6 @@
           </row>
           <row align="center">
             <vbox align="right">
-              <label pack="end" value="&extension-version.label;" />
-            </vbox>
-            <textbox config="extension.version" />
-          </row>
-          <row align="center">
-            <vbox align="right">
               <label pack="end" value="&extension-description.label;" />
             </vbox>
             <textbox config="extension.description" />

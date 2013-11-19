@@ -116,8 +116,8 @@ function packageCCK2(type) {
     return;
   }
   if (type == "extension" &&
-      (!config.extension || !config.extension.id || !config.extension.version)) {
-    showErrorMessage("noextension");
+      (!config.extension || !config.extension.id)) {
+    showErrorMessage("noextensionid");
     selectPane("extension");
     return;
   }
@@ -163,7 +163,7 @@ function packageCCK2(type) {
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%extid%", config.extension.id);
     installRDF = installRDF.replace("%extname%", config.extension.name);
-    installRDF = installRDF.replace("%version%", config.extension.version);
+    installRDF = installRDF.replace("%version%", config.version);
     if ("description" in config.extension) {
       installRDF = installRDF.replace("%description%", config.extension.description);
     } else {
