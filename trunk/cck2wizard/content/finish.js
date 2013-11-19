@@ -242,10 +242,13 @@ function packageCCK2(type) {
     destfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
     writeFile(destfile, data, addFileToZip(zipwriter));
   }
-  if ("iconurl" in config.extension) {
+  if ("icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    iconFile.initWithPath(config.extension.iconurl);
+    iconFile.initWithPath(config.extension.icon);
     copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
+    // Since icon gives away local path, remove it
+    delete(extension.icon);
+    
   }
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
