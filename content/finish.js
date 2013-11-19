@@ -20,8 +20,8 @@ const installRDFTemplate = [
 '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"',
 '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">',
 '    <Description about="urn:mozilla:install-manifest">',
-'        <em:id>%id%</em:id>',
-'        <em:name>%name%</em:name>',
+'        <em:id>%extid%</em:id>',
+'        <em:name>%extname%</em:name>',
 '        <em:version>%version%</em:version>',
 '        <em:description>%description%</em:description>',
 '        <em:creator>CCK2 Wizard (http://mike.kaply.com/cck2)</em:creator>',
@@ -47,8 +47,8 @@ const chromeManifestTemplate = [
 const chromeManifestComponentTemplate = [
 '',
 'component %uuid% components/CCK2Service.js',
-'contract @kaply.com/cck2-%id%-service;1 %uuid%',
-'category profile-after-change CCK2%id-nospecialchars%Service @kaply.com/cck2-%id%-service;1',
+'contract @kaply.com/cck2-%id-nospecialchars%-service;1 %uuid%',
+'category profile-after-change CCK2%id-nospecialchars%Service @kaply.com/cck2-%id-nospecialchars%-service;1',
 ''].join("\n");
 
 const CCK2ServiceTemplate = [
@@ -71,7 +71,7 @@ const CCK2ServiceTemplate = [
 '    }',
 '  },',
 '  classDescription: "CCK2 %id% Service",',
-'  contractID: "@kaply.com/cck2-%id%-service;1",',
+'  contractID: "@kaply.com/cck2-%id-nospecialchars%-service;1",',
 '  classID: Components.ID("%uuid%"),',
 '  QueryInterface: XPCOMUtils.generateQI([Ci.nsIObserver]),',
 '  _xpcom_categories: [{category: "profile-after-change"}]',
@@ -161,8 +161,8 @@ function packageCCK2(type) {
   zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
   
   if (type != "distribution") {
-    var installRDF = installRDFTemplate.replace("%id%", config.extension.id);
-    installRDF = installRDF.replace("%name%", config.extension.name);
+    var installRDF = installRDFTemplate.replace("%extid%", config.extension.id);
+    installRDF = installRDF.replace("%extname%", config.extension.name);
     installRDF = installRDF.replace("%version%", config.extension.version);
     if ("description" in config.extension) {
       installRDF = installRDF.replace("%description%", config.extension.description);
