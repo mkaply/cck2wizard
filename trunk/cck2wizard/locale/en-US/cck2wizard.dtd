@@ -14,3 +14,7 @@
 <!ENTITY export.label "Export">
 <!ENTITY close.label "Close">
 <!ENTITY none.label "(none)">
+
+<!ENTITY cckwizard.description "To get started with the CCK2 Wizard, select an option from the File menu.">
+<!ENTITY cckwizard.description2 "If you're starting from scratch, select New.">
+<!ENTITY cckwizard.description3 "If you've used a previous version of the CCK Wizard, select Import.">

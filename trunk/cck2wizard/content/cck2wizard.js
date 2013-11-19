@@ -16,7 +16,24 @@ function onLoad() {
     gDeck = document.getElementById("cck2wizard-deck");
     gTree.addEventListener("select", onPaneSelected, false);
     gStringBundle = document.getElementById("cck2wizard-string-bundle");
-    document.getElementById("cck2wizard-browser").setAttribute("src", "http://mike.kaply.com/cck2-window/");
+    var request = new XMLHttpRequest();
+    request.open("GET", "http://mike.kaply.com/cck2-window/?json=1");
+    request.onload = function() {
+      var json = JSON.parse(request.responseText);
+      var target = document.getElementById("cck2web");;
+      var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]
+                               .getService(Components.interfaces.nsIScriptableUnescapeHTML)
+                               .parseFragment(json.page.content, false, null, target);
+      target.appendChild(fragment);      
+//      document.getElementById("cck2web").textContent = json.page.custom_fields.message;
+//      document.getElementById("cck2web").setAttribute("href", json.page.custom_fields.href);
+    }
+    request.send();
+    //document.getElementById("cck2web").addEventListener("click", function(event) {
+    //  var win = Services.wm.getMostRecentWindow("navigator:browser");
+    //  win.openUILinkIn(event.target.getAttribute("href"), "tab");
+    //  window.close();
+    //}, false);
   } catch(e) {
     errorCritical(e);
   }

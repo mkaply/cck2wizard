@@ -40,3 +40,19 @@ description {
   padding-right: 5px;
   padding-bottom: 5px;
 }
+
+#cck2wizard-info {
+  font-size: larger;
+}
+
+#cck2wizard-info description {
+  margin-top: 25px;
+}
+
+#cck2wizard-info #cck2web {
+  margin-top: 75px;
+}
+
+#cck2wizard-info #cck2web a {
+  color: blue;
+}
