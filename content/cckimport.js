@@ -239,8 +239,8 @@ function importCCKFile(configFileContent)
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
-    if (!config.bookmarks.window) {
-      config.bookmarks.window = [];
+    if (!config.bookmarks.menu) {
+      config.bookmarks.menu = [];
     }
     var foldername, i=1;
     while ((foldername = configarray['BookmarkFolder' + i])) {
@@ -265,7 +265,7 @@ function importCCKFile(configFileContent)
         folder.folder.push(bookmark);
         j++;
       }
-      config.bookmarks.window.push(folder);
+      config.bookmarks.menu.push(folder);
       i++;
     }
   }
@@ -273,8 +273,8 @@ function importCCKFile(configFileContent)
     if (!config.bookmarks) {
       config.bookmarks = {};
     }
-    if (!config.bookmarks.toolbar) {
-      config.bookmarks.window = [];
+    if (!config.bookmarks.menu) {
+      config.bookmarks.menu = [];
     }
     var bookmarkname, i=1;
     while ((bookmarkname = configarray["BookmarkTitle" + i])) {
@@ -291,7 +291,7 @@ function importCCKFile(configFileContent)
 	bookmark.name = bookmarkname;
 	bookmark.location = configarray["BookmarkURL" + i]
       }
-      config.bookmarks.window.push(bookmark);
+      config.bookmarks.menu.push(bookmark);
       i++;
     }
   }
