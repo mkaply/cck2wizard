@@ -114,11 +114,11 @@ function createBookmarkListItem(bookmark) {
     var listcell = createListCell(bookmark.name);
     listcell.setAttribute("class", "listcell-iconic");
     listitem.appendChild(listcell);
-    tooltiptext = name;
+    tooltiptext = bookmark.name;
   }
   if ("location" in bookmark) {
     listitem.appendChild(createListCell(bookmark.location));
-    tooltiptext += " - " + location;
+    tooltiptext += " - " + bookmark.location;
   }
   if ("type" in bookmark) {
     listitem.setAttribute("type", bookmark.type);
@@ -127,12 +127,21 @@ function createBookmarkListItem(bookmark) {
     listitem.setAttribute("folder", "true");
   }
   listitem.setAttribute("context", "bookmarks-contextmenu");
+  listitem.setAttribute("tooltiptext", tooltiptext);
   return listitem;
 }
 
 function updateBookmarkListItem(listitem, bookmark) {
   listitem.childNodes[0].setAttribute("label", bookmark.name);
   listitem.childNodes[1].setAttribute("label", bookmark.location);
+  var tooltiptext = "";
+  if ("name" in bookmark) {
+    tooltiptext = bookmark.name;
+  }
+  if ("location" in bookmark) {
+    tooltiptext += " - " + bookmark.location;
+  }
+  listitem.setAttribute("tooltiptext", tooltiptext);
   return listitem;
 }
 

@@ -122,6 +122,7 @@ function updatePreferenceListItem(listitem, name, value, type, locked) {
   listitem.childNodes[0].setAttribute("label", name);
   listitem.childNodes[2].setAttribute("label", type);
   listitem.childNodes[3].setAttribute("label", value);
+  listitem.setAttribute("tooltiptext", name + ": " + value);
 }
 
 function onDeletePreference() {
