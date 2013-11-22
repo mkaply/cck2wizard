@@ -12,24 +12,18 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="preferences" setconfig="setPreferences" getconfig="getPreferences" resetconfig="resetPreferences">
-        <listbox id="preferences-listbox"
+        <richlistbox id="preferences-listbox"
                  ondblclick="onEditPreference();"
                  onkeypress="onKeyPressPreference(event);"
                  context="preferences-listbox-contextmenu"
                  flex="1">
-          <listhead>
-            <listheader label="&name.label;" flex="1"/>
-            <listheader label="&status.label;" />
-            <listheader label="&type.label;" />
-            <listheader label="&value.label;" flex="1"/>
-          </listhead>
-          <listcols>
-            <listcol flex="1"/>
-            <listcol />
-            <listcol />
-            <listcol flex="1"/>
-          </listcols>
-        </listbox>
+          <listheader  equalsize="always" style="border: 0; padding: 0; -moz-appearance: none;">
+            <treecol label="&name.label;" flex="1"/>
+            <treecol label="&status.label;" flex="1"/>
+            <treecol label="&type.label;" flex="1"/>
+            <treecol label="&value.label;" flex="1" />
+          </listheader>
+        </richlistbox>
       <hbox>
         <button label="&add.label;" oncommand="onAddPreference()"/>
       </hbox>
