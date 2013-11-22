@@ -1,21 +1,26 @@
-.bookmarks-listbox listitem[level="1"] > listcell.listcell-iconic {
+.bookmarks-listbox listitem[level="1"] > listcell.listcell-iconic,
+.bookmarks-listbox listitem[level="1"][type="separator"] > listcell {
   padding-left: 15px;
 }
 
-.bookmarks-listbox listitem[level="2"] > listcell.listcell-iconic {
+.bookmarks-listbox listitem[level="2"] > listcell.listcell-iconic,
+.bookmarks-listbox listitem[level="2"][type="separator"] > listcell {
   padding-left: 30px;
 }
 
 
-.bookmarks-listbox listitem[level="3"] > listcell.listcell-iconic {
+.bookmarks-listbox listitem[level="3"] > listcell.listcell-iconic,
+.bookmarks-listbox listitem[level="3"][type="separator"] > listcell {
   padding-left: 45px;
 }
 
-.bookmarks-listbox listitem[level="4"] > listcell.listcell-iconic {
+.bookmarks-listbox listitem[level="4"] > listcell.listcell-iconic,
+.bookmarks-listbox listitem[level="4"][type="separator"] > listcell {
   padding-left: 60px;
 }
 
-.bookmarks-listbox listitem[level="5"] > listcell.listcell-iconic {
+.bookmarks-listbox listitem[level="5"] > listcell.listcell-iconic,
+.bookmarks-listbox listitem[level="5"][type="separator"] > listcell {
   padding-left: 75px;
 }
 
@@ -30,7 +35,6 @@
 .bookmarks-listbox listitem[type="separator"]:after {
   content: "----------";
 }
-
 
 .bookmarks-listbox listitem[folder="true"]:-moz-drag-over {
   border: 1px solid black;
