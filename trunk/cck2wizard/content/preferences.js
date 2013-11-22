@@ -87,14 +87,20 @@ function addPreference(name, value, type, locked) {
 
 function createPreferenceListItem(name, value, type, locked) {
   var listitem = document.createElement("listitem");
+  listitem.setAttribute("equalsize", "always");
+  listitem.setAttribute("tooltiptext", name + ": " + value);
   var nameCell = document.createElement("listcell");
+  nameCell.setAttribute("flex", "1");
+  nameCell.setAttribute("crop", "end");
   nameCell.setAttribute("label", name);
   var typeCell = document.createElement("listcell");
+  typeCell.setAttribute("flex", "1");
   if (type == "number") {
     type = "integer";
   }
   typeCell.setAttribute("label", type);
   var statusCell = document.createElement("listcell");
+  statusCell.setAttribute("flex", "1");
   if (locked) {
     statusCell.setAttribute("label", "locked");
     listitem.setAttribute("locked", "true");
@@ -102,6 +108,7 @@ function createPreferenceListItem(name, value, type, locked) {
     statusCell.setAttribute("label", "default");
   }
   var valueCell = document.createElement("listcell");
+  valueCell.setAttribute("flex", "1");
   valueCell.setAttribute("label", value);
   listitem.appendChild(nameCell);
   listitem.appendChild(statusCell);
