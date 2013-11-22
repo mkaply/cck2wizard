@@ -68,7 +68,7 @@ function addRegistryItem(registryitem, update) {
 function createRegistryListItem(registryitem) {
   var listitem = document.createElement("listitem");
   listitem.setAttribute("equalsize", "always");
-  listitem.setAttribute("tooltiptext", registryitem.key + "\" + registryitem.name + ": " + registryitem.value);
+  listitem.setAttribute("tooltiptext", registryitem.key + "\\" + registryitem.name + ": " + registryitem.value);
   listitem.appendChild(createListCell(registryitem.rootkey));
   listitem.appendChild(createListCell(registryitem.key));
   listitem.appendChild(createListCell(registryitem.name));
