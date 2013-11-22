@@ -13,26 +13,19 @@
     <vbox id="permissions" setconfig="setPermissions" getconfig="getPermissions" resetconfig="resetPermissions">
       <label class="cck2wizard-heading" value="&permissions.label;"/>
       <description class="cck2wizard-description">&permissions.description;</description>
-        <listbox id="permissions-listbox"
+        <richlistbox id="permissions-listbox"
                  ondblclick="onEditPermissionsItem();"
                  onkeypress="onKeyPressPermissions(event);"
                  context="permissions-listbox-contextmenu"
                  flex="1">
-          <listhead>
-            <listheader label="&site.label;" flex="1"/>
-            <listheader label="&popup.label;" flex="1"/>
-            <listheader label="&install.label;" flex="1"/>
-            <listheader label="&cookie.label;" flex="1"/>
-            <listheader label="&plugins.label;" flex="1"/>
-          </listhead>
-          <listcols>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-          </listcols>
-        </listbox>
+          <listheader  equalsize="always" style="border: 0; padding: 0; -moz-appearance: none;">
+            <treecol label="&site.label;" flex="1"/>
+            <treecol label="&popup.label;" flex="1"/>
+            <treecol label="&install.label;" flex="1"/>
+            <treecol label="&cookie.label;" flex="1"/>
+            <treecol label="&plugins.label;" flex="1"/>
+          </listheader>
+        </richlistbox>
       <hbox>
         <button label="&add.label;" oncommand="onAddPermissionsItem()"/>
       </hbox>
