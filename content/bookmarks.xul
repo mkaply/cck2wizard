@@ -30,7 +30,7 @@
       <checkbox config="removeDefaultBookmarks" label="&removeDefaultBookmarks.label;" />
     </vbox>
     <vbox id="bookmarks-toolbar">
-        <listbox id="bookmarks-toolbar-listbox"
+        <richlistbox id="bookmarks-toolbar-listbox"
                  class="bookmarks-listbox"
                  ondragstart="onDragStart(event);"
                  ondrop="onDrop(event);"
@@ -40,15 +40,11 @@
                  onkeypress="onKeyPressBookmarksToolbar(event);"
                  context="bookmarks-listbox-contextmenu"
                  flex="1">
-          <listhead>
-            <listheader label="&bookmarks-name.label;" />
-            <listheader label="&bookmarks-location.label;" />
-          </listhead>
-          <listcols>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-          </listcols>
-        </listbox>      
+          <listheader  equalsize="always" style="border: 0; padding: 0; -moz-appearance: none;">
+            <treecol label="&bookmarks-name.label;" flex="1"/>
+            <treecol label="&bookmarks-location.label;" flex="1"/>
+          </listheader>
+        </richlistbox>      
       <hbox>
         <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-toolbar-listbox'));" />
         <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-toolbar-listbox'));" />
@@ -56,7 +52,7 @@
       </hbox>
     </vbox>
     <vbox id="bookmarks-menu">
-        <listbox id="bookmarks-menu-listbox"
+        <richlistbox id="bookmarks-menu-listbox"
                  class="bookmarks-listbox"
                  ondragstart="onDragStart(event);"
                  ondrop="onDrop(event);"
@@ -66,15 +62,11 @@
                  onkeypress="onKeyPressBookmarksToolbar(event);"
                  context="bookmarks-listbox-contextmenu"
                  flex="1">
-          <listhead>
-            <listheader label="&bookmarks-name.label;" />
-            <listheader label="&bookmarks-location.label;" />
-          </listhead>
-          <listcols>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-          </listcols>
-        </listbox>      
+          <listheader  equalsize="always" style="border: 0; padding: 0; -moz-appearance: none;">
+            <treecol label="&bookmarks-name.label;" flex="1"/>
+            <treecol label="&bookmarks-location.label;" flex="1"/>
+          </listheader>
+        </richlistbox>      
       <hbox>
         <button label="&bookmarks-addbookmark.label;" oncommand="onAddBookmark(document.getElementById('bookmarks-menu-listbox'));" />
         <button label="&bookmarks-addfolder.label;" oncommand="onAddFolder(document.getElementById('bookmarks-menu-listbox'));" />

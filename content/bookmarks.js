@@ -108,13 +108,17 @@ function addBookmark(listbox, bookmark) {
 
 function createBookmarkListItem(bookmark) {
   var listitem = document.createElement("listitem");
+  listitem.setAttribute("equalsize", "always")
+  var tooltiptext = "";
   if ("name" in bookmark) {
     var listcell = createListCell(bookmark.name);
     listcell.setAttribute("class", "listcell-iconic");
     listitem.appendChild(listcell);
+    tooltiptext = name;
   }
   if ("location" in bookmark) {
     listitem.appendChild(createListCell(bookmark.location));
+    tooltiptext += " - " + location;
   }
   if ("type" in bookmark) {
     listitem.setAttribute("type", bookmark.type);
@@ -224,7 +228,7 @@ function getLastFolderItem(listitem) {
 
 function onDrop(event) {
   var data = event.dataTransfer.getData("cck2/bookmark");
-  if (event.target.nodeName == "listbox") {
+  if (event.target.nodeName == "richlistbox") {
     var listbox = event.target;
     var listitem = listbox.getItemAtIndex(data);
     if (listitem.hasAttribute("folder")) {
@@ -300,7 +304,7 @@ function onKeyPressBookmarksToolbar(event) {
 
 function onAddSeparator(target) {
   var listbox;
-  if (target.nodeName == "listbox") {
+  if (target.nodeName == "richlistbox") {
     listbox = target;
   } else {
     listbox = target.parentNode;
@@ -330,7 +334,7 @@ function onAddBookmark(target) {
     return;
   }
   var listbox;
-  if (target.nodeName == "listbox") {
+  if (target.nodeName == "richlistbox") {
     listbox = target;
   } else {
     listbox = target.parentNode;
@@ -363,7 +367,7 @@ function onAddFolder(target) {
     return;
   }
   var listbox;
-  if (target.nodeName == "listbox") {
+  if (target.nodeName == "richlistbox") {
     listbox = target;
   } else {
     listbox = target.parentNode;
