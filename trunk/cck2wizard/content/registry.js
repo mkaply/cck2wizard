@@ -84,6 +84,7 @@ function updateRegistryListItem(listitem, registryitem) {
   listitem.childNodes[2].setAttribute("label", registryitem.name);
   listitem.childNodes[3].setAttribute("label", registryitem.value);
   listitem.childNodes[4].setAttribute("label", registryitem.type);
+  listitem.setAttribute("tooltiptext", registryitem.key + "\\" + registryitem.name + ": " + registryitem.value);
   return listitem;
 }
 

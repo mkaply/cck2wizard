@@ -98,6 +98,7 @@ function updatePermissionsListItem(listitem, permissionsitem) {
   listitem.childNodes[3].setAttribute("value", permissionsitem.cookie);
   listitem.childNodes[4].setAttribute("label", convertValueToLabel(permissionsitem.plugins));
   listitem.childNodes[4].setAttribute("value", permissionsitem.plugins);
+  listitem.setAttribute("tooltiptext", permissionsitem.host);
   return listitem;
 }
 
