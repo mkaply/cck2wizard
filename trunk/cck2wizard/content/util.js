@@ -50,5 +50,6 @@ function createListCell(label, value) {
   if (value) {
     listcell.setAttribute("value", value);
   }
+  listcell.setAttribute("flex", "1");
   return listcell;
 }

@@ -11,26 +11,19 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="registry" setconfig="setRegistry" getconfig="getRegistry" resetconfig="resetRegistry">
-        <listbox id="registry-listbox"
+        <richlistbox id="registry-listbox"
                  ondblclick="onEditRegistryItem();"
                  onkeypress="onKeyPressRegistry(event);"
                  context="registry-listbox-contextmenu"
                  flex="1">
-          <listhead>
-            <listheader label="&regRootKey.label;" flex="1"/>
-            <listheader label="&regKey.label;" flex="1"/>
-            <listheader label="&regName.label;" flex="1"/>
-            <listheader label="&regNameValue.label;" flex="1"/>
-            <listheader label="&regType.label;" flex="1"/>
-          </listhead>
-          <listcols>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-            <listcol flex="1"/>
-          </listcols>
-        </listbox>
+          <listheader  equalsize="always" style="border: 0; padding: 0; -moz-appearance: none;">
+            <treecol label="&regRootKey.label;" flex="1"/>
+            <treecol label="&regKey.label;" flex="1"/>
+            <treecol label="&regName.label;" flex="1"/>
+            <treecol label="&regNameValue.label;" flex="1"/>
+            <treecol label="&regType.label;" flex="1"/>
+          </listheader>
+        </richlistbox>
       <hbox>
         <button label="&add.label;" oncommand="onAddRegistryItem()"/>
       </hbox>

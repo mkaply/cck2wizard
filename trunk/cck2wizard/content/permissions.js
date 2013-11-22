@@ -69,6 +69,8 @@ function addPermissionsItem(permissionsitem, host) {
 
 function createPermissionsListItem(permissionsitem, host) {
   var listitem = document.createElement("listitem");
+  listitem.setAttribute("equalsize", "always");
+  listitem.setAttribute("tooltiptext", host ? host : permissionsitem.host);
   if (host) {
     listitem.appendChild(createListCell(host));
   } else {
