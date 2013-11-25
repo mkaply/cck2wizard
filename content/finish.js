@@ -342,6 +342,7 @@ function packageCCK2(type) {
             zipReader.close();
           }
         }
+        delete(config.addons[i]);
       }
     }
   }
