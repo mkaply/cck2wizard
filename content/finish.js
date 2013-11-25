@@ -41,6 +41,7 @@ const installRDFTemplate = [
 
 const chromeManifestTemplate = [
 'resource %id% resources/',
+'content %id% resources/',
 'manifest cck2/chrome.manifest',
 ''].join("\n");
 
@@ -284,6 +285,19 @@ function packageCCK2(type) {
         searchpluginFile.initWithPath(config.searchplugins[i]);
         copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
         config.searchplugins[i] = "resource://" + config.id + "/searchplugins/" + searchpluginFile.leafName;
+      }
+    }
+  }
+  if ("addons" in config) {
+    var addonsDir = resourceDir.clone();
+    addonsDir.append("addons");
+    addonsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    for (var i=0; i < config.addons.length; i++) {
+      if (!/^https?:/.test(config.addons[i])) {
+        var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        addonFile.initWithPath(config.addons[i]);
+        copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
+        config.addons[i] = "chrome://" + config.id + "/content/addons/" + addonFile.leafName;
       }
     }
   }
