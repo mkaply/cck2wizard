@@ -1,4 +1,5 @@
 <!ENTITY ui.label "User Interface">
+<!ENTITY helpmenu.label "Help Menu">
 
 <!ENTITY titlemodifier.caption "Browser Window's Title Bar Text">
 <!ENTITY titlemodifier.label "Custom Title Bar Text:">

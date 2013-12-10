@@ -2,14 +2,26 @@
 <!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/ui.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <treechildren id="cck2wizard-treechildren">
-    <treeitem>
+    <treeitem container="true" open="true">
       <treerow>
         <treecell label="&ui.label;" value="ui" />
       </treerow>
+      <treechildren>
+        <treeitem>
+          <treerow>
+        <treecell label="&helpmenu.label;" value="helpmenu" />
+          </treerow>
+        </treeitem>
+      </treechildren>
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="ui">
+      <groupbox>
+        <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
+        <checkbox config="removeDeveloperTools" label="&removeDeveloperTools.label;" />
+        <checkbox config="removeSetDesktopBackground" label="&removeSetDesktopBackground.label;" />
+      </groupbox>
       <groupbox>
         <caption label="&titlemodifier.caption;"/>
         <description>&titlemodifier.description;</description>
@@ -18,6 +30,8 @@
           <textbox id="titlemodifier" config="titlemodifier" flex="1"/>
         </hbox>
       </groupbox>
+    </vbox>
+    <vbox id="helpmenu">
       <groupbox>
         <caption label="&helpMenu.caption;"/>
         <description>&helpMenu.description;</description>
@@ -34,9 +48,6 @@
           <textbox id="HelpMenuCommandAccesskey" config="helpMenu.accesskey" flex="1"/>
         </vbox>
       </groupbox>
-      <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
-      <checkbox config="removeDeveloperTools" label="&removeDeveloperTools.label;" />
-      <checkbox config="removeSetDesktopBackground" label="&removeSetDesktopBackground.label;" />
     </vbox>
   </deck>
 </overlay>
