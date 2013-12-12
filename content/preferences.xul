@@ -4,10 +4,27 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="preferences.js" />
   <treechildren id="cck2wizard-treechildren">
-    <treeitem>
+    <treeitem container="true" open="true">
       <treerow>
-        <treecell label="Preferences" value="preferences" />
+        <treecell label="&preferences.label;" value="preferences" />
       </treerow>
+      <treechildren>
+        <treeitem>
+          <treerow>
+            <treecell label="&privacy.label;" value="privacy" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
+            <treecell label="&sync.label;" value="sync" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
+            <treecell label="&datachoices.label;" value="datachoices" />
+          </treerow>
+        </treeitem>
+      </treechildren>
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
@@ -27,14 +44,26 @@
       <hbox>
         <button label="&add.label;" oncommand="onAddPreference()"/>
       </hbox>
+      <checkbox config="disableAboutConfig" label="&disableaboutconfig.label;" />
+    </vbox>
+    <vbox id="privacy">
+      <groupbox>
+        <checkbox config="disablePrivateBrowsing" label="&disableprivatebrowsing.label;" />
+      </groupbox>
+    </vbox>
+    <vbox id="sync">
+      <groupbox>
+        <checkbox config="disableSync" label="&disablesync.label;" />
+      </groupbox>
+    </vbox>
+    <vbox id="datachoices">
+      <groupbox>
+        <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
+        <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
+        <checkbox config="disableFirefoxHealthReportUpload" label="&disableFirefoxHealthReportUpload.label;" />
+      </groupbox>
     </vbox>
   </deck>
-    <deck id="cck2wizard-dialog-deck">
-      <vbox id="cck2wizard-pref-dialog" onaccept="onNewPanelOK">
-        <label value="&name.label;:"/><textbox id="pref-name" type="autocomplete" autocompletesearch="prefs" onkeyup="prefSetPrefValue();" ontextentered="prefSetPrefValue();"/>
-        <label value="&value.label;:"/><textbox id="pref-value" hidespinbuttons="true"/>
-      </vbox>
-    </deck>
     <popupset>
       <menupopup id="preferences-contextmenu" onpopupshowing="onPreferencesPopup()">
         <menuitem id="preferences-lock" label="&lock.label;" oncommand="onLockUnlockPreference()"/>
