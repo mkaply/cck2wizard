@@ -81,6 +81,9 @@ var CCK2 = {
   
       if (!config)
         return;
+      if (!config.id) {
+        alert("Missing ID in config");
+      }
       this.firstrun = Preferences.get("extensions.cck2." + config.id + ".firstrun", true);
       Preferences.set("extensions.cck2." + config.id + ".firstrun", false);
       if (!this.firstrun) {
@@ -519,7 +522,11 @@ function addBookmarks(bookmarks, destination, annotation) {
 }
 
 function errorCritical(e) {
-  Services.prompt.alert(null, "CCK2", e + "\n\n" + e.stack);
+  var stack = e.stack;
+  if (!stack) {
+    stack = Error().stack;
+  }
+  Services.prompt.alert(null, "CCK2", e + "\n\n" + stack);
 }
 
 /**
