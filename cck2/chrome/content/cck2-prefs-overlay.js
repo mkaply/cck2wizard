@@ -1,6 +1,8 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://cck2/CCK2.jsm");
 
 (function () {
+  var config = CCK2.getConfig();
   var temp = {};
   Components.utils.import("resource://cck2/Preferences.jsm", temp);
   var Preferences = temp.Preferences;
@@ -22,6 +24,11 @@ Components.utils.import("resource://gre/modules/Services.jsm");
     if (event.target.id == "paneAdvanced" &&
 	Preferences.locked("datareporting.healthreport.uploadEnabled", false)) {
       disable(E("submitHealthReportBox"));
+    }
+    if (event.target.id == "paneSecurity" &&
+	config.noMasterPassword == true) {
+      hide(E("useMasterPassword"));
+      hide(E("changeMasterPassword"));
     }
   }
 

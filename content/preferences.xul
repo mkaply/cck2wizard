@@ -16,6 +16,11 @@
         </treeitem>
         <treeitem>
           <treerow>
+            <treecell label="&security.label;" value="security" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
             <treecell label="&sync.label;" value="sync" />
           </treerow>
         </treeitem>
@@ -49,6 +54,11 @@
     <vbox id="privacy">
       <groupbox>
         <checkbox config="disablePrivateBrowsing" label="&disableprivatebrowsing.label;" />
+      </groupbox>
+    </vbox>
+    <vbox id="security">
+      <groupbox>
+        <checkbox config="noMasterPassword" label="&noMasterPassword.label;" />
       </groupbox>
     </vbox>
     <vbox id="sync">

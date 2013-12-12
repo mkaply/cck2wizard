@@ -1,6 +1,7 @@
 <!ENTITY preferences.label "Preferences">
 <!ENTITY privacy.label "Privacy">
 <!ENTITY sync.label "Sync">
+<!ENTITY security.label "Security">
 
 <!ENTITY add.label "Add...">
 
@@ -23,3 +24,5 @@
 <!ENTITY disableFirefoxHealthReportUpload.label "Disable Firefox Health Report upload">
 
 <!ENTITY disableaboutconfig.label "Prevent access to about:config">
+
+<!ENTITY noMasterPassword.label "No Master Password">
