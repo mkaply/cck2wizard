@@ -1,4 +1,6 @@
 <!ENTITY preferences.label "Preferences">
+<!ENTITY privacy.label "Privacy">
+<!ENTITY sync.label "Sync">
 
 <!ENTITY add.label "Add...">
 
@@ -11,3 +13,13 @@
 <!ENTITY unlock.label "Unlock">
 <!ENTITY edit.label "Edit...">
 <!ENTITY delete.label "Delete">
+
+<!ENTITY disableprivatebrowsing.label "Disable Private Browsing">
+<!ENTITY disablesync.label "Disable Sync">
+<!ENTITY datachoices.label "Data Choices">
+
+<!ENTITY disableCrashReporter.label "Disable the crash reporter">
+<!ENTITY disableTelemetry.label "Disable telemetry">
+<!ENTITY disableFirefoxHealthReportUpload.label "Disable Firefox Health Report upload">
+
+<!ENTITY disableaboutconfig.label "Prevent access to about:config">
