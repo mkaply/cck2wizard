@@ -115,17 +115,17 @@ Components.utils.import("resource://cck2/CCK2.jsm");
           return element != "about:preferences";
         })
 
-      if (!Preferences.get("browser.privatebrowsing.enabled", true) &&
+      if (config.disablePrivateBrowsing &&
 	  PrivateBrowsingUtils.isWindowPrivate(window)) {
 	window.setTimeout(function() {
 	  Services.prompt.alert(window, "Private Browsing", "Private Browsing has been disabled by your administrator");
   	window.close();
 	}, 0, false);
       }
-      if (!Preferences.get("browser.privatebrowsing.enabled", true)) {
+      if (config.disablePrivateBrowsing) {
 	disablePrivateBrowsing();
       }
-      if (!Preferences.get("services.sync.enabled", true)) {
+      if (config.disableSync) {
 	disableSync();
       }
       var appcontent = E("appcontent");
