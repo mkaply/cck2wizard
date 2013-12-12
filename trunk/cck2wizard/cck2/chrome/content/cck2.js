@@ -20,7 +20,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 	return;
       }
       /* Remove the sync button from about:home */
-      if (!Preferences.get("services.sync.enabled", true) &&
+      if ((config && config.disableSync) &&
 	 /^about:home/.test(doc.location.href)) {
 	remove(E("sync", doc));
       }
