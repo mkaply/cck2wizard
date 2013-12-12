@@ -115,6 +115,10 @@ Components.utils.import("resource://cck2/CCK2.jsm");
           return element != "about:preferences";
         })
 
+      config = CCK2.getConfig();
+      if (!config)
+        return;
+
       if (config.disablePrivateBrowsing &&
 	  PrivateBrowsingUtils.isWindowPrivate(window)) {
 	window.setTimeout(function() {
@@ -133,9 +137,6 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 	 appcontent.addEventListener("DOMContentLoaded", onPageLoad, false);
       }
   
-      config = CCK2.getConfig();
-      if (!config)
-        return;
       if (config.disableAddonsManager) {
 	disableAddonsManager();
       }
