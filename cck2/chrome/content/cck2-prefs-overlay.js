@@ -12,13 +12,13 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 
   function paneload(event) {
     if (event.target.id == "panePrivacy" &&
-	!Preferences.get("browser.privatebrowsing.enabled", true)) {
+	config.disablePrivateBrowsing) {
       hide(E("privateBrowsingAutoStart"));
       var privateBrowsingMenu = document.querySelector("menuitem[value='dontremember']");
       hide(privateBrowsingMenu);
     }
     if (event.target.id == "paneAdvanced" &&
-	Preferences.locked("toolkit.crashreporter.enabled", false)) {
+	config.disableCrashReporter) {
       disable(E("submitCrashesBox"));
     }
     if (event.target.id == "paneAdvanced" &&
@@ -36,7 +36,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   {
     try {
       window.removeEventListener("load", startup, false);
-      if (Preferences.get("services.sync.enabled", true))
+      if (!config.disableSync)
         return;
       var prefWindow = E("BrowserPreferences");
       var paneSyncRadio = document.getAnonymousElementByAttribute(prefWindow, "pane", "paneSync");

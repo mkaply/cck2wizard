@@ -130,7 +130,6 @@ var CCK2 = {
         }
       }
       if (config.disablePrivateBrowsing) {
-        Preferences.lock("browser.privatebrowsing.enabled", false);
         Preferences.lock("browser.taskbar.lists.tasks.enabled", false);
         Preferences.lock("browser.privatebrowsing.autostart", false);
         var aboutPrivateBrowsing = {};
@@ -144,7 +143,6 @@ var CCK2 = {
         Preferences.lock("extensions.getAddons.showPane", false);
       }
       if (config.disableSync) {
-        Preferences.lock("services.sync.enabled", false);
         var aboutSyncLog = {};
         aboutSyncLog.classID = Components.ID(uuid.generateUUID().toString());
         aboutSyncLog.factory = disableAbout(aboutSyncLog.classID,
