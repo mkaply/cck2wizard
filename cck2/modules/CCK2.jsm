@@ -98,6 +98,11 @@ var CCK2 = {
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
             Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
+            if (j == "plugins") {
+              // ENUMERATE ALL PLUGINS AND ENABLE THEM FOR THE GIVEN DOMAIN
+              Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + "java", config.permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + "java", config.permissions[i][j]);
+            }
           }
         }
       }
