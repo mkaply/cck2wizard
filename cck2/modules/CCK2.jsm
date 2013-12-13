@@ -154,6 +154,9 @@ var CCK2 = {
       if (config.noGetAddons) {
         Preferences.lock("extensions.getAddons.showPane", false);
       }
+      if (config.noAddons) {
+        Preferences.lock("xpinstall.enabled", false);
+      }
       if (config.disableSync) {
         var aboutSyncLog = {};
         aboutSyncLog.classID = Components.ID(uuid.generateUUID().toString());
