@@ -8,3 +8,7 @@
 <!ENTITY addurl.label "Add URL...">
 
 <!ENTITY delete.label "Delete">
+
+<!ENTITY noGetAddons.label "Prevent Discovering Add-ons in the Add-ons Manager">
+<!ENTITY disableAddonsManager.label "Disable the Add-ons Manager">
+<!ENTITY noAddons.label "Don't allow add-ons to be installed">

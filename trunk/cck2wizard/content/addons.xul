@@ -22,6 +22,11 @@
         <button id="addons-addfile" label="&addfile.label;" oncommand="onAddAddonFromFile();"/>
         <button id="addons-addurl" label="&addurl.label;" oncommand="onAddAddonFromURL();"/>
       </hbox>
+      <groupbox>
+        <checkbox config="noGetAddons" label="&noGetAddons.label;" />
+        <checkbox config="disableAddonsManager" label="&disableAddonsManager.label;"/>
+        <checkbox config="noAddons" label="&noAddons.label;"/>
+      </groupbox>
     </vbox>
   </deck>
       <popupset>

@@ -1,9 +1,7 @@
 <!ENTITY services.label "Services">
 <!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
-<!ENTITY noGetAddons.label "Prevent Discovering Add-ons in the Add-ons Manager">
 
 <!ENTITY dontShowRights.label "Don't show the rights notification">
-<!ENTITY disableAddonsManager.label "Disable the Add-ons Manager">
 
 <!ENTITY removeSnippets.label "Don't show snippets on about:home">
 <!ENTITY disableResetFirefox.label "Don't allow Firefox to be reset on about:support">
