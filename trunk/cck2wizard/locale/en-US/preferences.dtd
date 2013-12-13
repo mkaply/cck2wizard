@@ -26,3 +26,4 @@
 <!ENTITY disableaboutconfig.label "Prevent access to about:config">
 
 <!ENTITY noMasterPassword.label "No Master Password">
+<!ENTITY dontRememberPasswords.label "Don't Remember passwords">

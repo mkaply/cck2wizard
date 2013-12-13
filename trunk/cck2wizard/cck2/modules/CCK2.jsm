@@ -260,6 +260,9 @@ var CCK2 = {
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.override", true);
       }
+      if (config.dontRememberPasswords) {
+        Preferences.lock("signon.rememberSignons", false);
+      }
       if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
