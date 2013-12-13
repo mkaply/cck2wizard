@@ -258,7 +258,7 @@ var CCK2 = {
         Preferences.lock("startup.homepage_override_url", config.upgradePage);
       }
       if (config.dontShowRights) {
-        Preferences.lock("browser.rights.3.shown", true);
+        Preferences.lock("browser.rights.override", true);
       }
       if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
