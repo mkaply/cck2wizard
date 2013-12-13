@@ -1,4 +1,7 @@
 <!ENTITY preferences.label "Preferences">
+
+<!ENTITY preferences.description "You can set and lock Firefox preferences. To lock a preference, right click and select 'Lock'.">
+
 <!ENTITY privacy.label "Privacy">
 <!ENTITY sync.label "Sync">
 <!ENTITY security.label "Security">

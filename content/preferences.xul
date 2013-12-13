@@ -34,6 +34,8 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="preferences" setconfig="setPreferences" getconfig="getPreferences" resetconfig="resetPreferences">
+      <label class="cck2wizard-heading" value="&preferences.label;"/>
+      <description class="cck2wizard-description">&preferences.description;</description>
         <richlistbox id="preferences-listbox"
                  ondblclick="onEditPreference();"
                  onkeypress="onKeyPressPreference(event);"
@@ -49,7 +51,9 @@
       <hbox>
         <button label="&add.label;" oncommand="onAddPreference()"/>
       </hbox>
+      <groupbox>
       <checkbox config="disableAboutConfig" label="&disableaboutconfig.label;" />
+      </groupbox>
     </vbox>
     <vbox id="privacy">
       <groupbox>
