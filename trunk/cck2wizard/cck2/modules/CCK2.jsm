@@ -11,6 +11,7 @@ try {
   Cu.import("resource://cck2/Timer.jsm");  
 }
 Cu.import("resource://cck2/Preferences.jsm");
+Cu.import("resource://cck2/CTPPermissions.jsm");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
     "@mozilla.org/browser/nav-bookmarks-service;1", "nsINavBookmarksService");
@@ -95,13 +96,19 @@ var CCK2 = {
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
       if (config.permissions) {
+        // Clear out all permissions at startup
+        Services.perms.removeAll();
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
             Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
             if (j == "plugins") {
-              // ENUMERATE ALL PLUGINS AND ENABLE THEM FOR THE GIVEN DOMAIN
-              Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + "java", config.permissions[i][j]);
-              Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + "java", config.permissions[i][j]);
+              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+              Components.utils.reportError(plugins);
+              Components.utils.reportError(plugins.length);
+              for (var k=0; k < plugins.length; k++) {
+                Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+              }
             }
           }
         }
