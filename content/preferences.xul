@@ -58,6 +58,7 @@
     </vbox>
     <vbox id="security">
       <groupbox>
+        <checkbox config="dontRememberPasswords" label="&dontRememberPasswords.label;" />
         <checkbox config="noMasterPassword" label="&noMasterPassword.label;" />
       </groupbox>
     </vbox>
