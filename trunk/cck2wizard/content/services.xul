@@ -11,7 +11,6 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="services">
-      <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
       <checkbox config="dontShowRights" label="&dontShowRights.label;" />
       <checkbox config="removeSnippets" label="&removeSnippets.label;"/>
       <checkbox config="disableResetFirefox" label="&disableResetFirefox.label;"/>
