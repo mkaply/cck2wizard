@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/misc.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="services.js" />
   <treechildren id="cck2wizard-treechildren">
     <treeitem>
       <treerow>
-        <treecell label="&misc.label;" value="miscs" />
+        <treecell label="&misc.label;" value="misc" />
       </treerow>
     </treeitem>
   </treechildren>
