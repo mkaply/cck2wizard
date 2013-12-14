@@ -2,3 +2,4 @@ content cck2wizard content/
 skin cck2wizard classic/1.0   skin/
 locale cck2wizard en-US locale/en-US/
 content cck2files cck2/
+content disablesafemodefiles disablesafemode/

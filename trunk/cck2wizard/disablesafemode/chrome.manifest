@@ -1,0 +1,2 @@
+content disablesafemode chrome/content/
+override chrome://browser/content/safeMode.xul chrome://disablesafemode/content/safeMode.xul

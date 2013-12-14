@@ -14,6 +14,7 @@
 <?xul-overlay href="chrome://cck2wizard/content/registry.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/certificates.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/network.xul"?>
+<?xul-overlay href="chrome://cck2wizard/content/autoconfig.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/extension.xul"?>
 <?xul-overlay href="chrome://cck2wizard/content/finish.xul"?>
 <!DOCTYPE cck2wizard SYSTEM "chrome://cck2wizard/locale/cck2wizard.dtd">

@@ -1,0 +1,4 @@
+<!ENTITY autoconfig.label "AutoConfig Only">
+
+<!ENTITY disableProfileMigrator.label "Don't Migrate Profiles">
+<!ENTITY disableSafeMode.label "Disable Safe Mode">
