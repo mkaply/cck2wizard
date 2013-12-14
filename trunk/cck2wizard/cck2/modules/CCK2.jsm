@@ -234,15 +234,15 @@ var CCK2 = {
                                                 "telemetry");
         CCK2.aboutFactories.push(aboutTelemetry);
       }
-      if (config.disableDeveloperTools) {
+      if (config.removeDeveloperTools) {
         Preferences.lock("devtools.scratchpad.enabled", false);
         Preferences.lock("devtools.responsiveUI.enabled", false);
         Preferences.lock("devtools.toolbar.enabled", false);
         Preferences.lock("devtools.styleeditor.enabled", false);
         Preferences.lock("devtools.debugger.enabled", false);
         Preferences.lock("devtools.profiler.enabled", false);
-        Preferences.lock("devtools.inspector.enabled", false);
         Preferences.lock("devtools.errorconsole.enabled", false);
+        Preferences.lock("devtools.inspector.enabled", false);
       }
       if (config.homePage && !config.lockHomePage) {
         Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);

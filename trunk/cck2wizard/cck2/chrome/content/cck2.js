@@ -95,11 +95,37 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     hide(E("menu_openAddons"));
     disable(E("Tools:Addons"));
   }
-
+  
   function removeDeveloperTools() {
     hide(E("webDeveloperMenu"));
-    document.getElementById("Tools:webconsole").removeAttribute("oncommand");
-    document.getElementById("Tools:timeline").removeAttribute("oncommand");
+    var devtoolsKeyset = document.getElementById("devtoolsKeyset");
+    for (var i = 0; i < devtoolsKeyset.childNodes.length; i++) {
+      devtoolsKeyset.childNodes[i].removeAttribute("command");
+    }
+    try {
+      document.getElementById("Tools:ResponsiveUI").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:Scratchpad").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:BrowserConsole").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:BrowserToolbox").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:DevAppsMgr").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:DevToolbar").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:DevToolbox").removeAttribute("oncommand");
+    } catch (e) {}
+    try {
+      document.getElementById("Tools:DevToolbarFocus").removeAttribute("oncommand");
+    } catch (e) {}
   }
 
   function disableErrorConsole() {
