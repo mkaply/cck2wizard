@@ -11,6 +11,11 @@
       <treechildren>
         <treeitem>
           <treerow>
+            <treecell label="&general.label;" value="general" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
             <treecell label="&privacy.label;" value="privacy" />
           </treerow>
         </treeitem>
@@ -53,6 +58,11 @@
       </hbox>
       <groupbox>
       <checkbox config="disableAboutConfig" label="&disableaboutconfig.label;" />
+      </groupbox>
+    </vbox>
+    <vbox id="general">
+      <groupbox>
+          <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">

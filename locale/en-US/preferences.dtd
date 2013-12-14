@@ -2,6 +2,7 @@
 
 <!ENTITY preferences.description "You can set and lock Firefox preferences. To lock a preference, right click and select 'Lock'.">
 
+<!ENTITY general.label "General">
 <!ENTITY privacy.label "Privacy">
 <!ENTITY sync.label "Sync">
 <!ENTITY security.label "Security">
@@ -30,3 +31,5 @@
 
 <!ENTITY noMasterPassword.label "No Master Password">
 <!ENTITY dontRememberPasswords.label "Don't Remember passwords">
+
+<!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
