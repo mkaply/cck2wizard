@@ -16,6 +16,11 @@ const cck2Files = [
   "modules/Utils.jsm"
 ]
 
+const disablesafemodeFiles = [
+  "chrome.manifest",
+  "chrome/content/safeMode.xul"
+]
+
 const installRDFTemplate = [
 '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"',
 '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">',
@@ -83,6 +88,11 @@ const CCK2ServiceTemplate = [
 
 const defaultPrefsTemplate = [
 'pref("extensions.cck2.config", "%config%");',
+''].join("\n");
+
+const overrideINI = [
+'[XRE]',
+'EnableProfileMigrator=0',
 ''].join("\n");
 
 const autoconfigPrefs = [
@@ -243,13 +253,35 @@ function packageCCK2(type) {
     destfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
     writeFile(destfile, data, addFileToZip(zipwriter));
   }
+
+  if (type == "distribution") {  
+    if ("autoconfig" in config && config.autoconfig.disableSafeMode) {
+      var disablesafemodeDir = dir.clone();
+      if (type == "distribution") {
+        disablesafemodeDir.append("distribution");
+        disablesafemodeDir.append("bundles");
+      }
+      disablesafemodeDir.append("disablesafemode");
+      disablesafemodeDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      numFilesToWrite += disablesafemodeFiles.length;
+      for (var i=0; i < disablesafemodeFiles.length; i++) {
+        var data = readChromeFile("chrome://disablesafemodefiles/content/" + disablesafemodeFiles[i]);
+        var destfile = disablesafemodeDir.clone();
+        var splitpath = disablesafemodeFiles[i].split('/');
+        for (var j=0; j < splitpath.length; j++) {
+          destfile.append(splitpath[j]);
+        }
+        destfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+        writeFile(destfile, data, addFileToZip(zipwriter));
+      }
+    }
+  }
   if ("icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
     iconFile.initWithPath(config.extension.icon);
     copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
     // Since icon gives away local path, remove it
     delete(extension.icon);
-    
   }
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
@@ -385,9 +417,6 @@ function packageCCK2(type) {
     }
   }
 
-  // certs in resources/certs
-  // extension in resources/extensions
-  // proxy config file in resources/proxyconfig
   if (type == "distribution") {
     var preferencesFile = dir.clone();
     preferencesFile.append("defaults");
@@ -396,6 +425,16 @@ function packageCCK2(type) {
     preferencesFile.append("autoconfig.js");
     numFilesToWrite += 1;
     writeFile(preferencesFile, autoconfigPrefs, addFileToZip(zipwriter));
+  }
+  if (type == "distribution") {
+    if ("autoconfig" in config && config.autoconfig.disableProfileMigrator) {
+      var overrideFile = dir.clone();
+      overrideFile.append("browser");
+      overrideFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      overrideFile.append("override.ini");
+      numFilesToWrite += 1;
+      writeFile(overrideFile, overrideINI, addFileToZip(zipwriter));
+    }
   }
   if (type == "distribution") {
     var autoconfigFile = dir.clone();
