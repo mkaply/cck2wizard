@@ -122,6 +122,9 @@ function getSearchEngineInfoFromFile(file, successCallback) {
 function getEngineInfoFromXML(xml) {
   var response = {};
   var ShortNames = xml.getElementsByTagNameNS("http://a9.com/-/spec/opensearch/1.1/", "ShortName");
+  if (ShortNames.length == 0) {
+    ShortNames = xml.getElementsByTagNameNS("http://www.mozilla.org/2006/browser/search/", "ShortName");
+  }
   if (ShortNames.length > 0) {
     response.name = ShortNames[0].textContent;
   } else {
@@ -129,6 +132,9 @@ function getEngineInfoFromXML(xml) {
     return null;
   }
   var Images = xml.getElementsByTagNameNS("http://a9.com/-/spec/opensearch/1.1/", "Image");
+  if (Images.length == 0) {
+    Images = xml.getElementsByTagNameNS("http://www.mozilla.org/2006/browser/search/", "Image");
+  }
   if (Images.length > 0) {
     response.image = Images[0].textContent;
   }
