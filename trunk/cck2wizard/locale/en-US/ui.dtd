@@ -9,9 +9,11 @@ It is recommended that you use the format Mozilla Firefox: Companyname Edition">
 <!ENTITY displayMenuBar.label "Display the menu bar by default">
 <!ENTITY removeDeveloperTools.label "Remove the Web Developer menu">
 <!ENTITY removeSetDesktopBackground.label "Remove the 'Set As Desktop Background' menuitem">
+<!ENTITY removeSafeModeMenu.label "Remove the 'Restart with Add-ons disabled' menuitem">
 
 <!ENTITY helpMenu.caption "Help Menu">
 <!ENTITY helpMenu.description "You can add an item to the Help Menu which provides a link to your online customer support page.">
 <!ENTITY helpMenuText.label "Menu Item Text:">
 <!ENTITY helpMenuURL.label "Help Menu Item URL:">
 <!ENTITY helpMenuAccesskey.label "Help Menu Item Accesskey:">
+
