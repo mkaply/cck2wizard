@@ -118,35 +118,39 @@ function importCCKFile(configFileContent)
     config.displayMenuBar = true;
   }
   function addPermissions(type, action, sites) {
-    if (!config.permissions)
+    if (!config.permissions) {
       config.permissions = {};
-    if (!config.permissions[type])
-      config.permissions[type] = {};
-    config.permissions[type][action] = sites.split(',');
+    }
+    sites.split(',').forEach(function(site) {
+      if (!config.permissions[site]) {
+	config.permissions[site] = {};
+      }
+      config.permissions[site][type] = action;
+    })
   }
   if (configarray.hasOwnProperty("PopupAllowedSites")) {
-    addPermissions("popup", "allow", configarray.PopupAllowedSites);
+    addPermissions("popup", 1, configarray.PopupAllowedSites);
   }
   if (configarray.hasOwnProperty("InstallAllowedSites")) {
-    addPermissions("install", "allow", configarray.InstallAllowedSites);
+    addPermissions("install", 1, configarray.InstallAllowedSites);
   }
   if (configarray.hasOwnProperty("CookieAllowedSites")) {
-    addPermissions("cookie", "allow", configarray.CookieAllowedSites);
+    addPermissions("cookie", 1, configarray.CookieAllowedSites);
   }
   if (configarray.hasOwnProperty("PluginAllowedSites")) {
-    addPermissions("plugins", "allow", configarray.PluginAllowedSites);
+    addPermissions("plugins", 1, configarray.PluginAllowedSites);
   }
   if (configarray.hasOwnProperty("PopupAllowedSites")) {
-    addPermissions("popup", "deny", configarray.PopupAllowedSites);
+    addPermissions("popup", 2, configarray.PopupDeniedSites);
   }
   if (configarray.hasOwnProperty("InstallAllowedSites")) {
-    addPermissions("install", "deny", configarray.InstallAllowedSites);
+    addPermissions("install", 2, configarray.InstallDeniedSites);
   }
   if (configarray.hasOwnProperty("CookieAllowedSites")) {
-    addPermissions("cookie", "deny", configarray.CookieAllowedSites);
+    addPermissions("cookie", 2, configarray.CookieDeniedSites);
   }
   if (configarray.hasOwnProperty("PluginAllowedSites")) {
-    addPermissions("plugins", "deny", configarray.PluginAllowedSites);
+    addPermissions("plugins", 2, configarray.PluginDeniedSites);
   }
   if (configarray.hasOwnProperty("BrowserPluginPath1")) {
     config.plugins = [];
