@@ -174,6 +174,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       if (config.disableErrorConsole) {
 	disableErrorConsole();
       }
+      if (config.removeSafeModeMenu) {
+	hide(E("helpSafeMode"));
+      }
       if (config.titlemodifier) {
 	document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
       }

@@ -21,6 +21,7 @@
         <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
         <checkbox config="removeDeveloperTools" label="&removeDeveloperTools.label;" />
         <checkbox config="removeSetDesktopBackground" label="&removeSetDesktopBackground.label;" />
+        <checkbox config="removeSafeModeMenu" label="&removeSafeModeMenu.label;" />
       </groupbox>
       <groupbox>
         <caption label="&titlemodifier.caption;"/>
