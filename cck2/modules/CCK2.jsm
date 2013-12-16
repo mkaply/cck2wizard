@@ -103,8 +103,6 @@ var CCK2 = {
             Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
             if (j == "plugins") {
               var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
-              Components.utils.reportError(plugins);
-              Components.utils.reportError(plugins.length);
               for (var k=0; k < plugins.length; k++) {
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
