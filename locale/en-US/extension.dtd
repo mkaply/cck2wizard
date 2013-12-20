@@ -15,4 +15,4 @@
 <!ENTITY choosefile.label "Choose File...">
 <!ENTITY extension-filename.label "Filename:">
 
-<!ENTITY hideExtension.label "Do not show the this extension in the Add-ons Manager">
+<!ENTITY hideExtension.label "Do not show this extension in the Add-ons Manager">
