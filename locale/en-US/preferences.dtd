@@ -38,5 +38,6 @@
 <!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
 <!ENTITY dontCheckDefaultBrowser.label "Don't check if Firefox is the default browser at startup">
 <!ENTITY dontUseDownloadDir.label "Always ask me where to save files">
+<!ENTITY disableFormFill.label "Don't remember search and form history">
 
 <!ENTITY disableFirefoxUpdates.label "Disable Firefox updates">

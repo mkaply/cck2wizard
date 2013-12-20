@@ -216,6 +216,9 @@ var CCK2 = {
       if (config.dontUseDownloadDir) {
         Preferences.lock("browser.download.useDownloadDir", false);
       }
+      if (config.disableFormFill) {
+        Preferences.lock("browser.formfill.enable", false);
+      }
       if (config.removeSmartBookmarks) {
         Preferences.lock("browser.places.smartBookmarksVersion", -1);
       }

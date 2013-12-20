@@ -79,6 +79,7 @@
       <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="disablePrivateBrowsing" label="&disableprivatebrowsing.label;" />
+        <checkbox config="disableFormFill" label="&disableFormFill.label;" />
       </groupbox>
     </vbox>
     <vbox id="security">
