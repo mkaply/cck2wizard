@@ -13,6 +13,7 @@
 <!ENTITY import.label "Import">
 <!ENTITY export.label "Export">
 <!ENTITY close.label "Close">
+<!ENTITY debug.label "Display Configs">
 <!ENTITY none.label "(none)">
 
 <!ENTITY cckwizard.description "To get started with the CCK2 Wizard, select an option from the File menu.">
