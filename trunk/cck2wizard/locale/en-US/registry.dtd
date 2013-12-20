@@ -1,4 +1,5 @@
 <!ENTITY registry.label "Windows Registry">
+<!ENTITY registry.description "You can add entries to the Windows registry.">
 
 <!ENTITY  regRootKey.label              "Root Key">
 <!ENTITY  regKey.label                  "Key">
