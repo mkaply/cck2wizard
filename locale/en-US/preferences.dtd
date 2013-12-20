@@ -6,6 +6,7 @@
 <!ENTITY privacy.label "Privacy">
 <!ENTITY sync.label "Sync">
 <!ENTITY security.label "Security">
+<!ENTITY update.label "Update">
 
 <!ENTITY add.label "Add...">
 
@@ -33,3 +34,5 @@
 <!ENTITY dontRememberPasswords.label "Don't Remember passwords">
 
 <!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
+
+<!ENTITY disableFirefoxUpdates.label "Disable Firefox updates">

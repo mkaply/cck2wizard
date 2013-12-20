@@ -286,6 +286,10 @@ var CCK2 = {
       if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
+      if (config.disableFirefoxUpdates) {
+        Preferences.lock("app.update.auto", false);
+        Preferences.lock("app.update.enabled", false);
+      }
       if (config.network) {
         var prefMapping = {
           proxyType: "network.proxy.type",

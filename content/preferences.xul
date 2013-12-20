@@ -34,6 +34,11 @@
             <treecell label="&datachoices.label;" value="datachoices" />
           </treerow>
         </treeitem>
+        <treeitem>
+          <treerow>
+            <treecell label="&update.label;" value="update" />
+          </treerow>
+        </treeitem>
       </treechildren>
     </treeitem>
   </treechildren>
@@ -63,7 +68,6 @@
     <vbox id="general">
       <groupbox>
           <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
-          <checkbox config="disablePDFjs" label="&disablePDFjs.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">
@@ -87,6 +91,11 @@
         <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
         <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
         <checkbox config="disableFirefoxHealthReportUpload" label="&disableFirefoxHealthReportUpload.label;" />
+      </groupbox>
+    </vbox>
+    <vbox id="update">
+      <groupbox>
+        <checkbox config="disableFirefoxUpdates" label="&disableFirefoxUpdates.label;" />
       </groupbox>
     </vbox>
   </deck>
