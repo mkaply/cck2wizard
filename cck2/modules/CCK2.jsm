@@ -96,8 +96,6 @@ var CCK2 = {
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
       if (config.permissions) {
-        // Clear out all permissions at startup
-        Services.perms.removeAll();
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
             Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
@@ -107,6 +105,14 @@ var CCK2 = {
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
               }
+            }
+          }
+          if (Object.keys(obj).length === 0) {
+            let perms = Services.perms.enumerator;
+            while (perms.hasMoreElements()) {
+            let perm = perms.getNext();
+            if (perm.host == config.permissions[i]) {
+              Services.perms.remove(perm.host, perm.type);
             }
           }
         }

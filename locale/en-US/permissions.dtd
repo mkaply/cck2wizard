@@ -1,6 +1,7 @@
 <!ENTITY permissions.label "Permissions">
 
 <!ENTITY permissions.description "You can preset website preferences, like always allowing popups or blocking cookies.">
+<!ENTITY permissions.description2 "If you would like to reset the permissions for a site, add it with all the values being blank.">
 
 <!ENTITY  site.label              "Site">
 <!ENTITY  popup.label                  "Popups">

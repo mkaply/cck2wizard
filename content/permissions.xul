@@ -13,6 +13,7 @@
     <vbox id="permissions" setconfig="setPermissions" getconfig="getPermissions" resetconfig="resetPermissions">
       <label class="cck2wizard-heading" value="&permissions.label;"/>
       <description class="cck2wizard-description">&permissions.description;</description>
+      <description class="cck2wizard-description">&permissions.description2;</description>
         <richlistbox id="permissions-listbox"
                  ondblclick="onEditPermissionsItem();"
                  onkeypress="onKeyPressPermissions(event);"
