@@ -3,4 +3,3 @@ skin cck2wizard classic/1.0   skin/
 locale cck2wizard en-US locale/en-US/
 content cck2files cck2/
 content disablesafemodefiles disablesafemode/
-resource cck2 cck2/modules/
