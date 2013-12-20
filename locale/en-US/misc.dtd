@@ -4,3 +4,4 @@
 
 <!ENTITY removeSnippets.label "Don't show snippets on about:home">
 <!ENTITY disableResetFirefox.label "Don't allow Firefox to be reset on about:support">
+<!ENTITY disablePDFjs.label "Disable the built-in PDF viewer">
