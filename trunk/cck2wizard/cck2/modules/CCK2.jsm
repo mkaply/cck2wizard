@@ -110,9 +110,10 @@ var CCK2 = {
           if (Object.keys(obj).length === 0) {
             let perms = Services.perms.enumerator;
             while (perms.hasMoreElements()) {
-            let perm = perms.getNext();
-            if (perm.host == config.permissions[i]) {
-              Services.perms.remove(perm.host, perm.type);
+              let perm = perms.getNext();
+              if (perm.host == config.permissions[i]) {
+                Services.perms.remove(perm.host, perm.type);
+              }
             }
           }
         }
