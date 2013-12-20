@@ -68,6 +68,7 @@
     <vbox id="general">
       <groupbox>
           <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
+          <checkbox config="dontCheckDefaultBrowser" label="&dontCheckDefaultBrowser.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">
