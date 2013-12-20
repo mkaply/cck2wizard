@@ -162,6 +162,11 @@ var CCK2 = {
       if (config.noAddons) {
         Preferences.lock("xpinstall.enabled", false);
       }
+      if (config.disablePDFjs) {
+        Preferences.lock("pdfjs.disabled", true);
+        // Not sure this is the right thing to do...
+        Preferences.lock("plugin.disable_full_page_plugin_for_types", "");
+      }
       if (config.disableSync) {
         var aboutSyncLog = {};
         aboutSyncLog.classID = Components.ID(uuid.generateUUID().toString());
