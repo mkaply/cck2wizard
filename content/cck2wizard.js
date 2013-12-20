@@ -124,7 +124,7 @@ function onImport() {
               errorCritical(e);
             }
           } else {
-            alert("INVALID FILE");
+            Services.prompt.alert(window, "CCK2", "Unable to process file");
           }
         }
       }, errorCritical)
