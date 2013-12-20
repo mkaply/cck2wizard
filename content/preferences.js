@@ -73,7 +73,7 @@ function addPreference(name, value, type, locked) {
     var listitem = gPreferencesListbox.getItemAtIndex(i);
     var label = listitem.firstChild.getAttribute("label");
     if (label == name) {
-      alert("duplicate");
+      Services.prompt.alert(window, "CCK2", "An entry for " + name + " already exists.")
       return;
     }
     if (label > name) {
