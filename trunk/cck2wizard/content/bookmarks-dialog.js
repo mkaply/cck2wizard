@@ -7,7 +7,8 @@ function onLoad() {
     document.getElementById('location').value = initVals.location;
   }
   if (initVals.folder) {
-    document.getElementById('location').hidden = true;
+    document.getElementById('location-hbox').hidden = true;
+    window.sizeToContent();
   }
 }
 

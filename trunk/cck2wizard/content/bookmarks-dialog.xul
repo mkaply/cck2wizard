@@ -14,7 +14,7 @@
     <label value="&bookmarks-name.label;:"/>
     <textbox id="name" flex="1"/>
     </hbox>
-    <hbox align="center">
+    <hbox align="center" id="location-hbox">
     <label value="&bookmarks-location.label;:"/>
     <textbox id="location" flex="1"/>
     </hbox>
