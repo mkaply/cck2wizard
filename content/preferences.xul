@@ -63,6 +63,7 @@
     <vbox id="general">
       <groupbox>
           <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
+          <checkbox config="disablePDFjs" label="&disablePDFjs.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">
