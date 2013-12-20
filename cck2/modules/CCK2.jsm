@@ -213,6 +213,9 @@ var CCK2 = {
       if (config.dontCheckDefaultBrowser) {
         Preferences.lock("browser.shell.checkDefaultBrowser", false);
       }
+      if (config.dontUseDownloadDir) {
+        Preferences.lock("browser.download.useDownloadDir", false);
+      }
       if (config.removeSmartBookmarks) {
         Preferences.lock("browser.places.smartBookmarksVersion", -1);
       }
