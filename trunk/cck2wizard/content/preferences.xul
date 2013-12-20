@@ -71,6 +71,7 @@
       <groupbox>
           <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
           <checkbox config="dontCheckDefaultBrowser" label="&dontCheckDefaultBrowser.label;" />
+          <checkbox config="dontUseDownloadDir" label="&dontUseDownloadDir.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">
