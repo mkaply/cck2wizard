@@ -8,6 +8,8 @@
 <!ENTITY security.label "Security">
 <!ENTITY update.label "Update">
 
+<!ENTITY subpreferences.description "Any preferences that are set on this page are automatically locked.">
+
 <!ENTITY add.label "Add...">
 
 <!ENTITY name.label "Name">
