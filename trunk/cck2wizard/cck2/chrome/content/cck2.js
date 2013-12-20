@@ -17,12 +17,12 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       var doc = event.target;
       var win = doc.defaultView;
       if (!doc.location) {
-	return;
+        return;
       }
       /* Remove the sync button from about:home */
       if ((config && config.disableSync) &&
-	 /^about:home/.test(doc.location.href)) {
-	remove(E("sync", doc));
+         /^about:home/.test(doc.location.href)) {
+        remove(E("sync", doc));
       }
       /* Remove the addons button from about:home */
       if ((config && config.disableAddonsManager) &&
@@ -42,12 +42,12 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 
       /* If health reporter upload is locked, remove the activation widget */
       if (Preferences.locked("datareporting.healthreport.uploadEnabled", false)) {
-	if (/^https:\/\/fhr.cdn.mozilla.net\//.test(doc.location.href)) {
+        if (/^https:\/\/fhr.cdn.mozilla.net\//.test(doc.location.href)) {
           var activationWidget = event.target.querySelector(".activationWidget");
           if (activationWidget) {
             remove(activationWidget);
           }
-	}
+        }
       }
     } catch (e) {
       errorCritical(e);
@@ -57,18 +57,18 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   function disableSync() {
     window.XULBrowserWindow.inContentWhitelist =
       window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
-	return element != "about:sync-progress";
+        return element != "about:sync-progress";
       })
     var mySyncUI = {
       init: function() {
-	return;
+        return;
       },
       initUI: function() {
-	return;
+        return;
       },
       updateUI: function() {
-	hide(E("sync-setup-state"));
-	hide(E("sync-syncnow-state"));
+        hide(E("sync-setup-state"));
+        hide(E("sync-syncnow-state"));
       }
     }
     gSyncUI = mySyncUI;
@@ -89,7 +89,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   function disableAddonsManager() {
     window.XULBrowserWindow.inContentWhitelist =
       window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
-	return element != "about:addons";
+        return element != "about:addons";
       })
     hide(E("appmenu_addons"));
     hide(E("menu_openAddons"));
@@ -146,119 +146,119 @@ Components.utils.import("resource://cck2/CCK2.jsm");
         return;
 
       if (config.disablePrivateBrowsing &&
-	  PrivateBrowsingUtils.isWindowPrivate(window)) {
-	window.setTimeout(function() {
-	  Services.prompt.alert(window, "Private Browsing", "Private Browsing has been disabled by your administrator");
-  	window.close();
-	}, 0, false);
+          PrivateBrowsingUtils.isWindowPrivate(window)) {
+        window.setTimeout(function() {
+          Services.prompt.alert(window, "Private Browsing", "Private Browsing has been disabled by your administrator");
+          window.close();
+        }, 0, false);
       }
       if (config.disablePrivateBrowsing) {
-	disablePrivateBrowsing();
+        disablePrivateBrowsing();
       }
       if (config.disableSync) {
-	disableSync();
+        disableSync();
       }
-      var appcontent = E("appcontent");
-      if (appcontent) {
-	 appcontent.addEventListener("DOMContentLoaded", onPageLoad, false);
-      }
+      E("appcontent").addEventListener("DOMContentLoaded", onPageLoad, false);
   
       if (config.disableAddonsManager) {
-	disableAddonsManager();
+        disableAddonsManager();
       }
       if (config.removeDeveloperTools) {
         Services.tm.mainThread.dispatch(function() {
-	  removeDeveloperTools();
+          removeDeveloperTools();
         }, Ci.nsIThread.DISPATCH_NORMAL);
       }
       if (config.disableErrorConsole) {
-	disableErrorConsole();
+        disableErrorConsole();
       }
       if (config.removeSafeModeMenu) {
-	hide(E("helpSafeMode"));
+        hide(E("helpSafeMode"));
+        try {
+          hide(E("appmenu_safeMode"));
+	} catch (e) {}
       }
       if (config.titlemodifier) {
-	document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
+        document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
       }
       if (config.removeSetDesktopBackground) {
-	// Because this is on a context menu, we can't use "hidden"
-	if (E("context-setDesktopBackground"))
-	  E("context-setDesktopBackground").setAttribute("style", "display: none;");
-      }
+        // Because this is on a context menu, we can't use "hidden"
+        if (E("context-setDesktopBackground"))
+          E("context-setDesktopBackground").setAttribute("style", "display: none;");
+        }
       if (config.hideMenus) {
-	for (var i=0; i < config.hideMenus.length; i++) {
-	  var menu = document.querySelector(config.hideMenus[i]);
-	  if (!menu)
-	    continue;
-	  hide(menu);
-	  menu.removeAttribute("key");
-	  menu.removeAttribute("oncommand");
-	  if (menu.hasAttribute("command")) {
-	    var commandId = menu.getAttribute("command");
-	    menu.removeAttribute("command");
-	    var command = document.getElementById(commandId);
-	    command.removeAttribute("oncommand");
-	    var keys = document.querySelectorAll("key[command='" + commandId + "']")
-	    for (var i=0; i < keys.length; i++) {
-	      keys[i].removeAttribute("command");
-	    }
-	  }
-	}
+        for (var i=0; i < config.hideMenus.length; i++) {
+          var menu = document.querySelector(config.hideMenus[i]);
+          if (!menu)
+            continue;
+          hide(menu);
+          menu.removeAttribute("key");
+          menu.removeAttribute("oncommand");
+          if (menu.hasAttribute("command")) {
+            var commandId = menu.getAttribute("command");
+            menu.removeAttribute("command");
+            var command = document.getElementById(commandId);
+            command.removeAttribute("oncommand");
+            var keys = document.querySelectorAll("key[command='" + commandId + "']")
+            for (var i=0; i < keys.length; i++) {
+              keys[i].removeAttribute("command");
+            }
+          }
+        }
       }
       if (config.helpMenu) {
-	// We need to run this function on a delay, because we won't know
-	// if the about menu is hidden for mac until after it is run.
+        // We need to run this function on a delay, because we won't know
+        // if the about menu is hidden for mac until after it is run.
         Services.tm.mainThread.dispatch(function() {
-	  var helpMenuPopup = document.getElementById("menu_HelpPopup");
-	  var menuitem = document.createElement("menuitem");
-	  menuitem.setAttribute("label", config.helpMenu.label);
-	  menuitem.setAttribute("url", config.helpMenu.url);
-	  menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
-	  menuitem.addEventListener("command", function(event) {
-	    openUILink(this.getAttribute("url"), event, false, true);
-	  })
-	  menuitem.addEventListener("click", function(event) {
-	    checkForMiddleClick(this, event);
-	  }, false);
-	  if (E("aboutName").hidden) {
-	    // Mac
-	    helpMenuPopup.appendChild(menuitem);
-	  } else {
-	    helpMenuPopup.insertBefore(menuitem, E("aboutName"));
-	    helpMenuPopup.insertBefore(document.createElement("menuseparator"),
-					      E("aboutName"));
-	  }
+          var helpMenuPopup = document.getElementById("menu_HelpPopup");
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", config.helpMenu.label);
+          menuitem.setAttribute("url", config.helpMenu.url);
+          menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
+          menuitem.addEventListener("command", function(event) {
+            openUILink(this.getAttribute("url"), event, false, true);
+          })
+          menuitem.addEventListener("click", function(event) {
+            checkForMiddleClick(this, event);
+          }, false);
+          if (E("aboutName").hidden) {
+            // Mac
+            helpMenuPopup.appendChild(menuitem);
+          } else {
+            helpMenuPopup.insertBefore(menuitem, E("aboutName"));
+            helpMenuPopup.insertBefore(document.createElement("menuseparator"),
+                                              E("aboutName"));
+          }
         }, Ci.nsIThread.DISPATCH_NORMAL);
-	var appMenuHelpMenuPopup = document.getElementById("appmenu_helpMenupopup");
-	if (appMenuHelpMenuPopup) {
-	  var menuitem = document.createElement("menuitem");
-	  menuitem.setAttribute("label", config.helpMenu.label);
-	  menuitem.setAttribute("url", config.helpMenu.url);
-	  menuitem.addEventListener("command", function(event) {
-	    openUILink(this.getAttribute("url"), event, false, true);
-	  })
-	  menuitem.addEventListener("click", function(event) {
-	    checkForMiddleClick(this, event);
-	  }, false);
-	  appMenuHelpMenuPopup.insertBefore(menuitem, E("appmenu_about"));
-	  appMenuHelpMenuPopup.insertBefore(document.createElement("menuseparator"),
-					    E("appmenu_about"));
-	}
+        var appMenuHelpMenuPopup = document.getElementById("appmenu_helpMenupopup");
+        if (appMenuHelpMenuPopup) {
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", config.helpMenu.label);
+          menuitem.setAttribute("url", config.helpMenu.url);
+          menuitem.addEventListener("command", function(event) {
+            openUILink(this.getAttribute("url"), event, false, true);
+          })
+          menuitem.addEventListener("click", function(event) {
+            checkForMiddleClick(this, event);
+          }, false);
+          appMenuHelpMenuPopup.insertBefore(menuitem, E("appmenu_about"));
+          appMenuHelpMenuPopup.insertBefore(document.createElement("menuseparator"),
+                                            E("appmenu_about"));
+        }
       }
       if (CCK2.firstrun) {
-	if (config.displayBookmarksToolbar || (config.bookmarks && config.bookmarks.toolbar)) {
-	  E("PersonalToolbar").collapsed = false;
-	  E("PersonalToolbar").setAttribute("collapsed", "false");
-	  document.persist("PersonalToolbar", "collapsed");
-	}
-	if (config.displayMenuBar) {
-	  if (typeof updateAppButtonDisplay != "undefined") {
-	    E("toolbar-menubar").setAttribute("autohide", "false");
-	    document.persist("toolbar-menubar", "autohide")
-	    updateAppButtonDisplay();
-	  }
-	}
-	CCK2.firstrun = false;
+        if (config.displayBookmarksToolbar || (config.bookmarks && config.bookmarks.toolbar)) {
+          E("PersonalToolbar").collapsed = false;
+          E("PersonalToolbar").setAttribute("collapsed", "false");
+          document.persist("PersonalToolbar", "collapsed");
+        }
+        if (config.displayMenuBar) {
+          if (typeof updateAppButtonDisplay != "undefined") {
+            E("toolbar-menubar").setAttribute("autohide", "false");
+            document.persist("toolbar-menubar", "autohide")
+            updateAppButtonDisplay();
+          }
+        }
+        CCK2.firstrun = false;
       }
     } catch (e) {
       errorCritical(e);
