@@ -137,8 +137,10 @@
         </vbox>
       </deck>
       <vbox flex="1"></vbox>
+      <groupbox>
       <checkbox id="networkLock" label="&networkLock.label;" accesskey="&shareproxy.accesskey;"
                             config="network.locked"/>
+      </groupbox>
     </vbox>
   </deck>
 </overlay>
