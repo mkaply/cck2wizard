@@ -94,7 +94,8 @@ function addCertificateFromURL() {
     showErrorMessage("invalidurl");
     return;
   }
-  var listitem = gCertificatesListbox.appendItem(url, "C,C,C");
+  var certString = getCertString();
+  var listitem = gCertificatesListbox.appendItem(url, certString);
   listitem.setAttribute("context", "certificate-contextmenu");
 }
 
@@ -126,10 +127,21 @@ function addCertificateOverride() {
   listitem.setAttribute("context", "certoverride-contextmenu");
 }
 
+function getCertString() {
+  var retVals = { certString: null};
+  window.openDialog("chrome://cck2wizard/content/cert-dialog.xul", "cck2wizard-certificate", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return "C,C,C";
+  } else {
+    return retVals.certString;
+  }
+}
+
 function addCertificateFromFile() {
   var certFile = chooseFile(window);
   if (certFile) {
-    var listitem = gCertificatesListbox.appendItem(certFile.path, "C,C,C");
+    var certString = getCertString();
+    var listitem = gCertificatesListbox.appendItem(certFile.path, certString);
     listitem.setAttribute("context", "certificate-contextmenu");
   }
 }
