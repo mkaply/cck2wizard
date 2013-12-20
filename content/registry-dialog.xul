@@ -6,8 +6,7 @@
         buttons="accept,cancel"
         ondialogaccept="return onOK()"
         ondialogcancel="return onCancel()"
-        onload="onLoad();"
-        width="480">
+        onload="onLoad();">
   <script src="chrome://cck2wizard/content/registry-dialog.js"/>
   <vbox>
     <label control="RootKey">&regRootKey.label;:</label>
