@@ -10,9 +10,12 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="misc">
+      <groupbox>
       <checkbox config="dontShowRights" label="&dontShowRights.label;" />
       <checkbox config="removeSnippets" label="&removeSnippets.label;"/>
       <checkbox config="disableResetFirefox" label="&disableResetFirefox.label;"/>
+      <checkbox config="disablePDFjs" label="&disablePDFjs.label;" />
+      </groupbox>
     </vbox>
   </deck>
 </overlay>
