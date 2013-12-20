@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE preferences-dialog SYSTEM "chrome://cck2wizard/locale/certificates.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog title="&certificates.label;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons="accept,cancel"
+        ondialogaccept="return onOK()"
+        ondialogcancel="return onCancel()"
+        onload="onLoad();"
+        width="480">
+  <script src="chrome://cck2wizard/content/cert-dialog.js"/>
+    <checkbox class="indent" id="trustSSL" label="&cert.trustSSL;"/>
+    <checkbox class="indent" id="trustEmail" label="&cert.trustEmail;"/>
+    <checkbox class="indent" id="trustObjSign" label="&cert.trustObjSign;"/>
+</dialog>
