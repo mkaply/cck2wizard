@@ -34,5 +34,6 @@
 <!ENTITY dontRememberPasswords.label "Don't Remember passwords">
 
 <!ENTITY alwaysdefaultbrowser.label "Make sure Firefox is the default browser at startup">
+<!ENTITY dontCheckDefaultBrowser.label "Don't check if Firefox is the default browser at startup">
 
 <!ENTITY disableFirefoxUpdates.label "Disable Firefox updates">

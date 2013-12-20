@@ -210,6 +210,9 @@ var CCK2 = {
         if (shellSvc)
           shellSvc.setDefaultBrowser(true, false);
       }
+      if (config.dontCheckDefaultBrowser) {
+        Preferences.lock("browser.shell.checkDefaultBrowser", false);
+      }
       if (config.removeSmartBookmarks) {
         Preferences.lock("browser.places.smartBookmarksVersion", -1);
       }
