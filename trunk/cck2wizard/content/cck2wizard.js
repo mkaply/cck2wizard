@@ -34,6 +34,14 @@ function onLoad() {
     //  win.openUILinkIn(event.target.getAttribute("href"), "tab");
     //  window.close();
     //}, false);
+    var debug = false;
+    try {
+      debug = Services.prefs.getBoolPref(prefsPrefix + "debug");
+    } catch (ex) {}
+    if (debug){
+      document.getElementById("debug-menuitem").hidden = false;
+    }
+
   } catch(e) {
     errorCritical(e);
   }
@@ -46,9 +54,11 @@ function onFilePopup(event) {
   if (gCurrentConfig) {
     document.getElementById("save-menuitem").disabled = false;
     document.getElementById("export-menuitem").disabled = false;
+    document.getElementById("debug-menuitem").disabled = false;
   } else {
     document.getElementById("save-menuitem").disabled = true;
     document.getElementById("export-menuitem").disabled = true;
+    document.getElementById("debug-menuitem").disabled = true;
   }
 }
 

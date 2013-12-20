@@ -40,7 +40,7 @@
         <menuitem id="export-menuitem" label="&export.label;" oncommand="onExport()" />
         <menuitem label="&import.label;" oncommand="onImport()" />
         <menuitem label="&close.label;" oncommand="onClose()" />
-        <menuitem id="debug-menu" label="&debug.label;" oncommand="onDebug()"/>
+        <menuitem hidden="true" id="debug-menuitem" label="&debug.label;" oncommand="onDebug()"/>
       </menupopup>
     </menu>
   </menubar>
