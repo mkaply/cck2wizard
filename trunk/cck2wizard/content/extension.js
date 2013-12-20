@@ -34,6 +34,10 @@ function onExtensionChooseIcon() {
 
 function setIcon(path) {
   var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-  iconFile.initWithPath(path);
-  document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
+  try {
+    iconFile.initWithPath(path);
+    document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
+  } catch(e) {
+    document.querySelector("textbox[config='extension.icon']").value = "";
+  }
 }
