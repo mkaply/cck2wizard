@@ -149,7 +149,7 @@ function packageCCK2(type) {
     try {
       dir.remove(true);
     }  catch (ex) {
-      alert("Directory is in use");
+      Services.prompt.alert(window, "CC2", "Unable to remove directory. It might be in use.");
       return;
     }
   }
@@ -463,9 +463,9 @@ function packageCCK2(type) {
       file.copyTo(destdir, filename);
     } catch (ex) {
       if (filename) {
-        alert("Unable to copy file " + filename + " to " + destdir.path);
+        Services.prompt.alert(window, "CC2", "Unable to copy file " + filename + " to " + destdir.path);
       } else {
-        alert("Unable to copy file " + file.leafName + " to " + destdir.path);
+        Services.prompt.alert(window, "CC2", "Unable to copy file " + file.leafName + " to " + destdir.path);
       }
       return;
     }
@@ -503,7 +503,7 @@ var observer = {
   onStopRequest: function(request, context, status)
   {
     zipwriter.close();
-    alert("CCK2 Creation is complete and available at: " + zipwriter.file.path);
+    Services.prompt.alert(window, "CC2", "CCK2 Creation is complete and available at: " + zipwriter.file.path);
   }
 };
 

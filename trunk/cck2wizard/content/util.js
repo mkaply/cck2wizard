@@ -1,6 +1,6 @@
 function errorCritical(e) {
   try {
-    alert(e.toString() + "\n\n" + e.stack);
+    Services.prompt.alert(window, "CC2", "An error has occurred. Please report the following information at http://cck2.freshdesk.com\n\n" + e.toString() + "\n\n" + e.stack);
   } catch (ex) {
     console.log(e.toString() + "\n\n" + e.stack);
   }

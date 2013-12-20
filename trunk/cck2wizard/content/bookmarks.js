@@ -372,7 +372,7 @@ function onAddFolder(target) {
   }
   var level = parseInt(target.getAttribute("level"), 10) + 1;
   if (level > 5) {
-    alert("too deep");
+    Services.prompt.alert(window, "CC2", "Bookmarks can only be nested five levels");
     return;
   }
   var listbox;

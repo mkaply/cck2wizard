@@ -208,11 +208,11 @@ function onNew() {
     return false;
   }
   if (!retVals.name || !retVals.id) {
-    alert("Name and ID are required");
+    Services.prompt.alert(window, "CC2", "Name and ID are required");
     return false;
   }
   if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + retVals.id)) {
-    alert("A config with that ID already exists");
+    Services.prompt.alert(window, "CCK2", "A config with that ID already exists");
     return false;
   }
   setConfig({name: retVals.name, id: retVals.id})

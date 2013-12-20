@@ -60,7 +60,7 @@ function addPermissionsItem(permissionsitem, host) {
     var listitem = gPermissionsListbox.getItemAtIndex(i);
     var label = listitem.firstChild.getAttribute("label");
     if (host && label == host) {
-      alert("duplicate");
+      Services.prompt.alert(window, "CCK2", "An entry for " + host + " already exists.")
       return;
     }
   }
