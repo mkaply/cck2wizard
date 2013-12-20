@@ -66,28 +66,38 @@
       </groupbox>
     </vbox>
     <vbox id="general">
+      <label class="cck2wizard-heading" value="&general.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
           <checkbox config="alwaysDefaultBrowser" label="&alwaysdefaultbrowser.label;" />
           <checkbox config="dontCheckDefaultBrowser" label="&dontCheckDefaultBrowser.label;" />
       </groupbox>
     </vbox>
     <vbox id="privacy">
+      <label class="cck2wizard-heading" value="&privacy.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="disablePrivateBrowsing" label="&disableprivatebrowsing.label;" />
       </groupbox>
     </vbox>
     <vbox id="security">
+      <label class="cck2wizard-heading" value="&security.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="dontRememberPasswords" label="&dontRememberPasswords.label;" />
         <checkbox config="noMasterPassword" label="&noMasterPassword.label;" />
       </groupbox>
     </vbox>
     <vbox id="sync">
+      <label class="cck2wizard-heading" value="&sync.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="disableSync" label="&disablesync.label;" />
       </groupbox>
     </vbox>
     <vbox id="datachoices">
+      <label class="cck2wizard-heading" value="&datachoices.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
         <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
@@ -95,6 +105,8 @@
       </groupbox>
     </vbox>
     <vbox id="update">
+      <label class="cck2wizard-heading" value="&update.label;"/>
+      <description class="cck2wizard-description">&subpreferences.description;</description>
       <groupbox>
         <checkbox config="disableFirefoxUpdates" label="&disableFirefoxUpdates.label;" />
       </groupbox>
