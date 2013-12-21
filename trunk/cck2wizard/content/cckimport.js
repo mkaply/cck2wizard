@@ -122,6 +122,7 @@ function importCCKFile(configFileContent)
       config.permissions = {};
     }
     sites.split(',').forEach(function(site) {
+      site = site.trim();
       if (!config.permissions[site]) {
 	config.permissions[site] = {};
       }
