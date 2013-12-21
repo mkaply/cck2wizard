@@ -143,13 +143,13 @@ function importCCKFile(configFileContent)
   if (configarray.hasOwnProperty("PopupAllowedSites")) {
     addPermissions("popup", 2, configarray.PopupDeniedSites);
   }
-  if (configarray.hasOwnProperty("InstallAllowedSites")) {
+  if (configarray.hasOwnProperty("InstallDeniedSites")) {
     addPermissions("install", 2, configarray.InstallDeniedSites);
   }
-  if (configarray.hasOwnProperty("CookieAllowedSites")) {
+  if (configarray.hasOwnProperty("CookieDeniedSites")) {
     addPermissions("cookie", 2, configarray.CookieDeniedSites);
   }
-  if (configarray.hasOwnProperty("PluginAllowedSites")) {
+  if (configarray.hasOwnProperty("PluginDeniedSites")) {
     addPermissions("plugins", 2, configarray.PluginDeniedSites);
   }
   if (configarray.hasOwnProperty("BrowserPluginPath1")) {
