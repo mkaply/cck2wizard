@@ -33,7 +33,7 @@ function readFile(file, successCallback, errorCallback) {
       }
       return;
     }
-    var data = NetUtil.readInputStreamToString(inputStream, inputStream.available());
+    var data = NetUtil.readInputStreamToString(inputStream, inputStream.available(), { charset : "UTF-8" });
     if (successCallback) {
       successCallback(data);
     }
