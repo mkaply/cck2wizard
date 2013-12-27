@@ -279,10 +279,14 @@ function packageCCK2(type) {
   }
   if ("icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    iconFile.initWithPath(config.extension.icon);
-    copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
-    // Since icon gives away local path, remove it
-    delete(extension.icon);
+    try {
+      iconFile.initWithPath(config.extension.icon);
+      copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
+      // Since icon gives away local path, remove it
+      delete(extension.icon);
+    } catch (e) {
+      copyFileError(config.extension.icon);
+    }
   }
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
@@ -295,8 +299,12 @@ function packageCCK2(type) {
     pluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
     for (var i=0; i < config.plugins.length; i++) {
       var pluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-      pluginFile.initWithPath(config.plugins[i]);
-      copyAndAddFileToZip(zipwriter, pluginFile, pluginsDir, null);
+      try {
+        pluginFile.initWithPath(config.plugins[i]);
+        copyAndAddFileToZip(zipwriter, pluginFile, pluginsDir, null);
+      } catch (e) {
+        copyFileError(config.plugins[i]);
+      }
     }
     delete(config.plugins);
   }
@@ -315,9 +323,13 @@ function packageCCK2(type) {
     for (var i=0; i < config.searchplugins.length; i++) {
       if (!/^https?:/.test(config.searchplugins[i])) {
         var searchpluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-        searchpluginFile.initWithPath(config.searchplugins[i]);
-        copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
-        config.searchplugins[i] = "resource://" + config.id + "/searchplugins/" + searchpluginFile.leafName;
+        try {
+          searchpluginFile.initWithPath(config.searchplugins[i]);
+          copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
+          config.searchplugins[i] = "resource://" + config.id + "/searchplugins/" + searchpluginFile.leafName;
+        } catch (e) {
+          copyFileError(config.searchplugins[i])
+        }
       }
     }
   }
@@ -329,51 +341,55 @@ function packageCCK2(type) {
     }
     for (var i=0; i < config.addons.length; i++) {
       if (!/^https?:/.test(config.addons[i])) {
-          var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+        try {
           addonFile.initWithPath(config.addons[i]);
-        if (type == "extension") {
-          copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
-          config.addons[i] = "chrome://" + config.id + "/content/addons/" + addonFile.leafName;
-        } else {
-          var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
-          var zipReader = zipReaderCache.getZip(addonFile);
-          try {
-            var installRDFSTream = zipReader.getInputStreamWithSpec(null, "install.rdf");
-            var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
-                                   getService(Ci.nsIScriptableInputStream);
-            scriptableStream.init(installRDFSTream);
-            var str = scriptableStream.read(installRDFSTream.available());
-            scriptableStream.close();
-            installRDFSTream.close();
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(str, "application/xml");
-            var id;
-            var descriptions = doc.getElementsByTagNameNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "Description");
-            for (var j=0; j < descriptions.length; j++) {
-              if (descriptions[j].getAttributeNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "about") == "urn:mozilla:install-manifest" ||
-                  descriptions[j].getAttribute("about") == "urn:mozilla:install-manifest"){
-                if (descriptions[j].hasAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id")) {
-                  id = descriptions[j].getAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id");
-                  break;
-                } else {
-                  var ids = descriptions[j].getElementsByTagNameNS("http://www.mozilla.org/2004/em-rdf#", "id");
-                  if (ids.length > 0) {
-                    id = ids[0].textContent
+          if (type == "extension") {
+            copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
+            config.addons[i] = "chrome://" + config.id + "/content/addons/" + addonFile.leafName;
+          } else {
+            var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
+            var zipReader = zipReaderCache.getZip(addonFile);
+            try {
+              var installRDFSTream = zipReader.getInputStreamWithSpec(null, "install.rdf");
+              var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
+                                     getService(Ci.nsIScriptableInputStream);
+              scriptableStream.init(installRDFSTream);
+              var str = scriptableStream.read(installRDFSTream.available());
+              scriptableStream.close();
+              installRDFSTream.close();
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(str, "application/xml");
+              var id;
+              var descriptions = doc.getElementsByTagNameNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "Description");
+              for (var j=0; j < descriptions.length; j++) {
+                if (descriptions[j].getAttributeNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "about") == "urn:mozilla:install-manifest" ||
+                    descriptions[j].getAttribute("about") == "urn:mozilla:install-manifest"){
+                  if (descriptions[j].hasAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id")) {
+                    id = descriptions[j].getAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id");
                     break;
+                  } else {
+                    var ids = descriptions[j].getElementsByTagNameNS("http://www.mozilla.org/2004/em-rdf#", "id");
+                    if (ids.length > 0) {
+                      id = ids[0].textContent
+                      break;
+                    }
                   }
                 }
               }
+              var extensionsDir = dir.clone();
+              extensionsDir.append("distribution");
+              extensionsDir.append("extensions");
+              if (!extensionsDir.exists()) {
+                extensionsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+              }
+              copyAndAddFileToZip(zipwriter, addonFile, extensionsDir, id + ".xpi");
+            } finally {
+              zipReader.close();
             }
-            var extensionsDir = dir.clone();
-            extensionsDir.append("distribution");
-            extensionsDir.append("extensions");
-            if (!extensionsDir.exists()) {
-              extensionsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-            }
-            copyAndAddFileToZip(zipwriter, addonFile, extensionsDir, id + ".xpi");
-          } finally {
-            zipReader.close();
           }
+        } catch (e) {
+          copyFileError(config.addons[i]);
         }
         delete(config.addons[i]);
       }
@@ -387,9 +403,13 @@ function packageCCK2(type) {
       for (var i=0; i < config.certs.ca.length; i++) {
         if (!/^https?:/.test(config.certs.ca[i].url)) {
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-          certFile.initWithPath(config.certs.ca[i].url);
-          copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
-          config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+          try {
+            certFile.initWithPath(config.certs.ca[i].url);
+            copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
+            config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+          } catch (e) {
+            copyFileError(config.certs.ca[i].url);
+          }
         }
       }
     }
@@ -397,9 +417,13 @@ function packageCCK2(type) {
       for (var i=0; i < config.certs.server.length; i++) {
         if (!/^https?:/.test(config.certs.server[i])) {
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-          certFile.initWithPath(config.certs.server[i]);
-          copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
-          config.certs.server[i] = "resource://" + config.id + "/certs/" + certFile.leafName;
+          try {
+            certFile.initWithPath(config.certs.server[i]);
+            copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
+            config.certs.server[i] = "resource://" + config.id + "/certs/" + certFile.leafName;
+          } catch(e) {
+            copyFileError(config.certs.server[i]);
+          }
         }
       }
     }
@@ -411,9 +435,13 @@ function packageCCK2(type) {
         proxyAutoConfigDir.append("proxyautoconfig");
         proxyAutoConfigDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
         var proxyAutoConfigFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-        proxyAutoConfigFile.initWithPath(config.network.proxyAutoConfig);
-        copyAndAddFileToZip(zipwriter, proxyAutoConfigFile, proxyAutoConfigDir, null);
-        config.network.proxyAutoConfig = "resource://" + config.id + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
+        try {
+          proxyAutoConfigFile.initWithPath(config.network.proxyAutoConfig);
+          copyAndAddFileToZip(zipwriter, proxyAutoConfigFile, proxyAutoConfigDir, null);
+          config.network.proxyAutoConfig = "resource://" + config.id + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
+        } catch (e) {
+          copyFileError(config.network.proxyAutoConfig);
+        }
       }
     }
   }
@@ -463,9 +491,9 @@ function packageCCK2(type) {
       file.copyTo(destdir, filename);
     } catch (ex) {
       if (filename) {
-        Services.prompt.alert(window, "CC2", "Unable to copy file " + filename + " to " + destdir.path);
+        Services.prompt.alert(window, "CCK2", "Unable to copy file " + filename + " to " + destdir.path);
       } else {
-        Services.prompt.alert(window, "CC2", "Unable to copy file " + file.leafName + " to " + destdir.path);
+        Services.prompt.alert(window, "CCK2", "Unable to copy file " + file.leafName + " to " + destdir.path);
       }
       return;
     }
@@ -507,6 +535,9 @@ var observer = {
   }
 };
 
+function copyFileError(filename) {
+  Services.prompt.alert(window, "CC2", "Unable to copy file " + filename);
+}
 
 function readChromeFile(path) {
   var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
