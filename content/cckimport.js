@@ -141,7 +141,7 @@ function importCCKFile(configFileContent)
   if (configarray.hasOwnProperty("PluginAllowedSites")) {
     addPermissions("plugins", 1, configarray.PluginAllowedSites);
   }
-  if (configarray.hasOwnProperty("PopupAllowedSites")) {
+  if (configarray.hasOwnProperty("PopupDeniedSites")) {
     addPermissions("popup", 2, configarray.PopupDeniedSites);
   }
   if (configarray.hasOwnProperty("InstallDeniedSites")) {
