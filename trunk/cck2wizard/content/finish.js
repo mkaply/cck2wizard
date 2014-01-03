@@ -154,6 +154,9 @@ function packageCCK2(type) {
     }
   }
 
+  // SAVE CONFIG
+  onSave();
+
   dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
   zipwriter = new zipwritera();
