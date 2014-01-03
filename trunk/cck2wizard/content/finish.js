@@ -46,8 +46,8 @@ const installRDFTemplate = [
 ''].join("\n");
 
 const chromeManifestTemplate = [
-'resource %id% resources/',
-'content %id% resources/',
+'resource %packagename% resources/',
+'content %packagename% resources/',
 'manifest cck2/chrome.manifest',
 ''].join("\n");
 
@@ -171,7 +171,17 @@ function packageCCK2(type) {
     zipfile.remove(false);
   }
   zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
-  
+
+  // These characters are not allowed in the packagename for chrome.manifest
+  var packageName = config.id.replace("@", "").replace("#", "").replace(";", "")
+                             .replace(":", "").replace("?", "").replace("/", "");
+
+  // These characters are not allowed in Windows paths (NTFS and FAT)
+  var packagePath = config.id.replace("/", "").replace("?", "").replace("<", "")
+                             .replace(">", "").replace("\\", "").replace(":", "")
+                             .replace("*", "").replace("|", "").replace("\"", "")
+                             .replace("^", "");
+
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%extid%", config.extension.id);
     installRDF = installRDF.replace("%extname%", config.extension.name);
@@ -215,7 +225,7 @@ function packageCCK2(type) {
   if (type == "extension") {
     chromeManifest += chromeManifestComponentTemplate;
   }
-  chromeManifest = chromeManifest.replace(/%id%/g, config.id);
+  chromeManifest = chromeManifest.replace(/%packagename%/g, packageName);
   // Remove all special characters from ID so it can be used for JavaScript
   chromeManifest = chromeManifest.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
   chromeManifest = chromeManifest.replace(/%uuid%/g, uuid);
@@ -224,7 +234,7 @@ function packageCCK2(type) {
   if (type == "distribution") {
     chromeManifestFile.append("distribution");
     chromeManifestFile.append("bundles");
-    chromeManifestFile.append(config.id);
+    chromeManifestFile.append(packagePath);
     if (!chromeManifestFile.exists()) {
       chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
     }
@@ -293,7 +303,7 @@ function packageCCK2(type) {
     if (type == "distribution") {
       pluginsDir.append("distribution");
       pluginsDir.append("bundles");
-      pluginsDir.append(config.id);
+      pluginsDir.append(packagePath);
     }
     pluginsDir.append("plugins");
     pluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -312,7 +322,7 @@ function packageCCK2(type) {
   if (type == "distribution") {
     resourceDir.append("distribution");
     resourceDir.append("bundles");
-    resourceDir.append(config.id);
+    resourceDir.append(packagePath);
   }
   resourceDir.append("resources");
   resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -326,7 +336,7 @@ function packageCCK2(type) {
         try {
           searchpluginFile.initWithPath(config.searchplugins[i]);
           copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
-          config.searchplugins[i] = "resource://" + config.id + "/searchplugins/" + searchpluginFile.leafName;
+          config.searchplugins[i] = "resource://" + packageName + "/searchplugins/" + searchpluginFile.leafName;
         } catch (e) {
           copyFileError(config.searchplugins[i])
         }
@@ -346,7 +356,7 @@ function packageCCK2(type) {
           addonFile.initWithPath(config.addons[i]);
           if (type == "extension") {
             copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
-            config.addons[i] = "chrome://" + config.id + "/content/addons/" + addonFile.leafName;
+            config.addons[i] = "chrome://" + packageName + "/content/addons/" + addonFile.leafName;
           } else {
             var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
             var zipReader = zipReaderCache.getZip(addonFile);
@@ -406,7 +416,7 @@ function packageCCK2(type) {
           try {
             certFile.initWithPath(config.certs.ca[i].url);
             copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
-            config.certs.ca[i].url = "resource://" + config.id + "/certs/" + certFile.leafName;
+            config.certs.ca[i].url = "resource://" + packageName + "/certs/" + certFile.leafName;
           } catch (e) {
             copyFileError(config.certs.ca[i].url);
           }
@@ -420,7 +430,7 @@ function packageCCK2(type) {
           try {
             certFile.initWithPath(config.certs.server[i]);
             copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
-            config.certs.server[i] = "resource://" + config.id + "/certs/" + certFile.leafName;
+            config.certs.server[i] = "resource://" + packageName + "/certs/" + certFile.leafName;
           } catch(e) {
             copyFileError(config.certs.server[i]);
           }
@@ -438,7 +448,7 @@ function packageCCK2(type) {
         try {
           proxyAutoConfigFile.initWithPath(config.network.proxyAutoConfig);
           copyAndAddFileToZip(zipwriter, proxyAutoConfigFile, proxyAutoConfigDir, null);
-          config.network.proxyAutoConfig = "resource://" + config.id + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
+          config.network.proxyAutoConfig = "resource://" + packageName + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
         } catch (e) {
           copyFileError(config.network.proxyAutoConfig);
         }
