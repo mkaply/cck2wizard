@@ -404,9 +404,16 @@ function packageCCK2(type) {
         } catch (e) {
           copyFileError(config.addons[i]);
         }
-        delete(config.addons[i]);
+        config.addons[i] = null;
       }
     }
+	// Kind of ugly, but we can't remove the items as we go since we are in an array.
+	config.addons = config.addons.filter(function(element) {
+        return element != null;;
+      });
+	if (config.addons.length ==0) {
+	  delete(config.addons);
+	}
   }
   if ("certs" in config && ("ca" in config.certs || "server" in config.certs)) {
     var certsDir = resourceDir.clone();
