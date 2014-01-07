@@ -543,6 +543,8 @@ function packageCCK2(type) {
   }
 }
 
+var errors = [];
+
 var observer = {
   onStartRequest: function(request, context)
   {
@@ -551,12 +553,19 @@ var observer = {
   onStopRequest: function(request, context, status)
   {
     zipwriter.close();
-    Services.prompt.alert(window, "CC2", "CCK2 Creation is complete and available at: " + zipwriter.file.path);
+    var message = "CCK2 Creation is complete and available at: " + zipwriter.file.path;
+    if (errors.length > 0) {
+      message += "\n\n" + "The following errors occurred during creation:";
+      for (var i=0; i < errors.length; i++) {
+        message += "\n\n" + errors[i];
+      }
+    }
+    Services.prompt.alert(window, "CCK2", message);
   }
 };
 
 function copyFileError(filename) {
-  Services.prompt.alert(window, "CC2", "Unable to copy file " + filename);
+  errors.push("Unable to copy file " + filename);
 }
 
 function readChromeFile(path) {
