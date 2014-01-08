@@ -296,7 +296,7 @@ function packageCCK2(type) {
       iconFile.initWithPath(config.extension.icon);
       copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
       // Since icon gives away local path, remove it
-      delete(extension.icon);
+      delete(config.extension.icon);
     } catch (e) {
       copyFileError(config.extension.icon);
     }
@@ -559,6 +559,7 @@ var observer = {
       for (var i=0; i < errors.length; i++) {
         message += "\n\n" + errors[i];
       }
+      errors = [];
     }
     Services.prompt.alert(window, "CCK2", message);
   }
