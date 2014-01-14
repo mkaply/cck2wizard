@@ -157,7 +157,11 @@ function packageCCK2(type) {
   // SAVE CONFIG
   onSave();
 
-  dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  try {
+    dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  } catch (e) {
+    Services.prompt.alert(window, "CC2", "Unable to create directory. You might not have the proper permissions.");
+  }
   var zipwritera = Components.Constructor("@mozilla.org/zipwriter;1", "nsIZipWriter");
   zipwriter = new zipwritera();
   var zipfile = basedir.clone();
@@ -507,6 +511,17 @@ function packageCCK2(type) {
   }  
 
   function copyAndAddFileToZip(zipwriter, file, destdir, filename) {
+    var destfile = destdir.clone();
+    if (filename) {
+      destfile.append(filename);
+    } else {
+      destfile.append(file.leafName);
+    }
+    // copyTo succeeds if the file is exactly the same and weird things happen.
+    // If the file exists, just ignore.
+    if (destfile.exists()) {
+      return;
+    }
     try {
       file.copyTo(destdir, filename);
     } catch (ex) {
@@ -516,12 +531,6 @@ function packageCCK2(type) {
         Services.prompt.alert(window, "CCK2", "Unable to copy file " + file.leafName + " to " + destdir.path);
       }
       return;
-    }
-    var destfile = destdir.clone();
-    if (filename) {
-      destfile.append(filename);
-    } else {
-      destfile.append(file.leafName);
     }
     var zipPath = destfile.path.replace(dir.path, "");
     zipPath = zipPath.substr(1);
