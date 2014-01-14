@@ -187,24 +187,24 @@ function packageCCK2(type) {
 
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%extid%", config.extension.id);
-    installRDF = installRDF.replace("%extname%", config.extension.name);
+    installRDF = installRDF.replace("%extname%", encodeXML(config.extension.name));
     installRDF = installRDF.replace("%version%", config.version);
     if ("description" in config.extension) {
-      installRDF = installRDF.replace("%description%", config.extension.description);
+      installRDF = installRDF.replace("%description%", encodeXML(config.extension.description));
     } else {
       installRDF = installRDF.split("\n").filter(function(element) {
         return !/%description%/.test(element);
       }).join("\n");
     }
     if ("homepageURL" in config.extension) {
-      installRDF = installRDF.replace("%homepageURL%", config.extension.homepageURL);
+      installRDF = installRDF.replace("%homepageURL%", encodeXML(config.extension.homepageURL));
     } else {
       installRDF = installRDF.split("\n").filter(function(element) {
         return !/%homepageURL%/.test(element);
       }).join("\n");
     }
     if ("updateURL" in config.extension) {
-      installRDF = installRDF.replace("%updateURL%", config.extension.updateURL);
+      installRDF = installRDF.replace("%updateURL%", encodeXML(config.extension.updateURL));
     } else {
       installRDF = installRDF.split("\n").filter(function(element) {
         return !/%updateURL%/.test(element);
@@ -580,4 +580,12 @@ function readChromeFile(path) {
   scriptableStream.close();
   input.close();
   return str;
+}
+
+function encodeXML(string) {
+  return string.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;')
+               .replace(/'/g, '&apos;');
 }
