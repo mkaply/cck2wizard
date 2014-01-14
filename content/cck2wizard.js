@@ -124,6 +124,21 @@ function onImport() {
           document.getElementById("main-deck").selectedIndex = 1;
           gTree.view.selection.select(0);
         } catch(e) {
+          if (configFileContent.substr(0, 3) != "id=") {
+            // See if we can pull a config from an XPI
+            var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
+            try {
+              var zipReader = zipReaderCache.getZip(configFile);
+              var cckConfigStream = zipReader.getInputStreamWithSpec(null, "cck.config");
+              var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
+                                     getService(Ci.nsIScriptableInputStream);
+              scriptableStream.init(cckConfigStream);
+              configFileContent = scriptableStream.read(cckConfigStream.available());
+              scriptableStream.close();
+              cckConfigStream.close();
+            } catch (e) {
+            }
+          }
           if (configFileContent.substr(0, 3) == "id=") {
             try {
               var config = importCCKFile(configFileContent);

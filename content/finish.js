@@ -368,13 +368,13 @@ function packageCCK2(type) {
             var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
             var zipReader = zipReaderCache.getZip(addonFile);
             try {
-              var installRDFSTream = zipReader.getInputStreamWithSpec(null, "install.rdf");
+              var installRDFStream = zipReader.getInputStreamWithSpec(null, "install.rdf");
               var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
                                      getService(Ci.nsIScriptableInputStream);
-              scriptableStream.init(installRDFSTream);
-              var str = scriptableStream.read(installRDFSTream.available());
+              scriptableStream.init(installRDFStream);
+              var str = scriptableStream.read(installRDFStream.available());
               scriptableStream.close();
-              installRDFSTream.close();
+              installRDFStream.close();
               var parser = new DOMParser();
               var doc = parser.parseFromString(str, "application/xml");
               var id;
