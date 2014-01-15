@@ -347,7 +347,7 @@ var CCK2 = {
         }
         if (config.certs.server) {
           for (var i=0; i < config.certs.server.length; i++) {
-            download(config.certs.ca[i], function(file) {
+            download(config.certs.server[i], function(file) {
               certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
             }, errorCritical);
           }
