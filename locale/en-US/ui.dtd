@@ -17,3 +17,8 @@ It is recommended that you use the format Mozilla Firefox: Companyname Edition">
 <!ENTITY helpMenuURL.label "Help Menu Item URL:">
 <!ENTITY helpMenuAccesskey.label "Help Menu Item Accesskey:">
 
+<!ENTITY hideui.label "Hidden UI">
+<!ENTITY hideui.description "You can specify UI elements that you want to hide, including menus and buttons. Elements can be specified from the main Firefox UI or preferences.">
+<!ENTITY hideui.description2 "You can specify them using a CSS selector. For instance, if you want to hide the 'Show All History' Menu, you could specify menuitem[label=&quot;Show All History&quot;] or use its ID - #menu_showAllHistory">
+<!ENTITY delete.label "Delete">
+<!ENTITY add.label "Add">
