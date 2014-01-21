@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/ui.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="ui.js" />
   <treechildren id="cck2wizard-treechildren">
     <treeitem container="true" open="true">
       <treerow>
@@ -9,7 +10,12 @@
       <treechildren>
         <treeitem>
           <treerow>
-        <treecell label="&helpmenu.label;" value="helpmenu" />
+            <treecell label="&helpmenu.label;" value="helpmenu" />
+          </treerow>
+        </treeitem>
+        <treeitem>
+          <treerow>
+            <treecell label="&hideui.label;" value="hideui" />
           </treerow>
         </treeitem>
       </treechildren>
@@ -50,5 +56,29 @@
         </vbox>
       </groupbox>
     </vbox>
+    <vbox id="hideui" setconfig="setHiddenUI" getconfig="getHiddenUI" resetconfig="resetHiddenUI">
+      <label class="cck2wizard-heading" value="&hideui.label;"/>
+      <description class="cck2wizard-description">&hideui.description;</description>
+      <description class="cck2wizard-description">&hideui.description2;</description>
+      <listbox id="hiddenui-listbox"
+               onkeypress="onKeyPressHiddenUI(event);"
+               context="hideui-listbox-contextmenu"
+               flex="1"
+      />
+      <hbox>
+        <button id="hideui-add"
+                label="&add.label;"
+                oncommand="onAddHiddenUI();"
+                />
+      </hbox>
+    </vbox>
   </deck>
+    <popupset>
+      <menupopup id="hideui-contextmenu">
+        <menuitem label="&delete.label;" oncommand="onDeleteHiddenUI()"/>
+      </menupopup>
+      <menupopup id="hideui-listbox-contextmenu">
+        <menuitem label="&add.label;" oncommand="onAddHiddenUI()"/>
+      </menupopup>
+    </popupset>
 </overlay>
