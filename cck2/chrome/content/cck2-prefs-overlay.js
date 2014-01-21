@@ -11,6 +11,14 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   let {E, hide, disable, errorCritical} = scope;
 
   function paneload(event) {
+    if (config.hiddenUI) {
+      for (var i=0; i < config.hiddenUI.length; i++) {
+	var uiElement = document.querySelector(config.hiddenUI[i]);
+	if (!uiElement)
+	  continue;
+	hide(uiElement);
+      }
+    }
     if (event.target.id == "panePrivacy" &&
 	config.disablePrivateBrowsing) {
       hide(E("privateBrowsingAutoStart"));
