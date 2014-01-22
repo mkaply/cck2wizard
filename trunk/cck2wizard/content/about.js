@@ -66,3 +66,10 @@ function copyConfig() {
   updateNextPreviousButtons();
   return true;
 }
+
+function onChooseOutputDirectory() {
+  var outputDir = chooseDir(window);
+  if (outputDir) {
+    document.querySelector('textbox[config="outputDirectory"]').value = outputDir.path;
+  }
+}
