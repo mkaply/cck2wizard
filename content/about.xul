@@ -21,12 +21,19 @@
       </vbox>
       <separator/>
       <vbox>
-        <label value="&description.label;"></label>
+        <label value="&description.label;:"></label>
         <textbox config="description"></textbox>
       </vbox>
       <vbox>
-        <label value="&version.label;"></label>
+        <label value="&version.label;:"></label>
         <textbox config="version"></textbox>
+      </vbox>
+      <vbox>
+        <label value="&outputDirectory.label;:"></label>
+        <hbox align="center">
+          <textbox flex="1" config="outputDirectory" readonly="true"/>
+          <button label="&choose.label;" oncommand="onChooseOutputDirectory()" />
+        </hbox>
       </vbox>
       <vbox align="center" pack="center" flex="1">
         <button id="about-delete"

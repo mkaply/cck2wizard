@@ -135,9 +135,13 @@ function packageCCK2(type) {
   }
   
   var numFilesToWrite = 0;
-  var basedir = chooseDir(window);
+
+  var basedir = chooseDir(window, config.outputDirectory);
   if (!basedir) {
     return;
+  }
+  if (config.outputDirectory) {
+    delete(config.outputDirectory);
   }
   var dir = basedir.clone();
   if (type == "distribution") {

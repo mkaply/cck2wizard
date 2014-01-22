@@ -355,7 +355,11 @@ function setConfig(config) {
     var setconfigs = gDeck.querySelectorAll("*[setconfig]");
     for (var i=0; i < setconfigs.length; i++) {
       var setconfig = setconfigs[i].getAttribute("setconfig");
-      window[setconfig](config);
+      try {
+        window[setconfig](config);
+      } catch(e) {
+        errorCritical(new Error(setconfig + " is not defined"));
+      }
     }
     gCurrentConfig = config;
     document.title = "CCK2 - " + config.name;
@@ -415,7 +419,12 @@ function getConfig(destdir) {
     var getconfigs = gDeck.querySelectorAll("*[getconfig]");
     for (var i=0; i < getconfigs.length; i++) {
       var getconfig = getconfigs[i].getAttribute("getconfig");
-      config = window[getconfig](config, destdir);
+      try {
+        config = window[getconfig](config, destdir);
+      } catch(e) {
+        errorCritical(new Error(getconfig + " is not defined"));
+      }
+
     }
   } catch (e) {
     errorCritical(e);
@@ -438,7 +447,11 @@ function resetConfig() {
     var resetconfigs = gDeck.querySelectorAll("*[resetconfig]");
     for (var i=0; i < resetconfigs.length; i++) {
       var resetconfig = resetconfigs[i].getAttribute("resetconfig");
-      window[resetconfig]();
+      try {
+        window[resetconfig]();
+      } catch(e) {
+        errorCritical(new Error(resetconfig + " is not defined"));
+      }
     }
   } catch (e) {
     errorCritical(e);
@@ -466,10 +479,15 @@ function chooseFile(win, filename) {
   return null;
 }
 
-function chooseDir(win) {
+function chooseDir(win, displayDir) {
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   fp.init(win, "", nsIFilePicker.modeGetFolder);
+  if (displayDir) {
+    var destdir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+    destdir.initWithPath(displayDir);
+    fp.displayDirectory = destdir;
+  }
   if (fp.show() == nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
   }
