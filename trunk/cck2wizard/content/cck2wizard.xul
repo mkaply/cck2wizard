@@ -46,7 +46,8 @@
   </menubar>
   <deck id="main-deck" flex="1">
     <vbox pack="center" align="center" height="50%" id="cck2wizard-info">
-      <description>&cckwizard.description;</description>
+      <description id="regular">&cckwizard.description;</description>
+      <description id="migrated" hidden="true">&cckwizard.migrated.description;</description>
       <description>&cckwizard.description2;</description><button label="&new.label;" oncommand="onNew()"/>
       <description>&cckwizard.description3;</description><button label="&import.label;" oncommand="onImport()"/>
       <vbox flex="1">
