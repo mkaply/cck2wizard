@@ -47,8 +47,8 @@
   <deck id="main-deck" flex="1">
     <vbox pack="center" align="center" height="50%" id="cck2wizard-info">
       <description>&cckwizard.description;</description>
-      <description>&cckwizard.description2;</description>
-      <description>&cckwizard.description3;</description>
+      <description>&cckwizard.description2;</description><button label="&new.label;" oncommand="onNew()"/>
+      <description>&cckwizard.description3;</description><button label="&import.label;" oncommand="onImport()"/>
       <vbox flex="1">
       <html:div id="cck2web" flex="1"></html:div>
       </vbox>
