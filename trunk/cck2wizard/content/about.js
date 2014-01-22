@@ -59,7 +59,10 @@ function copyConfig() {
   var newConfig = getConfig();
   newConfig.name = retVals.name;
   newConfig.id = retVals.id;
-  Services.prefs.setCharPref(prefsPrefix + "configs." + retVals.id, JSON.stringify(newConfig))
+  if (newConfig.outputDirectory) {
+    delete(newConfig.outputDirectory);
+  }
+  Services.prefs.setCharPref(prefsPrefix + "configs." + retVals.id, JSON.stringify(newConfig));
   setConfig(newConfig);
   document.getElementById("main-deck").selectedIndex = 1;
   gTree.view.selection.select(0);
