@@ -10,7 +10,67 @@ var gTree = null;
 var gStringBundle = null;
 var gNewPanel = null;
 
+function migrateCCK() {
+  var alreadyMigrated = false;
+  try {
+    alreadyMigrated = Services.prefs.getBoolPref("extensions.cckwizard.migrated");
+  } catch(e) {}
+  if (alreadyMigrated) {
+    return false;
+  }
+  try {
+    var oldConfigs = Services.prefs.getChildList("cck.config", []);
+    if (oldConfigs.length > 0) {
+      var buttonFlags = (Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_YES) +
+                        (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_NO) +
+                        Services.prompt.BUTTON_POS_0_DEFAULT;
+      var check = {value: false};
+      var confirm = Services.prompt.confirmEx(window.opener,
+                                            "CCK2",
+                                            "You have configurations from the CCK Wizard. Would you like to migrate them?",
+                                            buttonFlags,
+                                            null,
+                                            null,
+                                            null,
+                                            "Don't ask me again",
+                                            check);
+      if (check.value == true) {
+        Services.prefs.setBoolPref("extensions.cckwizard.migrated", true);
+      }
+      if (confirm == 0) {
+        for (var i=0; i < oldConfigs.length; i++) {
+          var configDir = Services.prefs.getCharPref(oldConfigs[i]);
+          var configName = oldConfigs[i].replace("cck.config.", "");
+          var configFile =  Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+          configFile.initWithPath(configDir);
+          configFile.append("cck.config");
+          readFile(configFile, function(configFileContent) {
+            try {
+              var config = importCCKFile(configFileContent);
+              config.outputDirectory = configDir;
+              var configJSON = JSON.stringify(config);
+              Services.prefs.setCharPref(prefsPrefix + "configs." + config.id, JSON.stringify(config))
+            } catch (e) {
+              errorCritical(e);
+            }
+          }, errorCritical)
+        }
+        Services.prefs.setBoolPref("extensions.cckwizard.migrated", true);
+        return true;
+      }
+    }
+  } catch (e) {
+    errorCritical(e);
+  }
+  return false;
+}
+
 function onLoad() {
+  var migrated = migrateCCK();
+  if (migrated) {
+    document.getElementById("regular").hidden = true;
+    document.getElementById("migrated").hidden = false;
+  }
   try {
     gTree = document.getElementById("cck2wizard-tree");
     gDeck = document.getElementById("cck2wizard-deck");

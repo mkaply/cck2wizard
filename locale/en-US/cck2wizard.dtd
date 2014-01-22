@@ -17,5 +17,6 @@
 <!ENTITY none.label "(none)">
 
 <!ENTITY cckwizard.description "You can open your CCK2 configurations from the File menu.">
+<!ENTITY cckwizard.migrated.description "You can open your migrated CCK configurations from the File menu.">
 <!ENTITY cckwizard.description2 "If you're starting from scratch, select ">
 <!ENTITY cckwizard.description3 "If you've used a previous version of the CCK Wizard, select ">
