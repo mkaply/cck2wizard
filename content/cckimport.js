@@ -457,7 +457,7 @@ function importCCKFile(configFileContent)
     }
     config.network.proxySOCKSPort = parseInt(configarray.networkProxySOCKS_Port, 10);
   }
-  if ("networkProxySOCKSVersion") {
+  if ("networkProxySOCKSVersion" in configarray) {
     if (!config.network) {
       config.network = {};
     }
