@@ -142,6 +142,8 @@ function packageCCK2(type) {
   }
   if (config.outputDirectory) {
     delete(config.outputDirectory);
+  } else {
+    document.querySelector('textbox[config="outputDirectory"]').value = basedir.path;
   }
   var dir = basedir.clone();
   if (type == "distribution") {
