@@ -195,6 +195,11 @@ function packageCCK2(type) {
                              .replace("*", "").replace("|", "").replace("\"", "")
                              .replace("^", "");
 
+  var configfile = basedir.clone();
+  configfile.append(packagePath + ".cck2.json")
+  configfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+  writeFile(configfile, JSON.stringify(config, null, 2));
+
   if (type != "distribution") {
     var installRDF = installRDFTemplate.replace("%extid%", config.extension.id);
     installRDF = installRDF.replace("%extname%", encodeXML(config.extension.name));
