@@ -116,6 +116,10 @@ function onImport() {
       readFile(configFile, function(configFileContent) {
         try {
           var config = JSON.parse(configFileContent);
+          if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." +config.id)) {
+            Services.prompt.alert(window, "CCK2", "A config with that ID already exists.");
+            return;
+          }
           setConfig(config);
           // This seems odd, but the imported JSON doesn't match
           // the order of the regular JSON. I want it to.
@@ -129,15 +133,19 @@ function onImport() {
             var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
             try {
               var zipReader = zipReaderCache.getZip(configFile);
-              var cckConfigStream = zipReader.getInputStreamWithSpec(null, "cck.config");
+              var cckConfigStream;
+              try {
+                cckConfigStream = zipReader.getInputStreamWithSpec(null, "cck.config");
+              } catch (e) {
+                cckConfigStream = zipReader.getInputStreamWithSpec(null, "cck2.config.json");
+              }
               var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
                                      getService(Ci.nsIScriptableInputStream);
               scriptableStream.init(cckConfigStream);
               configFileContent = scriptableStream.read(cckConfigStream.available());
               scriptableStream.close();
               cckConfigStream.close();
-            } catch (e) {
-            }
+            } catch (e) {}
           }
           if (configFileContent.substr(0, 3) == "id=") {
             try {
@@ -149,7 +157,22 @@ function onImport() {
               errorCritical(e);
             }
           } else {
-            Services.prompt.alert(window, "CCK2", "Unable to process file");
+            try {
+              var config = JSON.parse(configFileContent);
+              if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." +config.id)) {
+                Services.prompt.alert(window, "CCK2", "A config with that ID already exists.");
+                return;
+              }
+              setConfig(config);
+              // This seems odd, but the imported JSON doesn't match
+              // the order of the regular JSON. I want it to.
+              config = getConfig();
+              setConfig(config);
+              document.getElementById("main-deck").selectedIndex = 1;
+              gTree.view.selection.select(0);
+            } catch(e) {
+              Services.prompt.alert(window, "CCK2", "Unable to process file");
+            }
           }
         }
       }, errorCritical)
@@ -227,7 +250,7 @@ function onNew() {
     return false;
   }
   if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + retVals.id)) {
-    Services.prompt.alert(window, "CCK2", "A config with that ID already exists");
+    Services.prompt.alert(window, "CCK2", "A config with that ID already exists.");
     return false;
   }
   setConfig({name: retVals.name, id: retVals.id})
