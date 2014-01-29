@@ -196,8 +196,10 @@ function packageCCK2(type) {
                              .replace("^", "");
 
   var configfile = basedir.clone();
-  configfile.append(packagePath + ".cck2.json")
-  configfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+  configfile.append("cck2.config.json")
+  if (!configfile.exists()) {
+    configfile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+  }
   writeFile(configfile, JSON.stringify(getConfig(), null, 2));
 
   if (type != "distribution") {
@@ -237,7 +239,7 @@ function packageCCK2(type) {
     numFilesToWrite += 1;
     writeFile(installRDFFile, installRDF, addFileToZip(zipwriter));
     var configFile = dir.clone();
-    configFile.append(packagePath + "cck2.config.json");
+    configFile.append("cck2.config.json");
     numFilesToWrite += 1;
     writeFile(configFile, JSON.stringify(getConfig(), null, 2), addFileToZip(zipwriter));
   }
