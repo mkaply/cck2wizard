@@ -10,67 +10,7 @@ var gTree = null;
 var gStringBundle = null;
 var gNewPanel = null;
 
-function migrateCCK() {
-  var alreadyMigrated = false;
-  try {
-    alreadyMigrated = Services.prefs.getBoolPref("extensions.cckwizard.migrated");
-  } catch(e) {}
-  if (alreadyMigrated) {
-    return false;
-  }
-  try {
-    var oldConfigs = Services.prefs.getChildList("cck.config", []);
-    if (oldConfigs.length > 0) {
-      var buttonFlags = (Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_YES) +
-                        (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_NO) +
-                        Services.prompt.BUTTON_POS_0_DEFAULT;
-      var check = {value: false};
-      var confirm = Services.prompt.confirmEx(window.opener,
-                                            "CCK2",
-                                            "You have configurations from the CCK Wizard. Would you like to migrate them?",
-                                            buttonFlags,
-                                            null,
-                                            null,
-                                            null,
-                                            "Don't ask me again",
-                                            check);
-      if (check.value == true) {
-        Services.prefs.setBoolPref("extensions.cckwizard.migrated", true);
-      }
-      if (confirm == 0) {
-        for (var i=0; i < oldConfigs.length; i++) {
-          var configDir = Services.prefs.getCharPref(oldConfigs[i]);
-          var configName = oldConfigs[i].replace("cck.config.", "");
-          var configFile =  Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-          configFile.initWithPath(configDir);
-          configFile.append("cck.config");
-          readFile(configFile, function(configFileContent) {
-            try {
-              var config = importCCKFile(configFileContent);
-              config.outputDirectory = configDir;
-              var configJSON = JSON.stringify(config);
-              Services.prefs.setCharPref(prefsPrefix + "configs." + config.id, JSON.stringify(config))
-            } catch (e) {
-              errorCritical(e);
-            }
-          }, errorCritical)
-        }
-        Services.prefs.setBoolPref("extensions.cckwizard.migrated", true);
-        return true;
-      }
-    }
-  } catch (e) {
-    errorCritical(e);
-  }
-  return false;
-}
-
 function onLoad() {
-  var migrated = migrateCCK();
-  if (migrated) {
-    document.getElementById("regular").hidden = true;
-    document.getElementById("migrated").hidden = false;
-  }
   try {
     gTree = document.getElementById("cck2wizard-tree");
     gDeck = document.getElementById("cck2wizard-deck");
@@ -415,11 +355,7 @@ function setConfig(config) {
     var setconfigs = gDeck.querySelectorAll("*[setconfig]");
     for (var i=0; i < setconfigs.length; i++) {
       var setconfig = setconfigs[i].getAttribute("setconfig");
-      try {
-        window[setconfig](config);
-      } catch(e) {
-        errorCritical(new Error(setconfig + " is not defined"));
-      }
+      window[setconfig](config);
     }
     gCurrentConfig = config;
     document.title = "CCK2 - " + config.name;
@@ -479,12 +415,7 @@ function getConfig(destdir) {
     var getconfigs = gDeck.querySelectorAll("*[getconfig]");
     for (var i=0; i < getconfigs.length; i++) {
       var getconfig = getconfigs[i].getAttribute("getconfig");
-      try {
-        config = window[getconfig](config, destdir);
-      } catch(e) {
-        errorCritical(new Error(getconfig + " is not defined"));
-      }
-
+      config = window[getconfig](config, destdir);
     }
   } catch (e) {
     errorCritical(e);
@@ -507,11 +438,7 @@ function resetConfig() {
     var resetconfigs = gDeck.querySelectorAll("*[resetconfig]");
     for (var i=0; i < resetconfigs.length; i++) {
       var resetconfig = resetconfigs[i].getAttribute("resetconfig");
-      try {
-        window[resetconfig]();
-      } catch(e) {
-        errorCritical(new Error(resetconfig + " is not defined"));
-      }
+      window[resetconfig]();
     }
   } catch (e) {
     errorCritical(e);
@@ -539,15 +466,10 @@ function chooseFile(win, filename) {
   return null;
 }
 
-function chooseDir(win, displayDir) {
+function chooseDir(win) {
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   fp.init(win, "", nsIFilePicker.modeGetFolder);
-  if (displayDir) {
-    var destdir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    destdir.initWithPath(displayDir);
-    fp.displayDirectory = destdir;
-  }
   if (fp.show() == nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
   }
