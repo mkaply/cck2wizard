@@ -3,6 +3,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 
 (function () {
   var config = CCK2.getConfig();
+  if (!config) {
+    return;
+  }
   var temp = {};
   Components.utils.import("resource://cck2/Preferences.jsm", temp);
   var Preferences = temp.Preferences;
