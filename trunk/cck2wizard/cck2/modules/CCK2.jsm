@@ -624,7 +624,7 @@ function fixupCert(cert) {
 function download(url, successCallback, errorCallback) {
   var uri = Services.io.newURI(url, null, null);
   uri.QueryInterface(Ci.nsIURL);
-  var file = Services.downloads.userDownloadsDirectory;
+  var file = Services.dirsvc.get("TmpD", Ci.nsIFile);
   file.append(uri.fileName);
   if (file.exists()) {
     file.remove(false);
