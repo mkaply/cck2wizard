@@ -62,6 +62,7 @@
       <description class="cck2wizard-description">&hideui.description2;</description>
       <listbox id="hiddenui-listbox"
                onkeypress="onKeyPressHiddenUI(event);"
+               ondblclick="onEditHiddenUI();"
                context="hideui-listbox-contextmenu"
                flex="1"
       />
