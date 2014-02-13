@@ -39,6 +39,11 @@
         <menuitem id="save-menuitem" label="&save.label;" oncommand="onSave()" />
         <menuitem id="export-menuitem" label="&export.label;" oncommand="onExport()" />
         <menuitem label="&import.label;" oncommand="onImport()" />
+        <menu label="&options.label;">
+          <menupopup>
+            <menuitem id="cck2wizard-autosave" type="checkbox" label="&autosave.label;" oncommand="onAutosave()" />
+          </menupopup>
+        </menu>
         <menuitem label="&close.label;" oncommand="onClose()" />
         <menuitem hidden="true" id="debug-menuitem" label="&debug.label;" oncommand="onDebug()"/>
       </menupopup>

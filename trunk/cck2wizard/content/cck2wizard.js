@@ -9,6 +9,7 @@ var gDeck = null;
 var gTree = null;
 var gStringBundle = null;
 var gNewPanel = null;
+var gAutoSave = false;
 
 function onLoad() {
   try {
@@ -40,6 +41,12 @@ function onLoad() {
     } catch (ex) {}
     if (debug){
       document.getElementById("debug-menuitem").hidden = false;
+    }
+    try {
+      gAutoSave = Services.prefs.getBoolPref(prefsPrefix + "autosave");
+      document.getElementById("cck2wizard-autosave").setAttribute("checked", gAutoSave);
+    } catch (e) {
+      Components.utils.reportError(e);
     }
 
   } catch(e) {
@@ -104,6 +111,12 @@ function onOpenRecent(event) {
   document.getElementById("main-deck").selectedIndex = 1;
   gTree.view.selection.select(0);
 
+}
+
+function onAutosave() {
+  gAutoSave = !gAutoSave;
+  document.getElementById("cck2wizard-autosave").setAttribute("checked", gAutoSave);
+  Services.prefs.setBoolPref(prefsPrefix + "autosave", gAutoSave);
 }
 
 function onImport() {
@@ -211,6 +224,9 @@ function checkToSave() {
   var newConfig = getConfig();
 //  if (gCurrentConfig && (JSON.stringify(newConfig)  != JSON.stringify(gCurrentConfig))) {
   if (gCurrentConfig && (!objectEquals(newConfig, gCurrentConfig))) {
+    if (gAutoSave) {
+      return onSave();
+    }
     var buttonFlags = (Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_YES) +
                       (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_CANCEL) +
                       (Services.prompt.BUTTON_POS_2) * (Services.prompt.BUTTON_TITLE_NO) +
