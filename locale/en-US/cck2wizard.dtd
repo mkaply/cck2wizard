@@ -13,6 +13,8 @@
 <!ENTITY import.label "Import">
 <!ENTITY export.label "Export">
 <!ENTITY close.label "Close">
+<!ENTITY options.label "Options">
+<!ENTITY autosave.label "Autosave">
 <!ENTITY debug.label "Display Configs">
 <!ENTITY none.label "(none)">
 
