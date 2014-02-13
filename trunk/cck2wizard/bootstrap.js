@@ -1,6 +1,11 @@
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+var gAustralis = false;
+try {
+  Cu.import("resource://app/modules/CustomizableUI.jsm");
+  gAustralis = true;
+} catch (e) {}
 
 const XMLHttpRequest = Components.Constructor("@mozilla.org/xmlextras/xmlhttprequest;1");
 
@@ -48,6 +53,7 @@ function uninstall(aData, aReason) {
 }
 
 function startup(aData, aReason) {
+  sss.loadAndRegisterSheet(Services.io.newURI("chrome://cck2wizard/skin/toolbar.css", null, null), sss.USER_SHEET);
   var win = Services.wm.getMostRecentWindow("navigator:browser");
   var url;
   switch (aReason) {
@@ -84,6 +90,7 @@ function startup(aData, aReason) {
 }
 
 function shutdown(data, reason) {
+  sss.unregisterSheet(Services.io.newURI("chrome://cck2wizard/skin/toolbar.css", null, null), sss.USER_SHEET);
   Services.wm.removeListener(windowListener);
 
   let enumerator = Services.wm.getEnumerator("navigator:browser");
@@ -97,13 +104,21 @@ function shutdown(data, reason) {
 */
 function saveButtonPosition(event) {
   var button = event.target.ownerDocument.getElementById(idPrefix + "button");
-  if (button) {
-    Services.prefs.setCharPref(prefsPrefix + "toolbarID", button.parentNode.id);
-    Services.prefs.setCharPref(prefsPrefix + "nextSiblingID", button.nextSibling.id);
-  } else {
+  var buttonPlacement = null;
+  if (gAustralis) {
+    buttonPlacement = CustomizableUI.getPlacementOfWidget(idPrefix + "button");
+  }
+  if (!button || (gAustralis && !buttonPlacement)) {
     Services.prefs.clearUserPref(prefsPrefix + "toolbarID");
     Services.prefs.clearUserPref(prefsPrefix + "nextSiblingID");
+    return;
   }
+  if (buttonPlacement) {
+    Services.prefs.setCharPref(prefsPrefix + "toolbarID", buttonPlacement.area);
+  } else {
+    Services.prefs.setCharPref(prefsPrefix + "toolbarID", button.parentNode.id);
+  }
+  Services.prefs.setCharPref(prefsPrefix + "nextSiblingID", button.nextSibling.id);
 }
 
 function onCommand(event) {
@@ -127,16 +142,33 @@ function loadIntoWindow(window) {
     let button = doc.createElement("toolbarbutton");
     button.setAttribute("id", idPrefix + "button");
     button.setAttribute("label", "CCK2 Wizard");
-    button.setAttribute("image", "chrome://cck2wizard/skin/icon16.png");
-    button.setAttribute("class", "toolbarbutton-1 chromeclass-toolbar-additional");
+    button.setAttribute("class", "toolbarbutton-1");
     toolbox.palette.appendChild(button);
     if (Services.prefs.prefHasUserValue(prefsPrefix + "toolbarID")) {
-      var toolbar = doc.getElementById(Services.prefs.getCharPref(prefsPrefix + "toolbarID"));
+      var toolbarID = Services.prefs.getCharPref(prefsPrefix + "toolbarID");
       var nextSibling = null;
       try {
         nextSibling = doc.getElementById(Services.prefs.getCharPref(prefsPrefix + "nextSiblingID"));
       } catch (ex) {}
-      toolbar.insertItem(idPrefix + "button", nextSibling);
+      if (gAustralis) {
+        var buttonPlacement = null;
+        if (nextSibling) {
+          buttonPlacement = CustomizableUI.getPlacementOfWidget(nextSibling.id);
+        }
+        if (!nextSibling || !buttonPlacement) {
+          CustomizableUI.addWidgetToArea(idPrefix + "button", toolbarID);
+        } else {
+          CustomizableUI.addWidgetToArea(idPrefix + "button",  toolbarID, buttonPlacement.position);
+         
+        }
+      } else {
+        var toolbar = doc.getElementById(toolbarID);
+        var nextSibling = null;
+        try {
+          nextSibling = doc.getElementById(Services.prefs.getCharPref(prefsPrefix + "nextSiblingID"));
+        } catch (ex) {}
+        toolbar.insertItem(idPrefix + "button", nextSibling);
+      }
     }
     window.addEventListener("aftercustomization", saveButtonPosition, false);
     window.addEventListener("command", onCommand, false);
