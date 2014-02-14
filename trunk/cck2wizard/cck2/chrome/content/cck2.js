@@ -187,21 +187,25 @@ Components.utils.import("resource://cck2/CCK2.jsm");
         }
       if (config.hiddenUI) {
         for (var i=0; i < config.hiddenUI.length; i++) {
-          var uiElement = document.querySelector(config.hiddenUI[i]);
-          if (!uiElement)
+          var uiElements = document.querySelectorAll(config.hiddenUI[i]);
+          if (!uiElements || uiElements.length == 0) {
             continue;
-          hide(uiElement);
-          if (uiElement.nodeName == "menuitem") {
-            uiElement.removeAttribute("key");
-            uiElement.removeAttribute("oncommand");
-            if (uiElement.hasAttribute("command")) {
-              var commandId = uiElement.getAttribute("command");
-              uiElement.removeAttribute("command");
-              var command = document.getElementById(commandId);
-              command.removeAttribute("oncommand");
-              var keys = document.querySelectorAll("key[command='" + commandId + "']")
-              for (var i=0; i < keys.length; i++) {
-                keys[i].removeAttribute("command");
+          }
+          for (var i=0; i < uiElements.length; i++) {
+            var uiElement = uiElements[i];
+            hide(uiElement);
+            if (uiElement.nodeName == "menuitem") {
+              uiElement.removeAttribute("key");
+              uiElement.removeAttribute("oncommand");
+              if (uiElement.hasAttribute("command")) {
+                var commandId = uiElement.getAttribute("command");
+                uiElement.removeAttribute("command");
+                var command = document.getElementById(commandId);
+                command.removeAttribute("oncommand");
+                var keys = document.querySelectorAll("key[command='" + commandId + "']")
+                for (var i=0; i < keys.length; i++) {
+                  keys[i].removeAttribute("command");
+                }
               }
             }
           }
