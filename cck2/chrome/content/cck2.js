@@ -77,12 +77,12 @@ Components.utils.import("resource://cck2/CCK2.jsm");
 
   function disablePrivateBrowsing() {
     disable(E("Tools:PrivateBrowsing"));
-    hide(E("uiElement_newPrivateWindow"));
-    // Because this is on a context uiElement, we can't use "hidden"
+    hide(E("menu_newPrivateWindow"));
+    // Because this is on a context menu, we can't use "hidden"
     if (E("context-openlinkprivate"))
       E("context-openlinkprivate").setAttribute("style", "display: none;");
-    hide(E("appuiElement_privateBrowsing"));
-    hide(E("appuiElement_newPrivateWindow"));
+    hide(E("appmenu_privateBrowsing"));
+    hide(E("appmenu_newPrivateWindow"));
     hide(E("privateBrowsingItem"));
   }
 
@@ -91,8 +91,8 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
         return element != "about:addons";
       })
-    hide(E("appuiElement_addons"));
-    hide(E("uiElement_openAddons"));
+    hide(E("appmenu_addons"));
+    hide(E("menu_openAddons"));
     disable(E("Tools:Addons"));
   }
   
@@ -174,14 +174,14 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       if (config.removeSafeModeMenu) {
         hide(E("helpSafeMode"));
         try {
-          hide(E("appuiElement_safeMode"));
+          hide(E("appmenu_safeMode"));
         } catch (e) {}
       }
       if (config.titlemodifier) {
         document.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
       }
       if (config.removeSetDesktopBackground) {
-        // Because this is on a context uiElement, we can't use "hidden"
+        // Because this is on a context menu, we can't use "hidden"
         if (E("context-setDesktopBackground"))
           E("context-setDesktopBackground").setAttribute("style", "display: none;");
         }
@@ -209,42 +209,42 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       }
       if (config.helpMenu) {
         // We need to run this function on a delay, because we won't know
-        // if the about uiElement is hidden for mac until after it is run.
+        // if the about menu is hidden for mac until after it is run.
         Services.tm.mainThread.dispatch(function() {
-          var helpMenuPopup = document.getElementById("uiElement_HelpPopup");
-          var uiElementitem = document.createElement("uiElementitem");
-          uiElementitem.setAttribute("label", config.helpMenu.label);
-          uiElementitem.setAttribute("url", config.helpMenu.url);
-          uiElementitem.setAttribute("accesskey", config.helpMenu.accesskey);
-          uiElementitem.addEventListener("command", function(event) {
+          var helpMenuPopup = document.getElementById("menu_HelpPopup");
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", config.helpMenu.label);
+          menuitem.setAttribute("url", config.helpMenu.url);
+          menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
+          menuitem.addEventListener("command", function(event) {
             openUILink(this.getAttribute("url"), event, false, true);
           })
-          uiElementitem.addEventListener("click", function(event) {
+          menuitem.addEventListener("click", function(event) {
             checkForMiddleClick(this, event);
           }, false);
           if (E("aboutName").hidden) {
             // Mac
-            helpMenuPopup.appendChild(uiElementitem);
+            helpMenuPopup.appendChild(menuitem);
           } else {
-            helpMenuPopup.insertBefore(uiElementitem, E("aboutName"));
-            helpMenuPopup.insertBefore(document.createElement("uiElementseparator"),
+            helpMenuPopup.insertBefore(menuitem, E("aboutName"));
+            helpMenuPopup.insertBefore(document.createElement("menuseparator"),
                                               E("aboutName"));
           }
         }, Ci.nsIThread.DISPATCH_NORMAL);
-        var appMenuHelpMenuPopup = document.getElementById("appuiElement_helpMenupopup");
+        var appMenuHelpMenuPopup = document.getElementById("appmenu_helpMenupopup");
         if (appMenuHelpMenuPopup) {
-          var uiElementitem = document.createElement("uiElementitem");
-          uiElementitem.setAttribute("label", config.helpMenu.label);
-          uiElementitem.setAttribute("url", config.helpMenu.url);
-          uiElementitem.addEventListener("command", function(event) {
+          var menuitem = document.createElement("menuitem");
+          menuitem.setAttribute("label", config.helpMenu.label);
+          menuitem.setAttribute("url", config.helpMenu.url);
+          menuitem.addEventListener("command", function(event) {
             openUILink(this.getAttribute("url"), event, false, true);
           })
-          uiElementitem.addEventListener("click", function(event) {
+          menuitem.addEventListener("click", function(event) {
             checkForMiddleClick(this, event);
           }, false);
-          appMenuHelpMenuPopup.insertBefore(uiElementitem, E("appuiElement_about"));
-          appMenuHelpMenuPopup.insertBefore(document.createElement("uiElementseparator"),
-                                            E("appuiElement_about"));
+          appMenuHelpMenuPopup.insertBefore(menuitem, E("appmenu_about"));
+          appMenuHelpMenuPopup.insertBefore(document.createElement("menuseparator"),
+                                            E("appmenu_about"));
         }
       }
       if (CCK2.firstrun) {
@@ -255,8 +255,8 @@ Components.utils.import("resource://cck2/CCK2.jsm");
         }
         if (config.displayMenuBar) {
           if (typeof updateAppButtonDisplay != "undefined") {
-            E("toolbar-uiElementbar").setAttribute("autohide", "false");
-            document.persist("toolbar-uiElementbar", "autohide")
+            E("toolbar-menubar").setAttribute("autohide", "false");
+            document.persist("toolbar-menubar", "autohide")
             updateAppButtonDisplay();
           }
         }
