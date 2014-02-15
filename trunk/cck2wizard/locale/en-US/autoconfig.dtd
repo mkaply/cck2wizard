@@ -2,3 +2,8 @@
 
 <!ENTITY disableProfileMigrator.label "Don't Migrate Profiles">
 <!ENTITY disableSafeMode.label "Disable Safe Mode">
+
+<!ENTITY add.label "Add...">
+<!ENTITY delete.label "Delete">
+
+<!ENTITY autoconfigjs.description "If you have additional JavaScript code that you'd like to add to the AutoConfig file, you can add files to the listbox below.">

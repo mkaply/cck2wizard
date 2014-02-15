@@ -45,9 +45,7 @@ function onLoad() {
     try {
       gAutoSave = Services.prefs.getBoolPref(prefsPrefix + "autosave");
       document.getElementById("cck2wizard-autosave").setAttribute("checked", gAutoSave);
-    } catch (e) {
-      Components.utils.reportError(e);
-    }
+    } catch (e) {}
 
   } catch(e) {
     errorCritical(e);

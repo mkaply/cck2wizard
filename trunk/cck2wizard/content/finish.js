@@ -108,6 +108,7 @@ const autoconfigTemplate = [
 '',
 'Components.utils.import("resource://cck2/CCK2.jsm");',
 'CCK2.init(config);',
+'',
 ''].join("\n");
 
 function onFinishAutoconfig() {
@@ -509,7 +510,16 @@ function packageCCK2(type) {
   if (type == "distribution") {
     var autoconfigFile = dir.clone();
     autoconfigFile.append("cck2.cfg");
-    writeFile(autoconfigFile, autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2)), addFileToZip(zipwriter));
+    var autoconfigcontent = autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2));
+    if ("AutoConfigJS" in config) {
+      for (var i=0; i < config.AutoConfigJS.length; i++) {
+        var file = Components.classes["@mozilla.org/file/local;1"]
+                              .createInstance(Components.interfaces.nsIFile);
+        file.initWithPath(config.AutoConfigJS[i]);
+        autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
+      }
+    }
+    writeFile(autoconfigFile, autoconfigcontent, addFileToZip(zipwriter));
   }
   if (type == "extension") {
     var CCK2Service = CCK2ServiceTemplate;
