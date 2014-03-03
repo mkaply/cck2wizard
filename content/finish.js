@@ -510,14 +510,19 @@ function packageCCK2(type) {
   if (type == "distribution") {
     var autoconfigFile = dir.clone();
     autoconfigFile.append("cck2.cfg");
-    var autoconfigcontent = autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2));
-    if ("AutoConfigJS" in config) {
-      for (var i=0; i < config.AutoConfigJS.length; i++) {
-        var file = Components.classes["@mozilla.org/file/local;1"]
-                              .createInstance(Components.interfaces.nsIFile);
-        file.initWithPath(config.AutoConfigJS[i]);
-        autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
-      }
+    var autoconfigcontent = "";
+    if ("AutoConfigJSBefore" in config) {
+      var file = Components.classes["@mozilla.org/file/local;1"]
+                            .createInstance(Components.interfaces.nsIFile);
+      file.initWithPath(config.AutoConfigJSBefore);
+      autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
+    }
+    autoconfigcontent += autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2));
+    if ("AutoConfigJSAfter" in config) {
+      var file = Components.classes["@mozilla.org/file/local;1"]
+                            .createInstance(Components.interfaces.nsIFile);
+      file.initWithPath(config.AutoConfigJSAfter);
+      autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
     }
     writeFile(autoconfigFile, autoconfigcontent, addFileToZip(zipwriter));
   }

@@ -53,3 +53,17 @@ function createListCell(label, value) {
   listcell.setAttribute("flex", "1");
   return listcell;
 }
+
+function onChooseDirectory(selector) {
+  var outputDir = chooseDir(window);
+  if (outputDir) {
+    document.querySelector(selector).value = outputDir.path;
+  }
+}
+
+function onChooseFile(selector) {
+  var outputFile = chooseFile(window);
+  if (outputFile) {
+    document.querySelector(selector).value = outputFile.path;
+  }
+}
