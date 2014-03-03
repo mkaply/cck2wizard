@@ -18,14 +18,14 @@
         <label value="&AutoConfigJSBefore.label;:"></label>
         <hbox align="center">
           <textbox flex="1" config="AutoConfigJSBefore"/>
-          <button label="&choose.label;" oncommand="onChooseOutputFile()" />
+          <button label="&choose.label;" oncommand="onChooseAutoConfigJSBefore()" />
         </hbox>
       </vbox>
       <vbox>
         <label value="&AutoConfigJSAfter.label;:"></label>
         <hbox align="center">
           <textbox flex="1" config="AutoConfigJSAfter" readonly="true"/>
-          <button label="&choose.label;" oncommand="onChooseOutputDirectory()" />
+          <button label="&choose.label;" oncommand="onChooseAutoConfigJSAfter()" />
         </hbox>
       </vbox>
     </vbox>
