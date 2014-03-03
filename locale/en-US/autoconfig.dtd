@@ -5,5 +5,9 @@
 
 <!ENTITY add.label "Add...">
 <!ENTITY delete.label "Delete">
+<!ENTITY choose.label "Choose...">
 
-<!ENTITY autoconfigjs.description "If you have additional JavaScript code that you'd like to add to the AutoConfig file, you can add files to the listbox below.">
+<!ENTITY autoconfigjs.description "If you have additional JavaScript code that you'd like to add to the AutoConfig file, you can use the fields below.">
+
+<!ENTITY AutoConfigJSAfter.label "After CCK2">
+<!ENTITY AutoConfigJSBefore.label "Before CCK2">
