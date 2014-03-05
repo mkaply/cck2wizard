@@ -82,7 +82,7 @@ function chooseProxyConfigURL() {
 }
 
 function chooseProxyConfigFile() {
-  var proxyConfigFile = chooseFile(window);
+  var proxyConfigFile = chooseFile(window, document.querySelector("textbox[config='network.proxyAutoConfig']").value);
   if (!proxyConfigFile) {
     return;
   }

@@ -62,7 +62,7 @@ function onChooseDirectory(selector) {
 }
 
 function onChooseFile(selector) {
-  var outputFile = chooseFile(window);
+  var outputFile = chooseFile(window, document.querySelector(selector).value);
   if (outputFile) {
     document.querySelector(selector).value = outputFile.path;
   }

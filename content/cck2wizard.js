@@ -299,7 +299,7 @@ function onDebug() {
 
 function onExport() {
   var configJSON = JSON.stringify(getConfig(), null, 2);
-  var configFile = chooseFile(window, "cck2config.json");
+  var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
     writeFile(configFile, configJSON);
   }
@@ -488,14 +488,26 @@ function showErrorMessage(id) {
                         gStringBundle.getString(id));
 }
 
-function chooseFile(win, filename) {
+function chooseFile(win, path) {
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
-  if (filename) {
-    fp.init(win, "", Ci.nsIFilePicker.modeSave);
-    fp.defaultString = filename;
-  } else {
-    fp.init(win, "", Ci.nsIFilePicker.modeOpen);
+  fp.init(win, "", Ci.nsIFilePicker.modeOpen);
+  if (path) {
+    var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+    file.initWithPath(path);
+    fp.defaultString = file.leafName;
+    fp.displayDirectory = file;
   }
+  fp.appendFilters(Ci.nsIFilePicker.filterAll);
+  if (fp.show() == Ci.nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
+    return fp.file;
+  }
+  return null;
+}
+
+function saveFile(win, filename) {
+  var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+  fp.init(win, "", Ci.nsIFilePicker.modeSave);
+  fp.defaultString = filename;
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
   if (fp.show() == Ci.nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
