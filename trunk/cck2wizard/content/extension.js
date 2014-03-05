@@ -25,7 +25,7 @@ function resetExtensionInfo() {
 }
 
 function onExtensionChooseIcon() {
-  var iconfile = chooseFile(window);
+  var iconfile = chooseFile(window, document.querySelector("textbox[config='extension.icon']").value);
   if (iconfile) {
     document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconfile).spec);
     document.querySelector("textbox[config='extension.icon']").value = iconfile.path;
