@@ -55,7 +55,7 @@ function createListCell(label, value) {
 }
 
 function onChooseDirectory(selector) {
-  var outputDir = chooseDir(window);
+  var outputDir = chooseDir(window, document.querySelector(selector).value);
   if (outputDir) {
     document.querySelector(selector).value = outputDir.path;
   }

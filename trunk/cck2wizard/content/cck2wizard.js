@@ -503,10 +503,15 @@ function chooseFile(win, filename) {
   return null;
 }
 
-function chooseDir(win) {
+function chooseDir(win, dir) {
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   fp.init(win, "", nsIFilePicker.modeGetFolder);
+  if (dir) {
+    var dirFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+    dirFile.initWithPath(dir);
+    fp.displayDirectory = dirFile;
+  }
   if (fp.show() == nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
   }
