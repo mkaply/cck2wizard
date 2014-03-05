@@ -90,6 +90,10 @@ function addCertificateFromURL() {
   var url = retVals.url;
   try {
     Services.io.newURI(url, null, null);
+    if (url.scheme != "https" || url.scheme != "http") {
+      showErrorMessage("invalidscheme");
+      return;
+    }
   } catch (ex) {
     showErrorMessage("invalidurl");
     return;
@@ -108,6 +112,10 @@ function addServerCertificateFromURL() {
   var url = retVals.url;
   try {
     Services.io.newURI(url, null, null);
+    if (url.scheme != "https" || url.scheme != "http") {
+      showErrorMessage("invalidscheme");
+      return;
+    }
   } catch (ex) {
     showErrorMessage("invalidurl");
     return;
