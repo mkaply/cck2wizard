@@ -71,7 +71,7 @@ function copyConfig() {
 }
 
 function onChooseOutputDirectory() {
-  var outputDir = chooseDir(window);
+  var outputDir = chooseDir(window, document.querySelector('textbox[config="outputDirectory"]').value);
   if (outputDir) {
     document.querySelector('textbox[config="outputDirectory"]').value = outputDir.path;
   }
