@@ -364,7 +364,33 @@ var CCK2 = {
     switch (topic) {
       case "distribution-customization-complete":
         var config = this.config;
-        if (!config || (!this.firstrun && this.installedVersion == config.version)) {
+        if (!config) {
+          return;
+        }
+        // Due to bug 947838, we have to reinitialize default preferences
+        var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
+        iniFile.leafName = "distribution";
+        iniFile.append("distribution.ini");
+        if (iniFile.exists()) {
+          if (config.preferences) {
+            for (var i in config.preferences) {
+              if (!("locked" in config.preferences[i])) {
+                if (Preferences.defaults.has(i)) {
+                  try {
+                    // If it's a complex preference, we need to set it differently
+                    Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
+                    Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
+                  } catch (ex) {
+                    Preferences.defaults.set(i, config.preferences[i].value);
+                  }
+                } else {
+                  Preferences.defaults.set(i, config.preferences[i].value);
+                }
+              }
+            }
+          }
+        }
+        if (!this.firstrun && this.installedVersion == config.version) {
           return;
         }
         if ("certs" in config && "override" in config.certs) {
