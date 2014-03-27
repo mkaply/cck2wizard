@@ -334,6 +334,8 @@ var CCK2 = {
                 var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
                 bstream.setInputStream(istream);
                 var cert = bstream.readBytes(bstream.available());
+                bstream.close();
+                istream.close();
                 if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
                   certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
                 } else {
@@ -649,12 +651,6 @@ function fixupCert(cert) {
  */
 function download(url, successCallback, errorCallback) {
   var uri = Services.io.newURI(url, null, null);
-  uri.QueryInterface(Ci.nsIURL);
-  var file = Services.dirsvc.get("TmpD", Ci.nsIFile);
-  file.append(uri.fileName);
-  if (file.exists()) {
-    file.remove(false);
-  }
 
   var channel = Services.io.newChannelFromURI(uri);
 
@@ -671,7 +667,7 @@ function download(url, successCallback, errorCallback) {
       errorCallback(new Error("Download failed"));
     }
   }
-  downloader.init(listener, file);
+  downloader.init(listener, null);
   channel.asyncOpen(downloader, null);
 }
 
