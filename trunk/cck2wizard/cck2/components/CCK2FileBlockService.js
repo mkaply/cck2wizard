@@ -6,8 +6,8 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 function CCK2FileBlock() {}
 
 CCK2FileBlock.prototype = {
-  chromeBlacklist: ["browser", "mozapps", "pippki", "marionette", "specialpowers",
-                    "pipnss", "cookie", "branding", "alerts"],
+  chromeBlacklist: ["browser", "mozapps", "marionette", "specialpowers",
+                    "cookie", "branding", "alerts"],
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aExtra) {
     // Prevent the loading of chrome URLs into the main browser window
     if (aContentLocation.scheme == "chrome") {
