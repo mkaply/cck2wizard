@@ -43,6 +43,9 @@ function showInstallPanel(doc, callback) {
 }
 
 function install(aData, aReason) {
+  if (aReason != 5) {
+    return;
+  }
   Services.prefs.setCharPref(prefsPrefix + "toolbarID", "nav-bar");
 }
 
@@ -118,7 +121,9 @@ function saveButtonPosition(event) {
   } else {
     Services.prefs.setCharPref(prefsPrefix + "toolbarID", button.parentNode.id);
   }
-  Services.prefs.setCharPref(prefsPrefix + "nextSiblingID", button.nextSibling.id);
+  if (button.nextSibling) {
+    Services.prefs.setCharPref(prefsPrefix + "nextSiblingID", button.nextSibling.id);
+  }
 }
 
 function onCommand(event) {
@@ -154,6 +159,9 @@ function loadIntoWindow(window) {
         var buttonPlacement = null;
         if (nextSibling) {
           buttonPlacement = CustomizableUI.getPlacementOfWidget(nextSibling.id);
+          if (buttonPlacement.area != toolbarID) {
+            buttonPlacement = null;
+          }
         }
         if (!nextSibling || !buttonPlacement) {
           CustomizableUI.addWidgetToArea(idPrefix + "button", toolbarID);
@@ -169,9 +177,9 @@ function loadIntoWindow(window) {
         } catch (ex) {}
         toolbar.insertItem(idPrefix + "button", nextSibling);
       }
+      button.addEventListener("command", onCommand, false);
     }
     window.addEventListener("aftercustomization", saveButtonPosition, false);
-    window.addEventListener("command", onCommand, false);
   }
 }
 
@@ -182,12 +190,14 @@ function unloadFromWindow(window) {
   let button = doc.getElementById(idPrefix + "button");
   if (button) {
     button.parentNode.removeChild(button);
+    button.removeEventListener("command", onCommand, false);
   } else {
     var toolbox = doc.getElementById("navigator-toolbox");
     if (toolbox && toolbox.palette) {
       var element = toolbox.palette.querySelector("#" + buttonID);
       if (element) {
         element.parentNode.removeChild(element);
+        element.removeEventListener("command", onCommand, false);
       }
     }
   }
@@ -197,7 +207,6 @@ function unloadFromWindow(window) {
   }
 
   window.removeEventListener("aftercustomization", saveButtonPosition, false);
-  window.removeEventListener("command", onCommand, false);
 }
 
 var windowListener = {
