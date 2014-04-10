@@ -168,6 +168,12 @@ var CCK2 = {
         Preferences.lock("plugin.disable_full_page_plugin_for_types", "");
       }
       if (config.disableSync) {
+        var aboutAccounts = {};
+        aboutAccounts.classID = Components.ID(uuid.generateUUID().toString());
+        aboutAccounts.factory = disableAbout(aboutAccounts.classID,
+                                                "Disable about:accounts - CCK",
+                                                "accounts");
+        CCK2.aboutFactories.push(aboutAccounts);
         var aboutSyncLog = {};
         aboutSyncLog.classID = Components.ID(uuid.generateUUID().toString());
         aboutSyncLog.factory = disableAbout(aboutSyncLog.classID,

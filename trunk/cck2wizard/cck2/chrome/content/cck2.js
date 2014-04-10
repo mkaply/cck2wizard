@@ -1,6 +1,9 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
-Components.utils.import("resource://cck2/CCK2.jsm");  
+Components.utils.import("resource://cck2/CCK2.jsm");
+try {
+  Components.utils.import("resource:///modules/CustomizableUI.jsm");
+} catch(e) {}
 
 (function () {
   var temp = {};
@@ -32,7 +35,7 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       /* Remove the addons button from about:home */
       if ((config && config.removeSnippets) &&
          /^about:home/.test(doc.location.href)) {
-        remove(E("snippets", doc));
+        E("snippets", doc).style.display = "none";
       }
       /* Remove the reset button from about:support */
       if ((config && config.disableResetFirefox) &&
@@ -59,20 +62,32 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
         return element != "about:sync-progress";
       })
-    var mySyncUI = {
-      init: function() {
-        return;
-      },
-      initUI: function() {
-        return;
-      },
-      updateUI: function() {
-        hide(E("sync-setup-state"));
-        hide(E("sync-syncnow-state"));
+    if (gSyncUI) {
+      var mySyncUI = {
+        init: function() {
+          return;
+        },
+        initUI: function() {
+          return;
+        },
+        updateUI: function() {
+          hide(E("sync-setup-state"));
+          hide(E("sync-syncnow-state"));
+        }
+      }
+      gSyncUI = mySyncUI;
+    }
+    try {      
+      CustomizableUI.destroyWidget("sync-button");
+      CustomizableUI.removeWidgetFromArea("sync-button");
+    } catch (e) {}
+    var toolbox = document.getElementById("navigator-toolbox");
+    if (toolbox && toolbox.palette) {
+      element = toolbox.palette.querySelector("#sync-button");
+      if (element) {
+        element.parentNode.removeChild(element);
       }
     }
-    gSyncUI = mySyncUI;
-    remove(E("sync-button"));
   }
 
   function disablePrivateBrowsing() {
@@ -84,6 +99,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     hide(E("appmenu_privateBrowsing"));
     hide(E("appmenu_newPrivateWindow"));
     hide(E("privateBrowsingItem"));
+    try {      
+      CustomizableUI.destroyWidget("privatebrowsing-button")
+    } catch (e) {}
   }
 
   function disableAddonsManager() {
@@ -94,9 +112,13 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     hide(E("appmenu_addons"));
     hide(E("menu_openAddons"));
     disable(E("Tools:Addons"));
+    try {      
+      CustomizableUI.destroyWidget("add-ons-button")
+    } catch (e) {}
   }
   
   function removeDeveloperTools() {
+    hide(E("developer-button"));
     hide(E("webDeveloperMenu"));
     var devtoolsKeyset = document.getElementById("devtoolsKeyset");
     for (var i = 0; i < devtoolsKeyset.childNodes.length; i++) {
@@ -126,10 +148,18 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     try {
       document.getElementById("Tools:DevToolbarFocus").removeAttribute("oncommand");
     } catch (e) {}
+    try {      
+      CustomizableUI.destroyWidget("developer-button")
+    } catch (e) {}
   }
 
   function disableErrorConsole() {
     document.getElementById("Tools:ErrorConsole").removeAttribute("oncommand");
+  }
+
+  function onPanelShowing(event) {
+    hide(E("PanelUI-fxa-status"));
+
   }
 
   function startup()
@@ -218,14 +248,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
           var helpMenuPopup = document.getElementById("menu_HelpPopup");
           var menuitem = document.createElement("menuitem");
           menuitem.setAttribute("label", config.helpMenu.label);
-          menuitem.setAttribute("url", config.helpMenu.url);
           menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
-          menuitem.addEventListener("command", function(event) {
-            openUILink(this.getAttribute("url"), event, false, true);
-          })
-          menuitem.addEventListener("click", function(event) {
-            checkForMiddleClick(this, event);
-          }, false);
+          menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
+          menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
           if (E("aboutName").hidden) {
             // Mac
             helpMenuPopup.appendChild(menuitem);
@@ -266,6 +291,10 @@ Components.utils.import("resource://cck2/CCK2.jsm");
         }
         CCK2.firstrun = false;
       }
+      var panelUIPopup = document.getElementById("PanelUI-popup");
+      if (panelUIPopup) {
+        document.getElementById("PanelUI-popup").addEventListener("popupshowing", onPanelShowing, false);
+      }
     } catch (e) {
       errorCritical(e);
     }
@@ -277,6 +306,10 @@ Components.utils.import("resource://cck2/CCK2.jsm");
     var appcontent = E("appcontent");
     if (appcontent) {
        appcontent.removeEventListener("DOMContentLoaded", onPageLoad, false);
+    }
+    var panelUIPopup = document.getElementById("PanelUI-popup");
+    if (panelUIPopup) {
+      document.getElementById("PanelUI-popup").removeEventListener("popupshowing", onPanelShowing, false);
     }
   }
 
