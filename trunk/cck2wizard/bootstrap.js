@@ -177,9 +177,9 @@ function loadIntoWindow(window) {
         } catch (ex) {}
         toolbar.insertItem(idPrefix + "button", nextSibling);
       }
-      button.addEventListener("command", onCommand, false);
     }
     window.addEventListener("aftercustomization", saveButtonPosition, false);
+    window.addEventListener("command", onCommand, false);
   }
 }
 
@@ -190,14 +190,12 @@ function unloadFromWindow(window) {
   let button = doc.getElementById(idPrefix + "button");
   if (button) {
     button.parentNode.removeChild(button);
-    button.removeEventListener("command", onCommand, false);
   } else {
     var toolbox = doc.getElementById("navigator-toolbox");
     if (toolbox && toolbox.palette) {
       var element = toolbox.palette.querySelector("#" + buttonID);
       if (element) {
         element.parentNode.removeChild(element);
-        element.removeEventListener("command", onCommand, false);
       }
     }
   }
@@ -207,6 +205,7 @@ function unloadFromWindow(window) {
   }
 
   window.removeEventListener("aftercustomization", saveButtonPosition, false);
+  window.removeEventListener("command", onCommand, false);
 }
 
 var windowListener = {
