@@ -248,7 +248,9 @@ try {
           var helpMenuPopup = document.getElementById("menu_HelpPopup");
           var menuitem = document.createElement("menuitem");
           menuitem.setAttribute("label", config.helpMenu.label);
-          menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
+          if ("accesskey" in config.helpMenu) {
+            menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
+          }
           menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
           menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
           if (E("aboutName").hidden) {
