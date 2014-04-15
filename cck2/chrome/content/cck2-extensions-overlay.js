@@ -25,8 +25,8 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       var xpinstallEnabled = Preferences.get("xpinstall.enabled", true);
       if (!showDiscoverPane || !xpinstallEnabled) {
 	hide(gCategories.get("addons://discover/"));
-	hide(E("#search-list-empty button"));
-	hide(E("#addon-list-empty button"));
+	hide(E("search-list-empty button"));
+	hide(E("addon-list-empty button"));
 	if (E("view-port") && E("view-port").selectedIndex == 0) {
 	  try {
 	    gViewController.loadView("addons://list/extension");
