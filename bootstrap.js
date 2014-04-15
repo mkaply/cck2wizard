@@ -175,12 +175,10 @@ function loadIntoWindow(window) {
         try {
           nextSibling = doc.getElementById(Services.prefs.getCharPref(prefsPrefix + "nextSiblingID"));
         } catch (ex) {}
-        if (toolbar) {
-          toolbar.insertItem(idPrefix + "button", nextSibling);
-        } else {
-          // Probably Australis Migration
-          // What should we do?
+        if (!toolbar) {
+          toolbar = doc.getElementById("nav-bar");
         }
+        toolbar.insertItem(idPrefix + "button", nextSibling);
       }
     }
     window.addEventListener("aftercustomization", saveButtonPosition, false);
