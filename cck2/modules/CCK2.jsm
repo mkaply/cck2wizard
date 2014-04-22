@@ -502,13 +502,20 @@ var CCK2 = {
         if (config.addons) {
           Cu.import("resource://gre/modules/AddonManager.jsm");
           var numAddonsInstalled = 0;
+          var numAddons = config.addons.length;
           for (var i=0; i < config.addons.length; i++) {
             try {
             AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
               let listener = {
-                onInstallEnded: function(addon) {
-                  numAddonsInstalled++;
-                  if (numAddonsInstalled == config.addons.length) {
+                onInstallEnded: function(install, addon) {
+                  if (addon.isActive) {
+                    // restartless add-on, so we don't need to restart
+                    numAddons--;
+                  } else {
+                    numAddonsInstalled++;
+                  }
+                  if (numAddonsInstalled > 0 &&
+                      numAddonsInstalled == config.addons.length) {
                     Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
                   }
                 }
