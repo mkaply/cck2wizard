@@ -12,6 +12,7 @@ try {
 }
 Cu.import("resource://cck2/Preferences.jsm");
 Cu.import("resource://cck2/CTPPermissions.jsm");
+Cu.import("resource:///modules/distribution.js");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
     "@mozilla.org/browser/nav-bookmarks-service;1", "nsINavBookmarksService");
@@ -25,6 +26,23 @@ XPCOMUtils.defineLazyServiceGetter(this, "override",
     "@mozilla.org/security/certoverride;1", "nsICertOverrideService");
 XPCOMUtils.defineLazyServiceGetter(this, "uuid",
     "@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
+
+/* Crazy hack to work around distribution.ini bug */
+/* Basically if the distribution can't be parsed,  make it null */
+let dirSvc = Cc["@mozilla.org/file/directory_service;1"].
+             getService(Ci.nsIProperties);
+let iniFile = dirSvc.get("XREExeF", Ci.nsIFile);
+iniFile.leafName = "distribution";
+iniFile.append("distribution.ini");
+if (iniFile.exists()) {
+  try {
+    let ini = Cc["@mozilla.org/xpcom/ini-parser-factory;1"].
+                 getService(Ci.nsIINIParserFactory).
+                 createINIParser(iniFile);
+  } catch (e) {
+    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() null);
+  }
+}
 
 function alert(string) {
   Services.prompt.alert(Services.wm.getMostRecentWindow("navigator:browser"), "", string);
