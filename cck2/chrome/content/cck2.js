@@ -35,7 +35,10 @@ try {
       /* Remove the addons button from about:home */
       if ((config && config.removeSnippets) &&
          /^about:home/.test(doc.location.href)) {
-        E("snippets", doc).style.display = "none";
+        var snippets = E("snippets", doc);
+        if (snippets) {
+          snippets.style.display = "none";
+        }
       }
       /* Remove the reset button from about:support */
       if ((config && config.disableResetFirefox) &&
