@@ -76,6 +76,8 @@ try {
         updateUI: function() {
           hide(E("sync-setup-state"));
           hide(E("sync-syncnow-state"));
+          hide(E("sync-setup"));
+          hide(E("sync-syncnowitem"));
         }
       }
       gSyncUI = mySyncUI;
@@ -91,6 +93,10 @@ try {
         element.parentNode.removeChild(element);
       }
     }
+    hide(E("sync-setup-state"));
+    hide(E("sync-syncnow-state"));
+    hide(E("sync-setup"));
+    hide(E("sync-syncnowitem"));
   }
 
   function disablePrivateBrowsing() {
