@@ -301,9 +301,6 @@ function onExport() {
   var configJSON = JSON.stringify(getConfig(), null, 2);
   var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
-    if (configFile.exists()) {
-      configFile.remove();
-    }
     writeFile(configFile, configJSON);
   }
 }
@@ -512,7 +509,7 @@ function saveFile(win, filename) {
   fp.init(win, "", Ci.nsIFilePicker.modeSave);
   fp.defaultString = filename;
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
-  if (fp.show() == Ci.nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
+  if (fp.show() != Ci.nsIFilePicker.returnCancel && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
   }
   return null;
