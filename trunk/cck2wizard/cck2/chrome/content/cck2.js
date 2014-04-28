@@ -262,7 +262,7 @@ try {
           }
           menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
           menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
-          if (E("aboutName").hidden) {
+          if (!E("aboutName") || E("aboutName").hidden) {
             // Mac
             helpMenuPopup.appendChild(menuitem);
           } else {
