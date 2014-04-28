@@ -301,6 +301,9 @@ function onExport() {
   var configJSON = JSON.stringify(getConfig(), null, 2);
   var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
+    if (configFile.exists()) {
+      configFile.remove();
+    }
     writeFile(configFile, configJSON);
   }
 }
