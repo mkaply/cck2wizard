@@ -89,8 +89,8 @@ function addCertificateFromURL() {
   }
   var url = retVals.url;
   try {
-    Services.io.newURI(url, null, null);
-    if (url.scheme != "https" || url.scheme != "http") {
+    var uri = Services.io.newURI(url, null, null);
+    if (uri.scheme != "https" && uri.scheme != "http") {
       showErrorMessage("invalidscheme");
       return;
     }
@@ -111,8 +111,8 @@ function addServerCertificateFromURL() {
   }
   var url = retVals.url;
   try {
-    Services.io.newURI(url, null, null);
-    if (url.scheme != "https" || url.scheme != "http") {
+    var uri = Services.io.newURI(url, null, null);
+    if (uri.scheme != "https" && uri.scheme != "http") {
       showErrorMessage("invalidscheme");
       return;
     }
