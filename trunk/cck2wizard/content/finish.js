@@ -524,6 +524,7 @@ function packageCCK2(type) {
       file.initWithPath(config.AutoConfigJSAfter);
       autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
     }
+    numFilesToWrite += 1;
     writeFile(autoconfigFile, autoconfigcontent, addFileToZip(zipwriter));
   }
   if (type == "extension") {
