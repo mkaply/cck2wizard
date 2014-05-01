@@ -44,7 +44,7 @@ function showInstallPanel(doc, callback) {
 
 function install(aData, aReason) {
   if (aReason != 5) {
-    return;
+//    return;
   }
   Services.prefs.setCharPref(prefsPrefix + "toolbarID", "nav-bar");
 }
