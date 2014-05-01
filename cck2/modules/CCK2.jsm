@@ -340,7 +340,7 @@ var CCK2 = {
           shareAllProxies: "network.proxy.share_proxy_settings"
         }
         for (var i in prefMapping) {
-          if (config.network[i]) {
+          if (i in config.network) {
             Preferences.defaults.set(prefMapping[i], config.network[i]);
           }
           if (config.network.locked) {
