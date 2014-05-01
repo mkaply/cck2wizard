@@ -44,6 +44,23 @@ if (iniFile.exists()) {
   }
 }
 
+var networkPrefMapping = {
+  proxyType: "network.proxy.type",
+  proxyHTTP: "network.proxy.http",
+  proxyHTTPPort: "network.proxy.http_port",
+  proxySSL: "network.proxy.ssl",
+  proxySSLPort: "network.proxy.ssl_port",
+  proxyFTP: "network.proxy.ftp",
+  proxyFTPPort: "network.proxy.ftp_port",
+  proxySOCKS: "network.proxy.socks",
+  proxySOCKSPort: "network.proxy.socks_port",
+  proxySocksVersion: "network.proxy.socks_version",
+  proxyNone: "network.proxy.no_proxies_on",
+  proxyAutoConfig: "network.proxy.autoconfig_url",
+  shareAllProxies: "network.proxy.share_proxy_settings"
+}
+
+
 function alert(string) {
   Services.prompt.alert(Services.wm.getMostRecentWindow("navigator:browser"), "", string);
 } 
@@ -289,6 +306,11 @@ var CCK2 = {
       }
       if (config.homePage && !config.lockHomePage) {
         Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
+        /* If you have a distribution.ini, browser.startup.homepage gets wiped out */
+        /* We need to save it */
+        if (!Preferences.isSet("browser.startup.homepage")) {
+          Preferences.set("browser.startup.homepage", config.homePage);
+        }
       }
       if (config.lockHomePage) {
         if (config.homePage) {
@@ -324,27 +346,12 @@ var CCK2 = {
         Preferences.lock("app.update.enabled", false);
       }
       if (config.network) {
-        var prefMapping = {
-          proxyType: "network.proxy.type",
-          proxyHTTP: "network.proxy.http",
-          proxyHTTPPort: "network.proxy.http_port",
-          proxySSL: "network.proxy.ssl",
-          proxySSLPort: "network.proxy.ssl_port",
-          proxyFTP: "network.proxy.ftp",
-          proxyFTPPort: "network.proxy.ftp_port",
-          proxySOCKS: "network.proxy.socks",
-          proxySOCKSPort: "network.proxy.socks_port",
-          proxySocksVersion: "network.proxy.socks_version",
-          proxyNone: "network.proxy.no_proxies_on",
-          proxyAutoConfig: "network.proxy.autoconfig_url",
-          shareAllProxies: "network.proxy.share_proxy_settings"
-        }
-        for (var i in prefMapping) {
+        for (var i in networkPrefMapping) {
           if (i in config.network) {
-            Preferences.defaults.set(prefMapping[i], config.network[i]);
+            Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
           }
           if (config.network.locked) {
-            Preferences.lock(prefMapping[i]);
+            Preferences.lock(networkPrefMapping[i]);
           }
         }
       }
@@ -394,24 +401,41 @@ var CCK2 = {
           return;
         }
         // Due to bug 947838, we have to reinitialize default preferences
-        var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
-        iniFile.leafName = "distribution";
-        iniFile.append("distribution.ini");
-        if (iniFile.exists()) {
-          if (config.preferences) {
-            for (var i in config.preferences) {
-              if (!("locked" in config.preferences[i])) {
-                if (Preferences.defaults.has(i)) {
-                  try {
-                    // If it's a complex preference, we need to set it differently
-                    Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                    Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                  } catch (ex) {
+        {
+          var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
+          iniFile.leafName = "distribution";
+          iniFile.append("distribution.ini");
+          if (iniFile.exists()) {
+            if (config.preferences) {
+              for (var i in config.preferences) {
+                if (!("locked" in config.preferences[i])) {
+                  if (Preferences.defaults.has(i)) {
+                    try {
+                      // If it's a complex preference, we need to set it differently
+                      Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
+                      Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
+                    } catch (ex) {
+                      Preferences.defaults.set(i, config.preferences[i].value);
+                    }
+                  } else {
                     Preferences.defaults.set(i, config.preferences[i].value);
                   }
-                } else {
-                  Preferences.defaults.set(i, config.preferences[i].value);
                 }
+              }
+            }
+          }
+          if (config.homePage && !config.lockHomePage) {
+            Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
+            /* If you have a distribution.ini, we changed browser.startup.homepage */
+            /* Put it back */
+            if (Preferences.get("browser.startup.homepage") == config.homePage) {
+              Preferences.reset("browser.startup.homepage");
+            }
+          }
+          if (config.network) {
+            for (var i in networkPrefMapping) {
+              if (i in config.network) {
+                Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
               }
             }
           }
