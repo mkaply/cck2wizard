@@ -227,6 +227,7 @@ var CCK2 = {
                                                 "Disable about:sync-tabs - CCK",
                                                 "sync-tabs");
         CCK2.aboutFactories.push(aboutSyncTabs);
+        Preferences.lock("browser.syncPromoViewsLeftMap", JSON.stringify({bookmarks:0, passwords:0, addons:0});
       }
       var disableAboutConfigFactory = null;
       if (config.disableAboutConfig) {
