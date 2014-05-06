@@ -230,8 +230,8 @@ try {
           if (!uiElements || uiElements.length == 0) {
             continue;
           }
-          for (var i=0; i < uiElements.length; i++) {
-            var uiElement = uiElements[i];
+          for (var j=0; j < uiElements.length; j++) {
+            var uiElement = uiElements[j];
             hide(uiElement);
             if (uiElement.nodeName == "menuitem") {
               uiElement.removeAttribute("key");
@@ -242,8 +242,8 @@ try {
                 var command = document.getElementById(commandId);
                 command.removeAttribute("oncommand");
                 var keys = document.querySelectorAll("key[command='" + commandId + "']")
-                for (var i=0; i < keys.length; i++) {
-                  keys[i].removeAttribute("command");
+                for (var k=0; k < keys.length; k++) {
+                  keys[k].removeAttribute("command");
                 }
               }
             }
