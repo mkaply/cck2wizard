@@ -299,6 +299,10 @@ try {
             document.persist("toolbar-menubar", "autohide")
             updateAppButtonDisplay();
           }
+          try {      
+            CustomizableUI.setToolbarVisibility("toolbar-menubar", "true");
+          } catch (e) {}
+
         }
         CCK2.firstrun = false;
       }
