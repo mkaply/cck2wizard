@@ -10,46 +10,46 @@ function importCCKFile(configFileContent)
     if (equals != -1) {
       var firstpart = str.substring(0,equals);
       var secondpart = str.substring(equals+1);
-	  switch (firstpart) {
-		case"HTTPproxyname":
-		  firstpart = "networkProxyHTTP";
-		  break;
-		case"HTTPportno":
-		  firstpart = "networkProxyHTTP_Port";
-		  break;
-		case"SSLproxyname":
-		  firstpart = "networkProxySSL";
-		  break;
-		case"SSLportno":
-		  firstpart = "networkProxySSL_Port";
-		  break;
-		case"FTPproxyname":
-		  firstpart = "networkProxyFTP";
-		  break;
-		case"FTPportno":
-		  firstpart = "networkProxyFTP_Port";
-		  break;
-		case"SOCKShostname":
-		  firstpart = "networkProxySOCKS";
-		  break;
-		case"SOCKSportno":
-		  firstpart = "networkProxySOCKS_Port";
-		  break;
-		case"socksv":
-		  firstpart = "networkProxySOCKSVersion";
-		  break;
-		case"NoProxyname":
-		  firstpart = "networkProxyNone";
-		  break;
-		case "ProxyType":
-		  firstpart = "networkProxyType";
-		  switch (secondpart) {
-			case "5":
-			  secondpart = "10";
-			  break;
-		  }
-		  break;
-	  }
+	switch (firstpart) {
+	  case"HTTPproxyname":
+	    firstpart = "networkProxyHTTP";
+	    break;
+	  case"HTTPportno":
+	    firstpart = "networkProxyHTTP_Port";
+	    break;
+	  case"SSLproxyname":
+	    firstpart = "networkProxySSL";
+	    break;
+	  case"SSLportno":
+	    firstpart = "networkProxySSL_Port";
+	    break;
+	  case"FTPproxyname":
+	    firstpart = "networkProxyFTP";
+	    break;
+	  case"FTPportno":
+	    firstpart = "networkProxyFTP_Port";
+	    break;
+	  case"SOCKShostname":
+	    firstpart = "networkProxySOCKS";
+	    break;
+	  case"SOCKSportno":
+	    firstpart = "networkProxySOCKS_Port";
+	    break;
+	  case"socksv":
+	    firstpart = "networkProxySOCKSVersion";
+	    break;
+	  case"NoProxyname":
+	    firstpart = "networkProxyNone";
+	    break;
+	  case "ProxyType":
+	    firstpart = "networkProxyType";
+	    switch (secondpart) {
+	      case "5":
+		secondpart = "10";
+		break;
+	    }
+	    break;
+	}
       configarray[firstpart] = secondpart;
     }
   }
@@ -303,10 +303,19 @@ function importCCKFile(configFileContent)
     config.preferences = {};
     var preferencename, i=1;
     while ((preferencename = configarray['PreferenceName' + i])) {
-      if (!configarray['PreferenceName' + i]) {
+      if (!(('PreferenceValue' + i) in configarray)) {
 	// LOCK ONLY PREF. JUST CONTINUE FOR NOW
 	// WE SHOULD CHECK FOR SPECIFIC PREFS AND SET
 	// THEIR SEPARATE LOCKING
+	if (preferencename == "browser.startup.homepage") {
+	  config.lockHomePage = true;
+	}
+	if (preferencename == "network.proxy.type") {
+          if (!config.network) {
+            config.network = {};
+          }
+	  config.network.locked = true;
+	}
         i++;
 	continue;
       }
