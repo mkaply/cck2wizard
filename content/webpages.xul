@@ -10,7 +10,7 @@
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
-    <vbox id="webpages" setconfig="setWebPages" getconfig="getWebPages" resetconfig="resetWebPages">
+    <vbox id="webpages">
     <groupbox>
       <caption label="&homePage.caption;"/>
       <description>&homePage.description;</description>
