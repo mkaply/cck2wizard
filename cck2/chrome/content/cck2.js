@@ -1,8 +1,10 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 Components.utils.import("resource://cck2/CCK2.jsm");
+var gAustralis = false;
 try {
   Components.utils.import("resource:///modules/CustomizableUI.jsm");
+  gAustralis = true;
 } catch(e) {}
 
 (function () {
@@ -82,10 +84,10 @@ try {
       }
       gSyncUI = mySyncUI;
     }
-    try {      
+    if (gAustralis) {
       CustomizableUI.destroyWidget("sync-button");
       CustomizableUI.removeWidgetFromArea("sync-button");
-    } catch (e) {}
+    }
     var toolbox = document.getElementById("navigator-toolbox");
     if (toolbox && toolbox.palette) {
       element = toolbox.palette.querySelector("#sync-button");
@@ -108,9 +110,9 @@ try {
     hide(E("appmenu_privateBrowsing"));
     hide(E("appmenu_newPrivateWindow"));
     hide(E("privateBrowsingItem"));
-    try {      
+    if (gAustralis) {
       CustomizableUI.destroyWidget("privatebrowsing-button")
-    } catch (e) {}
+    }
   }
 
   function disableAddonsManager() {
@@ -121,9 +123,9 @@ try {
     hide(E("appmenu_addons"));
     hide(E("menu_openAddons"));
     disable(E("Tools:Addons"));
-    try {      
+    if (gAustralis) {
       CustomizableUI.destroyWidget("add-ons-button")
-    } catch (e) {}
+    }
   }
   
   function removeDeveloperTools() {
@@ -157,9 +159,9 @@ try {
     try {
       document.getElementById("Tools:DevToolbarFocus").removeAttribute("oncommand");
     } catch (e) {}
-    try {      
+    if (gAustralis) {
       CustomizableUI.destroyWidget("developer-button")
-    } catch (e) {}
+    }
   }
 
   function disableErrorConsole() {
@@ -299,9 +301,9 @@ try {
             document.persist("toolbar-menubar", "autohide")
             updateAppButtonDisplay();
           }
-          try {      
+          if (gAustralis) {
             CustomizableUI.setToolbarVisibility("toolbar-menubar", "true");
-          } catch (e) {}
+          }
 
         }
         CCK2.firstrun = false;
