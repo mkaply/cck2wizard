@@ -1,12 +1,14 @@
-@-moz-document url(chrome://browser/content/browser.xul) {
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-#cck2wizard-button {
-  list-style-image: url("chrome://cck2wizard/skin/icon16.png") !important;
-}
+@-moz-document url("chrome://browser/content/browser.xul"),
+               url("chrome://global/content/customizeToolbar.xul")
+{
+  #cck2wizard-button {
+    list-style-image: url("chrome://cck2wizard/skin/icon16.png") !important;
+  }
 
-#cck2wizard-button[cui-areatype="menu-panel"],
-toolbarpaletteitem[place="palette"] > #cck2wizard-button {
-  list-style-image: url("chrome://cck2wizard/skin/icon.png") !important;
-}
-
+  #cck2wizard-button[cui-areatype="menu-panel"],
+  toolbarpaletteitem[place="palette"] > #cck2wizard-button {
+    list-style-image: url("chrome://cck2wizard/skin/icon.png") !important;
+  }
 }
