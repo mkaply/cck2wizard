@@ -9,6 +9,12 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   Services.scriptloader.loadSubScript("chrome://cck2/content/util.js", scope);
   let {E, hide, errorCritical} = scope;
 
+  function hideExtension(extensionID) {
+    var richlistitem = document.querySelector("richlistitem[value='" + extensionID + "']");
+    if (richlistitem)
+      richlistitem.hidden = true;
+  }
+
   function startup()
   {
     try {
@@ -16,10 +22,9 @@ Components.utils.import("resource://cck2/CCK2.jsm");
       var config = CCK2.getConfig();
       if (config && "extension" in config && config.extension.hide) {
 	window.addEventListener("ViewChanged", function() {
-	  var richlistitem = document.querySelector("richlistitem[value='" + config.extension.id + "']");
-	  if (richlistitem)
-	    richlistitem.hidden = true;
+	  hideExtension(config.extension.id);
 	} , false)
+	hideExtension(config.extension.id);
       }
       var showDiscoverPane = Preferences.get("extensions.getAddons.showPane", true);
       var xpinstallEnabled = Preferences.get("xpinstall.enabled", true);
