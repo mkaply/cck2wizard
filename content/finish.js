@@ -102,8 +102,6 @@ const autoconfigPrefs = [
 ''].join("\n");
 
 const autoconfigTemplate = [
-'// Autoconfig file written by CCK2',
-'',
 'var config = %config%;',
 '',
 'Components.utils.import("resource://cck2/CCK2.jsm");',
@@ -510,7 +508,7 @@ function packageCCK2(type) {
   if (type == "distribution") {
     var autoconfigFile = dir.clone();
     autoconfigFile.append("cck2.cfg");
-    var autoconfigcontent = "";
+    var autoconfigcontent = "// Autoconfig file written by CCK2" + "\n\n";
     if ("AutoConfigJSBefore" in config) {
       var file = Components.classes["@mozilla.org/file/local;1"]
                             .createInstance(Components.interfaces.nsIFile);
