@@ -155,6 +155,15 @@ var CCK2 = {
       }
       if (config.preferences) {
         for (var i in config.preferences) {
+          // Ugly, but we need special handling for this pref
+          // since Firefox doesn't honor the default pref
+          // So we set a regular pref if first run
+          if (i == "plugin.disable_full_page_plugin_for_types") {
+            if (this.firstrun) {
+              Preferences.set(i, config.preferences[i].value);
+            }
+            continue;
+          }
           if (config.preferences[i].locked) {
             Preferences.lock(i, config.preferences[i].value);
           } else {
@@ -407,6 +416,11 @@ var CCK2 = {
           if (iniFile.exists()) {
             if (config.preferences) {
               for (var i in config.preferences) {
+                // Ugly, but we need special handling for this pref
+                // since Firefox doesn't honor the default pref
+                if (i == "plugin.disable_full_page_plugin_for_types") {
+                  continue;
+                }
                 if (!("locked" in config.preferences[i])) {
                   if (Preferences.defaults.has(i)) {
                     try {
