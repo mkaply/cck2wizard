@@ -24,7 +24,7 @@
       <vbox>
         <label value="&AutoConfigJSAfter.label;:"></label>
         <hbox align="center">
-          <textbox flex="1" config="AutoConfigJSAfter" readonly="true"/>
+          <textbox flex="1" config="AutoConfigJSAfter"/>
           <button label="&choose.label;" oncommand="onChooseAutoConfigJSAfter()" />
         </hbox>
       </vbox>
