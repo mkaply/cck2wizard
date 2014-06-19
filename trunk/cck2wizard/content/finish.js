@@ -14,7 +14,8 @@ const cck2Files = [
   "modules/Preferences.jsm",
   "modules/Timer.jsm",
   "modules/Utils.jsm",
-  "modules/CTPPermissions.jsm"
+  "modules/CTPPermissions.jsm",
+  "modules/CAPSClipboard.jsm"
 ]
 
 const disablesafemodeFiles = [
