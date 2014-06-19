@@ -117,6 +117,19 @@ function onAutosave() {
   Services.prefs.setBoolPref(prefsPrefix + "autosave", gAutoSave);
 }
 
+function validConfigID(config) {
+  while (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + config.id)) {
+    var check = {value: false};
+    var input = {value: config.id};  
+    var result = Services.prompt.prompt(window, "CCK2", "A config with that ID already exists. Please enter a new ID.", input, null, check);
+    if (!result) {
+      return false;
+    }
+    config.id = input.value;
+  }
+  return true;
+}
+
 function onImport() {
   try {
     if (!checkToSave()) {
@@ -127,8 +140,7 @@ function onImport() {
       readFile(configFile, function(configFileContent) {
         try {
           var config = JSON.parse(configFileContent);
-          if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." +config.id)) {
-            Services.prompt.alert(window, "CCK2", "A config with that ID already exists.");
+          if (!validConfigID(config)) {
             return;
           }
           setConfig(config);
@@ -161,6 +173,9 @@ function onImport() {
           if (configFileContent.substr(0, 3) == "id=") {
             try {
               var config = importCCKFile(configFileContent);
+              if (!validConfigID(config)) {
+                return;
+              }
               setConfig(config);
               document.getElementById("main-deck").selectedIndex = 1;
               gTree.view.selection.select(0);              
@@ -170,8 +185,7 @@ function onImport() {
           } else {
             try {
               var config = JSON.parse(configFileContent);
-              if (Services.prefs.prefHasUserValue(prefsPrefix + "configs." +config.id)) {
-                Services.prompt.alert(window, "CCK2", "A config with that ID already exists.");
+              if (!validConfigID(config)) {
                 return;
               }
               setConfig(config);
