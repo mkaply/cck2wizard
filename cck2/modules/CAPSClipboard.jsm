@@ -77,6 +77,7 @@ var CAPSClipboard = {
     case "final-ui-startup":
       try {
         Services.obs.removeObserver(CAPSClipboard, "final-ui-startup", false);
+        // TODO - Check Firefox version
         var policies = [];
         policies = Services.prefs.getCharPref("capability.policy.policynames").split(', ');
         for (var i=0; i < policies.length; i++ ) {
