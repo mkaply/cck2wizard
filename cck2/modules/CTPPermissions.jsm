@@ -64,6 +64,8 @@ var CTP = {
         permission =
           ((0 < lastPeriod) ? aTag.filename.substring(0, lastPeriod) :
            aTag.filename);
+        // Remove digits at the end
+        permission = permission.replace(/[0-9]+$/, "");
       }
     } else {
       permission = aTag.filename;
