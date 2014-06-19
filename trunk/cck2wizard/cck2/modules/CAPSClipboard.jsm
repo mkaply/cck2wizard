@@ -11,19 +11,19 @@ function myExecCommand(doc) {
     switch (aCommandName) {
       case "cut":
       case "copy":
-	if (doc.allowCutCopy) {
-	  var win = Services.wm.getMostRecentWindow("navigator:browser");
-	  win.goDoCommand("cmd_" + aCommandName);
-	  return;
-	}
-	break;
-      case "paste":
-	if (doc.allowPaste) {
-	  var win = Services.wm.getMostRecentWindow("navigator:browser");
-	  win.goDoCommand("cmd_" + aCommandName);
-	  return;
-	}
-	break;
+        if (doc.allowCutCopy) {
+          var win = Services.wm.getMostRecentWindow("navigator:browser");
+          win.goDoCommand("cmd_" + aCommandName);
+          return;
+        }
+        break;
+            case "paste":
+        if (doc.allowPaste) {
+          var win = Services.wm.getMostRecentWindow("navigator:browser");
+          win.goDoCommand("cmd_" + aCommandName);
+          return;
+        }
+        break;
     }
     doc.originalExecCommand(aCommandName, aShowDefaultUI, aValueArgument);
   }
@@ -36,8 +36,8 @@ function myDesignModeGetter(doc) {
       Cu.exportFunction(myExecCommand(doc), doc, {defineAs: "execCommand"});
     } else if (mode == "off") {
       if (doc.originalExecCommand) {
-	Cu.waiveXrays(doc).execCommand = doc.originalExecCommand;
-	doc.originalExecCommand = null;
+        Cu.waiveXrays(doc).execCommand = doc.originalExecCommand;
+        doc.originalExecCommand = null;
       }
     }
     doc.originalDesignModeGetter(mode);
