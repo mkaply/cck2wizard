@@ -1,6 +1,8 @@
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 
+const EXPORTED_SYMBOLS = [];
+
 var gAllowedPasteSites = [];
 var gAllowedCutCopySites = [];
 
@@ -74,7 +76,7 @@ var CAPSClipboard = {
     switch (topic) {
       case "final-ui-startup":
 	try {
-	  Services.obs.removeObserver(documentObserver, "final-ui-startup", false);
+	  Services.obs.removeObserver(CAPSClipboard, "final-ui-startup", false);
 	  var policies = [];
 	  policies = Services.prefs.getCharPref("capability.policy.policynames").split(', ');
 	  for (var i=0; i < policies.length; i++ ) {
@@ -99,12 +101,12 @@ var CAPSClipboard = {
 	Services.obs.addObserver(documentObserver, "content-document-global-created", false);
         break;
       case "quit-application":
-	Services.obs.removeObserver(documentObserver, "quit-application", false);
+	Services.obs.removeObserver(CAPSClipboard, "quit-application", false);
 	Services.obs.removeObserver(documentObserver, 'content-document-global-created', false);
 	break;
     }
   }
 }
 
-Services.obs.addObserver(CCK2, "final-ui-startup", false);
-Services.obs.addObserver(CCK2, "quit-application", false);
+Services.obs.addObserver(CAPSClipboard, "final-ui-startup", false);
+Services.obs.addObserver(CAPSClipboard, "quit-application", false);
