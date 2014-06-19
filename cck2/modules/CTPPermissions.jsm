@@ -66,6 +66,7 @@ var CTP = {
            aTag.filename);
         // Remove digits at the end
         permission = permission.replace(/[0-9]+$/, "");
+        permission = permission.toLowerCase();
       }
     } else {
       permission = aTag.filename;
