@@ -181,7 +181,7 @@ function onEditPreference() {
   if ("cancel" in retVals) {
     return;
   }
-  updatePreferenceListItem(listitem, retVals.name, retVals.value, retVals.type, false);
+  updatePreferenceListItem(gPreferencesListbox.selectedItem, retVals.name, retVals.value, retVals.type, false);
 }
 
 
