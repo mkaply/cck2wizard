@@ -5,6 +5,10 @@ const EXPORTED_SYMBOLS = [];
 
 var gAllowedPasteSites = [];
 var gAllowedCutCopySites = [];
+var gDeniedPasteSites = [];
+var gDeniedCutCopySites = [];
+var gDefaultPastePolicy = false;
+var gDefaultCutCopyPolicy = false;
 
 function myExecCommand(doc) {
   return function(aCommandName, aShowDefaultUI, aValueArgument) {
@@ -48,18 +52,36 @@ var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
       var doc = subject.document;
-      doc.allowCutCopy = false;
-      doc.allowPaste = false;
-      for (var i=0; i < gAllowedCutCopySites.length; i++) {
-        if (doc.location.href.indexOf(gAllowedCutCopySites[i] == 0)) {
-          doc.allowCutCopy = true;
-          break;
+      doc.allowCutCopy = gDefaultCutCopyPolicy;
+      doc.allowPaste = gDefaultPastePolicy;
+      if (gDefaultCutCopyPolicy == true) {
+        for (var i=0; i < gDeniedCutCopySites.length; i++) {
+          if (doc.location.href.indexOf(gDeniedCutCopySites[i] == 0)) {
+            doc.allowCutCopy = false;
+            break;
+          }
+        }
+      } else {
+        for (var i=0; i < gAllowedCutCopySites.length; i++) {
+          if (doc.location.href.indexOf(gAllowedCutCopySites[i] == 0)) {
+            doc.allowCutCopy = true;
+            break;
+          }
         }
       }
-      for (var i=0; i < gAllowedPasteSites.length; i++) {
-        if (doc.location.href.indexOf(gAllowedPasteSites[i] == 0)) {
-          doc.allowPaste = true;
-          break;
+      if (gDefaultPastePolicy == true) {
+        for (var i=0; i < gDeniedPasteSites.length; i++) {
+          if (doc.location.href.indexOf(gDeniedPasteSites[i] == 0)) {
+            doc.allowPaste = false;
+            break;
+          }
+        }
+      } else {
+        for (var i=0; i < gAllowedPasteSites.length; i++) {
+          if (doc.location.href.indexOf(gAllowedPasteSites[i] == 0)) {
+            doc.allowPaste = true;
+            break;
+          }
         }
       }
       if (!doc.allowCutCopy && !doc.allowPaste) {
@@ -78,6 +100,16 @@ var CAPSClipboard = {
       try {
         Services.obs.removeObserver(CAPSClipboard, "final-ui-startup", false);
         // TODO - Check Firefox version
+        try {
+          if (Services.prefs.getCharPref("capability.policy.default.Clipboard.cutcopy") == "allAccess") {
+            gDefaultCutCopyPolicy = true;
+          }
+        } catch (e) {}
+        try {
+          if (Services.prefs.getCharPref("capability.policy.default.Clipboard.paste") == "allAccess") {
+            gDefaultPastePolicy = true;
+          }
+        } catch (e) {}
         var policies = [];
         policies = Services.prefs.getCharPref("capability.policy.policynames").split(', ');
         for (var i=0; i < policies.length; i++ ) {
@@ -90,10 +122,26 @@ var CAPSClipboard = {
             }
           } catch(e) {}
           try {
+            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.cutcopy") == "noAccess") {
+              var deniedCutCopySites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+              for (var j=0; j < deniedCutCopySites.length; j++) {
+                gDeniedCutCopySites.push(deniedCutCopySites[j]);
+              }
+            }
+          } catch(e) {}
+          try {
             if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "allAccess") {
               var allowedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
               for (var j=0; j < allowedPasteSites.length; j++) {
                 gAllowedPasteSites.push(allowedPasteSites[j]);
+              }
+            }
+          } catch(e) {}
+          try {
+            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "noAccess") {
+              var deniedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+              for (var j=0; j < deniedPasteSites.length; j++) {
+                gDeniedPasteSites.push(deniedPasteSites[j]);
               }
             }
           } catch(e) {}
