@@ -364,37 +364,6 @@ var CCK2 = {
           }
         }
       }
-      if (config.certs) {
-        if (config.certs.ca) {
-          for (var i=0; i < config.certs.ca.length; i++) {
-            if (config.certs.ca[i].url) {
-              download(config.certs.ca[i].url, function(file) {
-                var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
-                istream.init(file, -1, -1, false);
-                var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
-                bstream.setInputStream(istream);
-                var cert = bstream.readBytes(bstream.available());
-                bstream.close();
-                istream.close();
-                if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                  certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
-                } else {
-                  certdb.addCert(cert, "C,C,C", "");
-                }
-              }, errorCritical);
-            } else if (config.certs.ca[i].cert) {
-              certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), "C,C,C", "");
-            }
-          }
-        }
-        if (config.certs.server) {
-          for (var i=0; i < config.certs.server.length; i++) {
-            download(config.certs.server[i], function(file) {
-              certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
-            }, errorCritical);
-          }
-        }
-      }
     } catch (e) {
       errorCritical(e);
     }
@@ -457,14 +426,45 @@ var CCK2 = {
         if (!this.firstrun && this.installedVersion == config.version) {
           return;
         }
-        if ("certs" in config && "override" in config.certs) {
-          for (var i=0; i < config.certs.override.length; i++) {
-            var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
-            try {
-              xhr.open("GET", "https://" + config.certs.override[i], false);
-              xhr.channel.notificationCallbacks = SSLExceptions;
-              xhr.send(null);
-            } catch (ex) {}
+        if ("certs" in config) {
+          if ("override" in config.certs) {
+            for (var i=0; i < config.certs.override.length; i++) {
+              var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+              try {
+                xhr.open("GET", "https://" + config.certs.override[i], false);
+                xhr.channel.notificationCallbacks = SSLExceptions;
+                xhr.send(null);
+              } catch (ex) {}
+            }
+          }
+          if (config.certs.ca) {
+            for (var i=0; i < config.certs.ca.length; i++) {
+              if (config.certs.ca[i].url) {
+                download(config.certs.ca[i].url, function(file) {
+                  var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
+                  istream.init(file, -1, -1, false);
+                  var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+                  bstream.setInputStream(istream);
+                  var cert = bstream.readBytes(bstream.available());
+                  bstream.close();
+                  istream.close();
+                  if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
+                    certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
+                  } else {
+                    certdb.addCert(cert, "C,C,C", "");
+                  }
+                }, errorCritical);
+              } else if (config.certs.ca[i].cert) {
+                certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), "C,C,C", "");
+              }
+            }
+          }
+          if (config.certs.server) {
+            for (var i=0; i < config.certs.server.length; i++) {
+              download(config.certs.server[i], function(file) {
+                certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+              }, errorCritical);
+            }
           }
         }
         if (config.removeSmartBookmarks) {
