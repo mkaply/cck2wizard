@@ -10,6 +10,7 @@ export VERSION=$VERSION
 perl -pi -e 's/0.0.0/$ENV{"VERSION"}/gi' bootstrap*.js
 rm bootstrap*.js.bak
 zip -r -D ../$SHORTNAME-$VERSION.xpi *
+zip -r -D ../$SHORTNAME-latest.xpi *
 cd ..
 rm -rf $SHORTNAME
 #wget --post-file=$SHORTNAME-$VERSION.xpi http://localhost:8888/
