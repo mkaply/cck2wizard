@@ -58,7 +58,9 @@ var networkPrefMapping = {
   proxySocksVersion: "network.proxy.socks_version",
   proxyNone: "network.proxy.no_proxies_on",
   proxyAutoConfig: "network.proxy.autoconfig_url",
-  shareAllProxies: "network.proxy.share_proxy_settings"
+  shareAllProxies: "network.proxy.share_proxy_settings",
+  proxySOCKSRemoteDNS: "network.proxy.socks_remote_dns",
+  proxyAutologin: "signon.autologin.proxy"
 }
 
 

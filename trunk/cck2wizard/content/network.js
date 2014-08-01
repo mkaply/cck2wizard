@@ -48,15 +48,19 @@ function selectProxyPanel(type) {
       break;
     case 1:
       $("networkProxyTypeDeck").selectedPanel = $("networkProxyTypeManual");
+      $("networkProxyTypeManual").appendChild($("autologinProxy"));
       break;
     case 2:
       $("networkProxyTypeDeck").selectedPanel = $("networkProxyTypeAuto");
+      $("networkProxyTypeAuto").appendChild($("autologinProxy"));
       break;
     case 4:
       $("networkProxyTypeDeck").selectedPanel = $("networkProxyTypeWPAD");
+      $("networkProxyTypeWPAD").appendChild($("autologinProxy"));
       break;
     case 5:
       $("networkProxyTypeDeck").selectedPanel = $("networkProxyTypeSystem");
+      $("networkProxyTypeSystem").appendChild($("autologinProxy"));
       break;
     default:
       $("networkProxyTypeDeck").selectedIndex = $("networkProxyTypeDontChange");
