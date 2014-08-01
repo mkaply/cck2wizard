@@ -101,14 +101,17 @@
               </row>
               <row>
                 <spacer/>
+                <box pack="start">
                 <radiogroup id="networkProxySOCKSVersion" orient="horizontal"
-                            preference="network.proxy.socks_version">
+                            config="network.proxySOCKSVersion">
                   <radio id="networkProxySOCKSVersion4" value="4" label="&socks4.label;" accesskey="&socks4.accesskey;" />
                   <radio id="networkProxySOCKSVersion5" value="5" label="&socks5.label;" accesskey="&socks5.accesskey;" />
                 </radiogroup>
+                <checkbox id="networkProxySOCKSRemoteDNS"  config="network.proxySOCKSRemoteDNS"
+                          label="&socksRemoteDNS.label;" accesskey="&socksRemoteDNS.accesskey;" />
+                </box>
               </row>
-  
-              <row align="center"> 
+                <row align="center"> 
                 <hbox align="center" pack="end">
                   <label value="&noproxy.label;" accesskey="&noproxy.accesskey;" control="networkProxyNone"/>
                 </hbox>
@@ -120,6 +123,12 @@
               </row>
             </rows>
           </grid>
+        <checkbox id="autologinProxy"
+                  label="&autologinproxy.label;"
+                  accesskey="&autologinproxy.accesskey;"
+                  config="network.proxyAutologin"
+                  tooltiptext="&autologinproxy.tooltip;"
+                  style="margin-top: 15px"/>
         </vbox>
         <vbox id="networkProxyTypeAuto">
           <description>&networkProxyTypeAuto.description;</description>
