@@ -7,7 +7,7 @@ function CCK2FileBlock() {}
 
 CCK2FileBlock.prototype = {
   chromeBlacklist: ["browser", "mozapps", "marionette", "specialpowers",
-                    "cookie", "branding", "alerts"],
+                    "branding", "alerts"],
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aExtra) {
     // Prevent the loading of chrome URLs into the main browser window
     if (aContentLocation.scheme == "chrome") {
