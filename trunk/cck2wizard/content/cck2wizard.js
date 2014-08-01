@@ -10,9 +10,18 @@ var gTree = null;
 var gStringBundle = null;
 var gNewPanel = null;
 var gAutoSave = false;
+var gVersion = null;
 
 function onLoad() {
   try {
+    try {
+      Cu.import("resource://gre/modules/AddonManager.jsm");
+      AddonManager.getAddonByID("cck2wizard@kaply.com", function(addon) {
+        gVersion = addon.version;
+        var title = document.getElementById("cck2wizard-window").getAttribute("title");
+        document.getElementById("cck2wizard-window").setAttribute("title", title + " - v" + gVersion);
+      });
+    } catch (e) {}
     gTree = document.getElementById("cck2wizard-tree");
     gDeck = document.getElementById("cck2wizard-deck");
     gTree.addEventListener("select", onPaneSelected, false);
@@ -301,7 +310,6 @@ function onClose() {
 
 function onSave() {
   var config = getConfig();
-  var configJSON = JSON.stringify(config);
   Services.prefs.setCharPref(prefsPrefix + "configs." + config.id, JSON.stringify(config))
   gCurrentConfig = config;
   return true;
@@ -423,6 +431,9 @@ function setConfig(config) {
 function getConfig(destdir) {
   try {
     var config = {};
+    if (gVersion) {
+      config.cckVersion = gVersion;
+    }
     // If items have a config value, they can be saved directly into the config
     // using that value.
     var textboxes = gDeck.querySelectorAll("textbox[config]");
