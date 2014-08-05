@@ -99,7 +99,10 @@ var CAPSClipboard = {
     case "final-ui-startup":
       try {
         Services.obs.removeObserver(CAPSClipboard, "final-ui-startup", false);
-        // TODO - Check Firefox version
+      // Don't do this check before Firefox 29
+      if (Services.vc.compare(Services.appinfo.version, "29") <= 0) {
+        return;
+      }
         try {
           if (Services.prefs.getCharPref("capability.policy.default.Clipboard.cutcopy") == "allAccess") {
             gDefaultCutCopyPolicy = true;

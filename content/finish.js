@@ -15,7 +15,8 @@ const cck2Files = [
   "modules/Timer.jsm",
   "modules/Utils.jsm",
   "modules/CTPPermissions.jsm",
-  "modules/CAPSClipboard.jsm"
+  "modules/CAPSClipboard.jsm",
+  "modules/CAPSCheckLoadURI.jsm"
 ]
 
 const disablesafemodeFiles = [
