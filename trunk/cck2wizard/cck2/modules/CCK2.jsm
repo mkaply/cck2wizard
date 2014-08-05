@@ -13,6 +13,7 @@ try {
 Cu.import("resource://cck2/Preferences.jsm");
 Cu.import("resource://cck2/CTPPermissions.jsm");
 Cu.import("resource://cck2/CAPSClipboard.jsm");
+Cu.import("resource://cck2/CAPSCheckLoadURI.jsm");
 Cu.import("resource:///modules/distribution.js");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
