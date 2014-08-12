@@ -8,6 +8,7 @@
     <em:description>Create custom Firefox configurations as standalone XPIs or that work with AutoConfig</em:description>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
+    <em:updateURL>https://mike.kaply.com/updates/cck2wizard/update.rdf</em:updateURL>
     <em:icon64URL>chrome://cck2wizard/skin/icon64.png</em:icon64URL>
     <em:targetApplication>
       <Description>
