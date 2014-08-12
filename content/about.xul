@@ -13,7 +13,7 @@
     <vbox id="about" setconfig="setAbout" getconfig="getAbout">
       <vbox>
         <label value="&name.label;:"></label>
-        <label class="indent" id="name"/>
+        <textbox class="indent" config="name"/>
       </vbox>
       <vbox>
         <label value="&id.label;:"></label>

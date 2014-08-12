@@ -127,6 +127,14 @@ function onAutosave() {
 }
 
 function validConfigID(config) {
+    var check = {value: false};
+    var input = {value: config.id};  
+    var result = Services.prompt.prompt(window, "CCK2", "Please enter a unique ID for this configuration.", input, null, check);
+    if (!result) {
+      return false;
+    }
+    config.id = input.value;
+
   while (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + config.id)) {
     var check = {value: false};
     var input = {value: config.id};  
@@ -209,6 +217,7 @@ function onImport() {
             }
           }
         }
+        onSave();
       }, errorCritical)
     }
   } catch(e) {
