@@ -137,9 +137,15 @@ function packageCCK2(type) {
   
   var numFilesToWrite = 0;
 
-  var basedir = chooseDir(window, config.outputDirectory);
-  if (!basedir) {
-    return;
+  var basedir;
+  if (config.outputDirectory) {
+    basedir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+    basedir.initWithPath(config.outputDirectory);
+  } else {
+    basedir = chooseDir(window, config.outputDirectory);
+    if (!basedir) {
+      return;
+    }
   }
   if (config.outputDirectory) {
     delete(config.outputDirectory);
