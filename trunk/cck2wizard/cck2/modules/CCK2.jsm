@@ -537,18 +537,25 @@ var CCK2 = {
         // Should probably only be done on firstrun or installedVersion changed
         if (config.searchplugins || config.defaultSearchEngine) {
           searchInitRun(function() {
-            // Stupid workaround needed until bug 493051 is fixed
-            setTimeout(function(currentEngineName) {
-              var defaultSearchEngine = Services.search.getEngineByName(currentEngineName);
-              if (defaultSearchEngine)
-                Services.search.currentEngine = defaultSearchEngine;
-            }, 100, config.defaultSearchEngine ? config.defaultSearchEngine : Services.search.currentEngine.name);
             for (var i in config.searchplugins) {
               var engine = Services.search.getEngineByName(i);
               // Should we remove engines and readd?
               if (!engine) {
-                Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false);
+                Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
+                  onSuccess: function (engine) {
+                    if (engine.name == config.defaultSearchEngine) {
+                      Services.search.currentEngine = engine;
+                    }
+                  },
+                  onError: function (errorCode) {
+                    // Ignore errors
+                  }
+                });
               }
+            }
+            var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
+            if (defaultSearchEngine) {
+              Services.search.currentEngine = defaultSearchEngine;
             }
           });
         }
