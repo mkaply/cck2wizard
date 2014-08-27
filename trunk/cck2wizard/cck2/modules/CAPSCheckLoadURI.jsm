@@ -4,7 +4,7 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
 const EXPORTED_SYMBOLS = [];
 
-var gDefaultCheckLoadURIPolicy = false;
+var gDefaultCheckLoadURIPolicy = true;
 var gForceExternalHandler = false;
 
 XPCOMUtils.defineLazyServiceGetter(this, "extProtocolSvc",

@@ -56,14 +56,14 @@ var documentObserver = {
       doc.allowPaste = gDefaultPastePolicy;
       if (gDefaultCutCopyPolicy == true) {
         for (var i=0; i < gDeniedCutCopySites.length; i++) {
-          if (doc.location.href.indexOf(gDeniedCutCopySites[i] == 0)) {
+          if (doc.location.href.indexOf(gDeniedCutCopySites[i]) == 0) {
             doc.allowCutCopy = false;
             break;
           }
         }
       } else {
         for (var i=0; i < gAllowedCutCopySites.length; i++) {
-          if (doc.location.href.indexOf(gAllowedCutCopySites[i] == 0)) {
+          if (doc.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
             doc.allowCutCopy = true;
             break;
           }
@@ -71,14 +71,14 @@ var documentObserver = {
       }
       if (gDefaultPastePolicy == true) {
         for (var i=0; i < gDeniedPasteSites.length; i++) {
-          if (doc.location.href.indexOf(gDeniedPasteSites[i] == 0)) {
+          if (doc.location.href.indexOf(gDeniedPasteSites[i]) == 0) {
             doc.allowPaste = false;
             break;
           }
         }
       } else {
         for (var i=0; i < gAllowedPasteSites.length; i++) {
-          if (doc.location.href.indexOf(gAllowedPasteSites[i] == 0)) {
+          if (doc.location.href.indexOf(gAllowedPasteSites[i]) == 0) {
             doc.allowPaste = true;
             break;
           }
@@ -87,8 +87,10 @@ var documentObserver = {
       if (!doc.allowCutCopy && !doc.allowPaste) {
         return;
       }
-      doc.originalDesignModeGetter = Cu.waiveXrays(doc).__lookupSetter__("designMode");
-      Cu.waiveXrays(doc).__defineSetter__("designMode", Cu.exportFunction(myDesignModeGetter(doc), doc));
+      if (!doc.originalDesignModeGetter) {
+        doc.originalDesignModeGetter = Cu.waiveXrays(doc).__lookupSetter__("designMode");
+        Cu.waiveXrays(doc).__defineSetter__("designMode", Cu.exportFunction(myDesignModeGetter(doc), doc));
+      }
     }
   }
 }
