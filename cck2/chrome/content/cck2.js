@@ -298,7 +298,7 @@ try {
                                             E("appmenu_about"));
         }
       }
-      if (CCK2.firstrun) {
+      if (CCK2.firstrun || CCK2.upgrade) {
         if (config.displayBookmarksToolbar || (config.bookmarks && config.bookmarks.toolbar)) {
           E("PersonalToolbar").collapsed = false;
           E("PersonalToolbar").setAttribute("collapsed", "false");
@@ -316,6 +316,7 @@ try {
 
         }
         CCK2.firstrun = false;
+        CCK2.upgrade = false;
       }
       var panelUIPopup = document.getElementById("PanelUI-popup");
       if (panelUIPopup) {

@@ -73,6 +73,7 @@ var CCK2 = {
   config: null,
   firefoxFirstRun: false,
   firstrun: false,
+  upgrade: false,
   installedVersion: null,
   initialized: false,
   aboutFactories: [],
@@ -128,6 +129,7 @@ var CCK2 = {
       Preferences.set("extensions.cck2." + config.id + ".firstrun", false);
       if (!this.firstrun) {
         this.installedVersion = Preferences.get("extensions.cck2." + config.id + ".installedVersion");
+        this.upgrade = (this.installedVersion != config.version);
       }
       Preferences.set("extensions.cck2." + config.id + ".installedVersion", config.version);
       Preferences.lock("distribution.id", config.id);
@@ -534,7 +536,6 @@ var CCK2 = {
             addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
           }
         }
-        // Should probably only be done on firstrun or installedVersion changed
         if (config.searchplugins || config.defaultSearchEngine) {
           searchInitRun(function() {
             for (var i in config.searchplugins) {
