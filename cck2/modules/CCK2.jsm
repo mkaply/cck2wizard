@@ -136,29 +136,6 @@ var CCK2 = {
       Preferences.lock("distribution.version", config.version + " (CCK2)");
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
-      if (config.permissions) {
-        for (var i in config.permissions) {
-          for (var j in config.permissions[i]) {
-            Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
-            if (j == "plugins") {
-              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
-              for (var k=0; k < plugins.length; k++) {
-                Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-              }
-            }
-          }
-          if (Object.keys(config.permissions[i]).length === 0) {
-            let perms = Services.perms.enumerator;
-            while (perms.hasMoreElements()) {
-              let perm = perms.getNext();
-              if (perm.host == i) {
-                Services.perms.remove(perm.host, perm.type);
-              }
-            }
-          }
-        }
-      }
       if (config.preferences) {
         for (var i in config.preferences) {
           // Ugly, but we need special handling for this pref
@@ -194,6 +171,29 @@ var CCK2 = {
                          config.registry[i].name,
                          config.registry[i].value,
                          config.registry[i].type);
+        }
+      }
+      if (config.permissions) {
+        for (var i in config.permissions) {
+          for (var j in config.permissions[i]) {
+            Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
+            if (j == "plugins") {
+              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+              for (var k=0; k < plugins.length; k++) {
+                Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+              }
+            }
+          }
+          if (Object.keys(config.permissions[i]).length === 0) {
+            let perms = Services.perms.enumerator;
+            while (perms.hasMoreElements()) {
+              let perm = perms.getNext();
+              if (perm.host == i) {
+                Services.perms.remove(perm.host, perm.type);
+              }
+            }
+          }
         }
       }
       if (config.disablePrivateBrowsing) {
