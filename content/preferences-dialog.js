@@ -94,7 +94,7 @@ function onLoad() {
   } else {
     updatePrefValue();
   }
-  if (initVals.value) {
+  if ("value" in initVals) {
     gPrefValueDeck.selectedPanel.value = initVals.value;
   }
 }
