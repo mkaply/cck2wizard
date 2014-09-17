@@ -134,7 +134,7 @@ function onCommand(event) {
     win.focus();
     return;
   }
-  Services.ww.openWindow(null, "chrome://cck2wizard/content/cck2wizard.xul", "cck2wizard", "chrome=yes,resizable=yes,dialog,centerscreen", null);
+  Services.ww.openWindow(null, "chrome://cck2wizard/content/cck2wizard.xul", "cck2wizard", "resizable=yes,centerscreen", null);
 }
 
 function loadIntoWindow(window) {
