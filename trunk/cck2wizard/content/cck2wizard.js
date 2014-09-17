@@ -527,9 +527,13 @@ function chooseFile(win, path) {
   fp.init(win, "", Ci.nsIFilePicker.modeOpen);
   if (path) {
     var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    file.initWithPath(path);
-    fp.defaultString = file.leafName;
-    fp.displayDirectory = file;
+    try {
+      file.initWithPath(path);
+      fp.defaultString = file.leafName;
+      fp.displayDirectory = file;
+    } catch(e) {
+      // Ignore path errors in case we are on different OSes
+    }
   }
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
   if (fp.show() == Ci.nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
@@ -555,8 +559,12 @@ function chooseDir(win, dir) {
   fp.init(win, "", nsIFilePicker.modeGetFolder);
   if (dir) {
     var dirFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    dirFile.initWithPath(dir);
-    fp.displayDirectory = dirFile;
+    try {
+      dirFile.initWithPath(dir);
+      fp.displayDirectory = dirFile;
+    } catch(e) {
+      // Ignore path errors in case we are on different OSes
+    }
   }
   if (fp.show() == nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
     return fp.file;
