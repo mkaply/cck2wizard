@@ -23,6 +23,7 @@
         id="cck2wizard-window"
         title="CCK2"
         onclose="return onCloseWindow()"
+        persist="width,height,screenX,screenY"
         width="640"
         height="480"
         >
