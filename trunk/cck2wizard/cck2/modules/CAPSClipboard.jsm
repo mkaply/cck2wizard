@@ -52,18 +52,24 @@ var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
       var doc = subject.document;
+      var win = doc.defaultView;
+      if (win !== win.top) {
+        // It's an iframe. Use the top level window
+        // for security purposes
+        win = win.top;
+      }
       doc.allowCutCopy = gDefaultCutCopyPolicy;
       doc.allowPaste = gDefaultPastePolicy;
       if (gDefaultCutCopyPolicy == true) {
         for (var i=0; i < gDeniedCutCopySites.length; i++) {
-          if (doc.location.href.indexOf(gDeniedCutCopySites[i]) == 0) {
+          if (win.location.href.indexOf(gDeniedCutCopySites[i]) == 0) {
             doc.allowCutCopy = false;
             break;
           }
         }
       } else {
         for (var i=0; i < gAllowedCutCopySites.length; i++) {
-          if (doc.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
+          if (win.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
             doc.allowCutCopy = true;
             break;
           }
@@ -71,14 +77,14 @@ var documentObserver = {
       }
       if (gDefaultPastePolicy == true) {
         for (var i=0; i < gDeniedPasteSites.length; i++) {
-          if (doc.location.href.indexOf(gDeniedPasteSites[i]) == 0) {
+          if (win.location.href.indexOf(gDeniedPasteSites[i]) == 0) {
             doc.allowPaste = false;
             break;
           }
         }
       } else {
         for (var i=0; i < gAllowedPasteSites.length; i++) {
-          if (doc.location.href.indexOf(gAllowedPasteSites[i]) == 0) {
+          if (win.location.href.indexOf(gAllowedPasteSites[i]) == 0) {
             doc.allowPaste = true;
             break;
           }
