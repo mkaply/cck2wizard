@@ -4,7 +4,6 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
 const EXPORTED_SYMBOLS = [];
 
-var gDefaultCheckLoadURIPolicy = true;
 var gForceExternalHandler = false;
 
 XPCOMUtils.defineLazyServiceGetter(this, "extProtocolSvc",
@@ -22,17 +21,49 @@ var documentObserver = {
           if (link.href.indexOf("file://") != 0) {
             continue;
           }
-          link.addEventListener("click", function(event) {
-            event.preventDefault();
-            if (gForceExternalHandler) {
-              extProtocolSvc.loadUrl(Services.io.newURI(event.target.href, null, null));
-            } else {
-              var win = Services.wm.getMostRecentWindow("navigator:browser");
-              if (win) {
-                win.openUILink(event.target.href, event);
+          link.addEventListener("click", function(link) {
+            return function(event) {
+              event.preventDefault();
+              if (gForceExternalHandler) {
+                extProtocolSvc.loadUrl(Services.io.newURI(link.href, null, null));
+              } else {
+                var win = Services.wm.getMostRecentWindow("navigator:browser");
+                if (win) {
+                  var target = "_self";
+                  if (link.hasAttribute("target")) {
+                    target = link.getAttribute("target");
+                  }
+                  // If we were told somewhere other than current, use it
+                  var where = win.whereToOpenLink(event);
+                  if (where != "current") {
+                    win.openUILinkIn(link.href, where);
+                    return;
+                  }
+                  switch (target) {
+                    case "_blank":
+                      win.openUILinkIn(link.href, "tab");
+                      break;
+                    case "_self":
+                      link.ownerDocument.location = link.href;
+                      break;
+                    case "_parent":
+                      link.ownerDocument.defaultView.parent.document.location = link.href;
+                      break;
+                    case "_top":
+                      link.ownerDocument.defaultView.top.document.location = link.href;
+                      break;
+                    default:
+                      // Attempt to find the iframe that this goes into
+                      var iframe = doc.defaultView.parent.document.getElementById(target);
+                      if (iframe) {
+                        iframe.setAttribute("src", link.href);
+                      }
+                      break;
+                  }
+                }
               }
             }
-          }, false);
+          }(link), false);
         }
       }, false);
     }
@@ -48,12 +79,13 @@ var CAPSCheckLoadURI = {
       if (Services.vc.compare(Services.appinfo.version, "29") <= 0) {
         return;
       }
+      var defaultCheckLoadURIPolicy = false;
       try {
         if (Services.prefs.getCharPref("capability.policy.default.checkloaduri.enabled") == "allAccess") {
-          gDefaultCheckLoadURIPolicy = true;
+          defaultCheckLoadURIPolicy = true;
         }
-      } catch (e) {
-        // If they haven't set the preference, don't do anything
+      } catch (e) {}
+      if (defaultCheckLoadURIPolicy == false) {
         return;
       }
       gForceExternalHandler = !extProtocolSvc.isExposedProtocol('file');
