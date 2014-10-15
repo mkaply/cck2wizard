@@ -52,7 +52,10 @@ var CAPSCheckLoadURI = {
         if (Services.prefs.getCharPref("capability.policy.default.checkloaduri.enabled") == "allAccess") {
           gDefaultCheckLoadURIPolicy = true;
         }
-      } catch (e) {}
+      } catch (e) {
+        // If they haven't set the preference, don't do anything
+        return;
+      }
       gForceExternalHandler = !extProtocolSvc.isExposedProtocol('file');
       Services.obs.addObserver(documentObserver, "content-document-global-created", false);
       break;
