@@ -71,7 +71,6 @@ function alert(string) {
 
 var CCK2 = {
   config: null,
-  firefoxFirstRun: false,
   firstrun: false,
   upgrade: false,
   installedVersion: null,
@@ -113,12 +112,6 @@ var CCK2 = {
                                               "",
                                               "preferences");
       CCK2.aboutFactories.push(aboutPreferences);
-  
-      // We want to know if this is the first run of Firefox. We do that by
-      // testing for the existing of extensions.ini
-      var profileDir = Services.dirsvc.get("ProfD", Ci.nsILocalFile);
-      profileDir.append("extensions.ini");
-      this.firefoxFirstRun = !profileDir.exists();
   
       if (!config)
         return;
@@ -276,16 +269,6 @@ var CCK2 = {
       }
       if (config.removeSmartBookmarks) {
         Preferences.lock("browser.places.smartBookmarksVersion", -1);
-      }
-      if (config.removeDefaultBookmarks && this.firefoxFirstRun) {
-        // If this is the first run of Firefox, we can prevent the creation
-        // of the default bookmarks by putting a 0 length bookmarks.html file
-        // in the profile directory
-        var bookmarksFile = profileDir.clone();
-        bookmarksFile.append("bookmarks.html");
-        var fos = Cc["@mozilla.org/network/file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
-        fos.init(profileDir, -1, -1, false);
-        fos.close();
       }
       if (config.disableCrashReporter) {
         Preferences.lock("toolkit.crashreporter.enabled", false);
