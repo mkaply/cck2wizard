@@ -131,10 +131,15 @@ try {
   function removeDeveloperTools() {
     hide(E("developer-button"));
     hide(E("webDeveloperMenu"));
-    var devtoolsKeyset = document.getElementById("devtoolsKeyset");
-    for (var i = 0; i < devtoolsKeyset.childNodes.length; i++) {
-      devtoolsKeyset.childNodes[i].removeAttribute("command");
-    }
+    // Need to delay this because devtools is created dynamically
+    window.setTimeout(function() {
+      var devtoolsKeyset = document.getElementById("devtoolsKeyset");
+      if (devtoolsKeyset) {
+        for (var i = 0; i < devtoolsKeyset.childNodes.length; i++) {
+          devtoolsKeyset.childNodes[i].removeAttribute("command");
+        }
+      }
+    }, 0);
     try {
       document.getElementById("Tools:ResponsiveUI").removeAttribute("oncommand");
     } catch (e) {}
