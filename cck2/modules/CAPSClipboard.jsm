@@ -12,19 +12,19 @@ var gDefaultCutCopyPolicy = false;
 
 function myExecCommand(doc) {
   return function(aCommandName, aShowDefaultUI, aValueArgument) {
-    switch (aCommandName) {
+    switch (aCommandName.toLowerCase()) {
     case "cut":
     case "copy":
       if (doc.allowCutCopy) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
-        win.goDoCommand("cmd_" + aCommandName);
+        win.goDoCommand("cmd_" + aCommandName.toLowerCase());
         return;
       }
       break;
     case "paste":
       if (doc.allowPaste) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
-        win.goDoCommand("cmd_" + aCommandName);
+        win.goDoCommand("cmd_" + aCommandName.toLowerCase());
         return;
       }
       break;
