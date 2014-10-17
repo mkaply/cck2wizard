@@ -15,6 +15,11 @@ var documentObserver = {
       var doc = subject.document;
       doc.addEventListener("DOMContentLoaded", function(event) {
         event.target.removeEventListener("DOMContentLoaded", arguments.callee, false);
+        // If the parent document is a local file, don't do anything
+        // Links will just work
+        if (doc.location.href.indexOf("file://") == 0) {
+          return;
+        }
         var links = event.target.getElementsByTagName("a");
         for (var i=0; i < links.length; i++) {
           var link = links[i];
@@ -33,7 +38,7 @@ var documentObserver = {
                   if (link.hasAttribute("target")) {
                     target = link.getAttribute("target");
                   }
-                  // If we were told somewhere other than current, use it
+                  // If we were told somewhere other than current (based on modifier keys), use it
                   var where = win.whereToOpenLink(event);
                   if (where != "current") {
                     win.openUILinkIn(link.href, where);
@@ -54,9 +59,11 @@ var documentObserver = {
                       break;
                     default:
                       // Attempt to find the iframe that this goes into
-                      var iframe = doc.defaultView.parent.document.getElementById(target);
-                      if (iframe) {
-                        iframe.setAttribute("src", link.href);
+                      var iframes = doc.defaultView.parent.document.getElementsByName(target);
+                      if (iframes.length > 0) {
+                        iframes[0].contentDocument.location = link.href;
+                      } else {
+                        link.ownerDocument.location = link.href;
                       }
                       break;
                   }
