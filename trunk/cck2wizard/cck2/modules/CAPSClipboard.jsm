@@ -27,7 +27,7 @@ function allowCutCopy(doc) {
     return true;
   } else {
     for (var i=0; i < gAllowedCutCopySites.length; i++) {
-      if (dwinoc.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
+      if (win.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
         return true;
       }
     }
