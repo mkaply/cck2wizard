@@ -10,41 +10,78 @@ var gDeniedCutCopySites = [];
 var gDefaultPastePolicy = false;
 var gDefaultCutCopyPolicy = false;
 
-function myExecCommand(doc) {
+function allowCutCopy(doc) {
+  var win = doc.defaultView;
+  if (win !== win.top) {
+    // It's an iframe. Use the top level window
+    // for security purposes
+    win = win.top;
+  }
+
+  if (gDefaultCutCopyPolicy == true) {
+    for (var i=0; i < gDeniedCutCopySites.length; i++) {
+      if (win.location.href.indexOf(gDeniedCutCopySites[i]) == 0) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    for (var i=0; i < gAllowedCutCopySites.length; i++) {
+      if (dwinoc.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+function allowPaste(doc) {
+  var win = doc.defaultView;
+  if (win !== win.top) {
+    // It's an iframe. Use the top level window
+    // for security purposes
+    win = win.top;
+  }
+
+  if (gDefaultPastePolicy == true) {
+    for (var i=0; i < gDeniedPasteSites.length; i++) {
+      if (win.location.href.indexOf(gDeniedPasteSites[i]) == 0) {
+        return false;
+        break;
+      }
+    }
+    return true;
+  } else {
+    for (var i=0; i < gAllowedPasteSites.length; i++) {
+      if (win.location.href.indexOf(gAllowedPasteSites[i]) == 0) {
+        return true;
+        break;
+      }
+    }
+    return false;
+  }
+}
+
+function myExecCommand(doc, originalExecCommand) {
   return function(aCommandName, aShowDefaultUI, aValueArgument) {
     switch (aCommandName.toLowerCase()) {
     case "cut":
     case "copy":
-      if (doc.allowCutCopy) {
+      if (allowCutCopy(doc)) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
         win.goDoCommand("cmd_" + aCommandName.toLowerCase());
-        return;
+        return true;
       }
       break;
     case "paste":
-      if (doc.allowPaste) {
+      if (allowPaste(doc)) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
         win.goDoCommand("cmd_" + aCommandName.toLowerCase());
-        return;
+        return true;
       }
       break;
     }
-    doc.originalExecCommand(aCommandName, aShowDefaultUI, aValueArgument);
-  }
-}
-
-function myDesignModeGetter(doc) {
-  return function(mode) {
-    if (mode == "on") {
-      doc.originalExecCommand = Cu.waiveXrays(doc).execCommand;
-      Cu.exportFunction(myExecCommand(doc), doc, {defineAs: "execCommand"});
-    } else if (mode == "off") {
-      if (doc.originalExecCommand) {
-        Cu.waiveXrays(doc).execCommand = doc.originalExecCommand;
-        doc.originalExecCommand = null;
-      }
-    }
-    doc.originalDesignModeGetter(mode);
+    return originalExecCommand.call(doc, aCommandName, aShowDefaultUI, aValueArgument);
   }
 }
 
@@ -52,51 +89,13 @@ var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
       var doc = subject.document;
-      var win = doc.defaultView;
-      if (win !== win.top) {
-        // It's an iframe. Use the top level window
-        // for security purposes
-        win = win.top;
-      }
-      doc.allowCutCopy = gDefaultCutCopyPolicy;
-      doc.allowPaste = gDefaultPastePolicy;
-      if (gDefaultCutCopyPolicy == true) {
-        for (var i=0; i < gDeniedCutCopySites.length; i++) {
-          if (win.location.href.indexOf(gDeniedCutCopySites[i]) == 0) {
-            doc.allowCutCopy = false;
-            break;
-          }
-        }
-      } else {
-        for (var i=0; i < gAllowedCutCopySites.length; i++) {
-          if (win.location.href.indexOf(gAllowedCutCopySites[i]) == 0) {
-            doc.allowCutCopy = true;
-            break;
-          }
-        }
-      }
-      if (gDefaultPastePolicy == true) {
-        for (var i=0; i < gDeniedPasteSites.length; i++) {
-          if (win.location.href.indexOf(gDeniedPasteSites[i]) == 0) {
-            doc.allowPaste = false;
-            break;
-          }
-        }
-      } else {
-        for (var i=0; i < gAllowedPasteSites.length; i++) {
-          if (win.location.href.indexOf(gAllowedPasteSites[i]) == 0) {
-            doc.allowPaste = true;
-            break;
-          }
-        }
-      }
-      if (!doc.allowCutCopy && !doc.allowPaste) {
+      var cutCopyAllowed = allowCutCopy(doc);
+      var pasteAllowed = allowPaste(doc);
+      if (!cutCopyAllowed && !pasteAllowed) {
         return;
       }
-      if (!doc.originalDesignModeGetter) {
-        doc.originalDesignModeGetter = Cu.waiveXrays(doc).__lookupSetter__("designMode");
-        Cu.waiveXrays(doc).__defineSetter__("designMode", Cu.exportFunction(myDesignModeGetter(doc), doc));
-      }
+      var originalExecCommand = Cu.waiveXrays(doc).execCommand;
+      Cu.exportFunction(myExecCommand(doc, originalExecCommand), doc, {defineAs: "execCommand"});
     }
   }
 }
