@@ -20,10 +20,6 @@ XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
     "@mozilla.org/browser/nav-bookmarks-service;1", "nsINavBookmarksService");
 XPCOMUtils.defineLazyServiceGetter(this, "annos",
     "@mozilla.org/browser/annotation-service;1", "nsIAnnotationService");
-XPCOMUtils.defineLazyServiceGetter(this, "certdb",
-    "@mozilla.org/security/x509certdb;1", "nsIX509CertDB");
-XPCOMUtils.defineLazyServiceGetter(this, "certdb2",
-    "@mozilla.org/security/x509certdb;1", "nsIX509CertDB2");
 XPCOMUtils.defineLazyServiceGetter(this, "override",
     "@mozilla.org/security/certoverride;1", "nsICertOverrideService");
 XPCOMUtils.defineLazyServiceGetter(this, "uuid",
@@ -424,6 +420,12 @@ var CCK2 = {
                 xhr.send(null);
               } catch (ex) {}
             }
+          }
+          var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
+          var certdb2 = certdb;
+          try {
+            certdb2 = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB2);
+          } catch (e) {
           }
           if (config.certs.ca) {
             for (var i=0; i < config.certs.ca.length; i++) {
