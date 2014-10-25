@@ -317,6 +317,16 @@ function packageCCK2(type) {
         writeFile(destfile, data, addFileToZip(zipwriter));
       }
     }
+    if (config.removeDefaultBookmarks) {
+      var blankBookmarksFile = dir.clone();
+      blankBookmarksFile.append("browser");
+      blankBookmarksFile.append("defaults");
+      blankBookmarksFile.append("profile");
+      blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      blankBookmarksFile.append("bookmarks.html");
+      blankBookmarksFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+      writeFile(blankBookmarksFile, "", addFileToZip(zipwriter));
+    }
   }
   if ("icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
