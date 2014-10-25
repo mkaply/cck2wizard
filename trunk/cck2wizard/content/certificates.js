@@ -99,8 +99,10 @@ function addCertificateFromURL() {
     return;
   }
   var certString = getCertString();
-  var listitem = gCertificatesListbox.appendItem(url, certString);
-  listitem.setAttribute("context", "certificate-contextmenu");
+  if (certString) {
+    var listitem = gCertificatesListbox.appendItem(url, certString);
+    listitem.setAttribute("context", "certificate-contextmenu");
+  }
 }
 
 function addServerCertificateFromURL() {
@@ -139,7 +141,7 @@ function getCertString() {
   var retVals = { certString: null};
   window.openDialog("chrome://cck2wizard/content/cert-dialog.xul", "cck2wizard-certificate", "modal,centerscreen", retVals);
   if (retVals.cancel) {
-    return "C,C,C";
+    return null;
   } else {
     return retVals.certString;
   }
@@ -149,8 +151,10 @@ function addCertificateFromFile() {
   var certFile = chooseFile(window);
   if (certFile) {
     var certString = getCertString();
-    var listitem = gCertificatesListbox.appendItem(certFile.path, certString);
-    listitem.setAttribute("context", "certificate-contextmenu");
+    if (certString) {
+      var listitem = gCertificatesListbox.appendItem(certFile.path, certString);
+      listitem.setAttribute("context", "certificate-contextmenu");
+    }
   }
 }
 
@@ -177,11 +181,11 @@ function onDeleteServerCertificate() {
 }
 
 function onKeyPressCertificate(event) {
-  if (event.keyCode == event.DOM_VK_DELETE ||
-      event.keyCode == event.DOM_VK_BACK_SPACE) {
-  }
   if (event.target.selectedIndex == -1) {
     return;
   }
-  event.target.removeChild(event.target.selectedItem);
+  if (event.keyCode == event.DOM_VK_DELETE ||
+      event.keyCode == event.DOM_VK_BACK_SPACE) {
+    event.target.removeChild(event.target.selectedItem);
+  }
 }
