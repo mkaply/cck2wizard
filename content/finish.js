@@ -320,8 +320,17 @@ function packageCCK2(type) {
     if (config.removeDefaultBookmarks) {
       var blankBookmarksFile = dir.clone();
       blankBookmarksFile.append("browser");
+      try {
+        blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      } catch (e) {}
       blankBookmarksFile.append("defaults");
+      try {
+        blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      } catch (e) {}
       blankBookmarksFile.append("profile");
+      try {
+        blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      } catch (e) {}
       blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
       blankBookmarksFile.append("bookmarks.html");
       blankBookmarksFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
@@ -517,7 +526,9 @@ function packageCCK2(type) {
     if ("autoconfig" in config && config.autoconfig.disableProfileMigrator) {
       var overrideFile = dir.clone();
       overrideFile.append("browser");
-      overrideFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      try {
+        overrideFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      } catch (e) {}
       overrideFile.append("override.ini");
       numFilesToWrite += 1;
       writeFile(overrideFile, overrideINI, addFileToZip(zipwriter));
