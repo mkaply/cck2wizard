@@ -331,9 +331,9 @@ function packageCCK2(type) {
       try {
         blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
       } catch (e) {}
-      blankBookmarksFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
       blankBookmarksFile.append("bookmarks.html");
       blankBookmarksFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+      numFilesToWrite += 1;
       writeFile(blankBookmarksFile, "", addFileToZip(zipwriter));
     }
   }
@@ -585,10 +585,11 @@ function packageCCK2(type) {
     try {
       file.copyTo(destdir, filename);
     } catch (ex) {
+      
       if (filename) {
-        Services.prompt.alert(window, "CCK2", "Unable to copy file " + filename + " to " + destdir.path);
+        copyFileError(filename);
       } else {
-        Services.prompt.alert(window, "CCK2", "Unable to copy file " + file.leafName + " to " + destdir.path);
+        copyFileError(file.leafName);
       }
       return;
     }
