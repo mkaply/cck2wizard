@@ -173,6 +173,13 @@ var CCK2 = {
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
               }
             }
+            // This is a crazy hack to work around bug 1083637
+            if (i == "addons.mozilla.org") {
+              Preferences.defaults.set("xpinstall.whitelist.add", "");
+            }
+            if (i == "marketplace.firefox.com") {
+              Preferences.defaults.set("xpinstall.whitelist.add.180", "");
+            }
           }
           if (Object.keys(config.permissions[i]).length === 0) {
             let perms = Services.perms.enumerator;
