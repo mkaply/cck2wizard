@@ -816,5 +816,28 @@ function disableAbout(aClass, aClassName, aboutType) {
   return gAbout;
 }
 
+var documentObserver = {
+  observe: function observe(subject, topic, data) {
+    if (subject instanceof Ci.nsIDOMWindow && topic == 'chrome-document-global-created') {
+      var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
+      win.addEventListener("load", function(event) {
+        win.removeEventListener("load", arguments.callee, false);
+        var doc = event.target;
+        var config = CCK2.config;
+        if (config.hiddenUI) {
+          for (var i=0; i < config.hiddenUI.length; i++) {
+            var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
+            for (var j=0; j < uiElements.length; j++) {
+              var uiElement = uiElements[j];
+              uiElement.setAttribute("hidden", "true");
+            }
+          }
+        }
+      }, false);
+    }
+  }
+}
+
 Services.obs.addObserver(CCK2, "distribution-customization-complete", false);
 Services.obs.addObserver(CCK2, "final-ui-startup", false);
+Services.obs.addObserver(documentObserver, 'chrome-document-global-created', false);  
