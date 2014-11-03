@@ -136,6 +136,10 @@ var CCK2 = {
             }
             continue;
           }
+          // Workaround bug where this pref is coming is as a string from import
+          if (i == "toolkit.telemetry.prompted") {
+            config.preferences[i].value = parseInt(config.preferences[i].value);
+          }
           if (config.preferences[i].locked) {
             Preferences.lock(i, config.preferences[i].value);
           } else {
@@ -381,6 +385,10 @@ var CCK2 = {
                 // since Firefox doesn't honor the default pref
                 if (i == "plugin.disable_full_page_plugin_for_types") {
                   continue;
+                }
+                // Workaround bug where this pref is coming is as a string from import
+                if (i == "toolkit.telemetry.prompted") {
+                   config.preferences[i].value = parseInt(config.preferences[i].value);
                 }
                 if (!("locked" in config.preferences[i])) {
                   if (Preferences.defaults.has(i)) {
