@@ -304,37 +304,42 @@ function importCCKFile(configFileContent)
     var preferencename, i=1;
     while ((preferencename = configarray['PreferenceName' + i])) {
       if (!(('PreferenceValue' + i) in configarray)) {
-	// LOCK ONLY PREF. JUST CONTINUE FOR NOW
-	// WE SHOULD CHECK FOR SPECIFIC PREFS AND SET
-	// THEIR SEPARATE LOCKING
-	if (preferencename == "browser.startup.homepage") {
-	  config.lockHomePage = true;
-	}
-	if (preferencename == "network.proxy.type") {
+        // LOCK ONLY PREF. JUST CONTINUE FOR NOW
+        // WE SHOULD CHECK FOR SPECIFIC PREFS AND SET
+        // THEIR SEPARATE LOCKING
+        if (preferencename == "browser.startup.homepage") {
+          config.lockHomePage = true;
+        }
+        if (preferencename == "network.proxy.type") {
           if (!config.network) {
             config.network = {};
           }
-	  config.network.locked = true;
-	}
+          config.network.locked = true;
+        }
         i++;
-	continue;
+        continue;
       }
       // CHECK TYPE IN SYSTEM. USE IT FIRST.
       // THEN USE VALUE
       // THERE MIGHT BE NO VALUE IF IT IS A LOCK ONLY
       var prefinfo = {};
       switch (configarray['PreferenceType' + i]) {
-	case "integer":
-	  prefinfo.value = parseInt(configarray['PreferenceValue' + i], 10);
-	  break;
-	case "boolean":
-	  prefinfo.value = JSON.parse(configarray['PreferenceValue' + i]);
-	  break;
-	default:
-	  prefinfo.value = configarray['PreferenceValue' + i];
+        case "integer":
+          prefinfo.value = parseInt(configarray['PreferenceValue' + i], 10);
+          break;
+        case "boolean":
+          prefinfo.value = JSON.parse(configarray['PreferenceValue' + i]);
+          break;
+        default:
+          prefinfo.value = configarray['PreferenceValue' + i];
       }
       if (configarray.hasOwnProperty("PreferenceLock1")) {
-	prefinfo.locked = true;
+        prefinfo.locked = true;
+      }
+      // Special case toolkit.telemetry.prompted import so it
+      // doesn't come in as a string
+      if (preferencename == "toolkit.telemetry.prompted") {
+        prefinfo.value = parseInt(configarray['PreferenceValue' + i], 10);
       }
       config.preferences[preferencename] = prefinfo;
       i++;
