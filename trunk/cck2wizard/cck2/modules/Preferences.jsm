@@ -157,7 +157,7 @@ Preferences.prototype = {
       {
         prefValue = parseInt(prefValue);
         if (isNaN(prefValue))
-          throw "Incompatible pref value type";
+          throw "Incompatible pref value type - " + prefName;
         prefType = "Number";
       }
       else if (existingPrefType == Ci.nsIPrefBranch.PREF_BOOL && prefType == "String")
@@ -167,7 +167,7 @@ Preferences.prototype = {
         else if (prefValue == "false")
           prefValue = false;
         else
-          throw "Incompatible pref value type";
+          throw "Incompatible pref value type - " + prefName;
         prefType = "Boolean";
       }
       else if (existingPrefType == Ci.nsIPrefBranch.PREF_BOOL && prefType == "Number")
@@ -197,7 +197,11 @@ Preferences.prototype = {
                 prefValue + ", as number pref values must be in the signed " +
                 "32-bit integer range -(2^31-1) to 2^31-1.  To store numbers " +
                 "outside that range, store them as strings.");
-        this._prefSvc.setIntPref(prefName, prefValue);
+        try {
+          this._prefSvc.setIntPref(prefName, prefValue);
+        } catch (e) {
+          throw new Error(e.toString() + " - " + prefName);
+        }
         if (prefValue % 1 != 0)
           Cu.reportError("Warning: setting the " + prefName + " pref to the " +
                          "non-integer number " + prefValue + " converted it " +
