@@ -11,6 +11,10 @@ perl -pi -e 's/0.0.0/$ENV{"VERSION"}/gi' bootstrap*.js
 rm bootstrap*.js.bak
 zip -r -D ../$SHORTNAME-$VERSION.xpi *
 zip -r -D ../$SHORTNAME-latest.xpi *
+grep -v "updateURL" install.rdf > install.rdf.addons
+rm install.rdf
+mv install.rdf.addons install.rdf
+zip -r -D ../$SHORTNAME-amo-$VERSION.xpi *
 cd ..
 rm -rf $SHORTNAME
 #wget --post-file=$SHORTNAME-$VERSION.xpi http://localhost:8888/
