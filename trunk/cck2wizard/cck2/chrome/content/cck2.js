@@ -233,21 +233,20 @@ try {
         if (config.hiddenUI) {
           for (var i=0; i < config.hiddenUI.length; i++) {
             var uiElements = document.querySelectorAll(config.hiddenUI[i]);
+            // Don't use .hidden since it doesn't work sometimes
+            var style = document.getElementById("cck2-hidden-style");
+            if (!style) {
+              style = document.createElementNS("http://www.w3.org/1999/xhtml", "style");
+              style.setAttribute("id", "cck2-hidden-style");
+              style.setAttribute("type", "text/css");
+              document.getElementById("main-window").appendChild(style);
+            }
+            style.textContent = style.textContent + config.hiddenUI[i] + "{display: none !important;}";
             if (!uiElements || uiElements.length == 0) {
-              // try adding style manually...maybe this should be the default?
-              var style = document.getElementById("cck2-hidden-style");
-              if (!style) {
-                style = document.createElementNS("http://www.w3.org/1999/xhtml", "style");
-                style.setAttribute("id", "cck2-hidden-style");
-                style.setAttribute("type", "text/css");
-                document.getElementById("main-window").appendChild(style);
-              }
-              style.textContent = style.textContent + config.hiddenUI[i] + "{display: none;}";
               continue;
             }
             for (var j=0; j < uiElements.length; j++) {
               var uiElement = uiElements[j];
-              hide(uiElement);
               if (uiElement.nodeName == "menuitem") {
                 uiElement.removeAttribute("key");
                 uiElement.removeAttribute("oncommand");
