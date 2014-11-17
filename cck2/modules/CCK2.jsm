@@ -66,20 +66,21 @@ function alert(string) {
 } 
 
 var CCK2 = {
-  config: null,
+  configs: {},
   firstrun: false,
   upgrade: false,
   installedVersion: null,
   initialized: false,
   aboutFactories: [],
-  init: function(in_config) {
+  init: function(config) {
     try {
-      if (this.initialized) {
-        return;
+      for (var id in this.configs) {
+        if (id == config.id) {
+          // We've already processed this config
+          return;
+        }
       }
-      if (in_config) {
-        this.config = in_config;
-      } else {
+      if (!config) {
         // Try to get config from default preference. If it is there, default
         // preference always wins
         var configJSON = Preferences.defaults.get("extensions.cck2.config");
@@ -90,13 +91,11 @@ var CCK2 = {
           // Try something else. Grou policy?
         }
         try {
-          this.config = JSON.parse(configJSON);
+          config = JSON.parse(configJSON);
         } catch (ex) {
           return;
         }
       }
-      var config = this.config;
-      this.initialized = true;
   
       // We don't handle in content preferences right now, so make sure they
       // can't be used. We redirect this to an invalid about: page so
@@ -114,11 +113,11 @@ var CCK2 = {
       if (!config.id) {
         alert("Missing ID in config");
       }
-      this.firstrun = Preferences.get("extensions.cck2." + config.id + ".firstrun", true);
+      config.firstrun = Preferences.get("extensions.cck2." + config.id + ".firstrun", true);
       Preferences.set("extensions.cck2." + config.id + ".firstrun", false);
-      if (!this.firstrun) {
-        this.installedVersion = Preferences.get("extensions.cck2." + config.id + ".installedVersion");
-        this.upgrade = (this.installedVersion != config.version);
+      if (!config.firstrun) {
+        config.installedVersion = Preferences.get("extensions.cck2." + config.id + ".installedVersion");
+        config.upgrade = (config.installedVersion != config.version);
       }
       Preferences.set("extensions.cck2." + config.id + ".installedVersion", config.version);
       Preferences.lock("distribution.id", config.id);
@@ -359,239 +358,241 @@ var CCK2 = {
           }
         }
       }
+      this.configs[config.id] = config;
     } catch (e) {
       errorCritical(e);
     }
   },
-  getConfig: function() {
-    return this.config;
+  getConfigs: function() {
+    return this.configs;
   },
   observe: function observe(subject, topic, data) {
     switch (topic) {
       case "distribution-customization-complete":
-        var config = this.config;
-        if (!config) {
-          return;
-        }
-        // Due to bug 947838, we have to reinitialize default preferences
-        {
-          var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
-          iniFile.leafName = "distribution";
-          iniFile.append("distribution.ini");
-          if (iniFile.exists()) {
-            if (config.preferences) {
-              for (var i in config.preferences) {
-                // Ugly, but we need special handling for this pref
-                // since Firefox doesn't honor the default pref
-                if (i == "plugin.disable_full_page_plugin_for_types") {
-                  continue;
-                }
-                // Workaround bug where this pref is coming is as a string from import
-                if (i == "toolkit.telemetry.prompted") {
-                   config.preferences[i].value = parseInt(config.preferences[i].value);
-                }
-                if (!("locked" in config.preferences[i])) {
-                  if (Preferences.defaults.has(i)) {
-                    try {
-                      // If it's a complex preference, we need to set it differently
-                      Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                      Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                    } catch (ex) {
+        for (var id in this.configs) {
+          var config = this.configs[id];
+          // Due to bug 947838, we have to reinitialize default preferences
+          {
+            var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
+            iniFile.leafName = "distribution";
+            iniFile.append("distribution.ini");
+            if (iniFile.exists()) {
+              if (config.preferences) {
+                for (var i in config.preferences) {
+                  // Ugly, but we need special handling for this pref
+                  // since Firefox doesn't honor the default pref
+                  if (i == "plugin.disable_full_page_plugin_for_types") {
+                    continue;
+                  }
+                  // Workaround bug where this pref is coming is as a string from import
+                  if (i == "toolkit.telemetry.prompted") {
+                     config.preferences[i].value = parseInt(config.preferences[i].value);
+                  }
+                  if (!("locked" in config.preferences[i])) {
+                    if (Preferences.defaults.has(i)) {
+                      try {
+                        // If it's a complex preference, we need to set it differently
+                        Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
+                        Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
+                      } catch (ex) {
+                        Preferences.defaults.set(i, config.preferences[i].value);
+                      }
+                    } else {
                       Preferences.defaults.set(i, config.preferences[i].value);
                     }
-                  } else {
-                    Preferences.defaults.set(i, config.preferences[i].value);
                   }
                 }
               }
             }
-          }
-          if (config.homePage && !config.lockHomePage) {
-            Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
-            /* If you have a distribution.ini, we changed browser.startup.homepage */
-            /* Put it back */
-            if (Preferences.get("browser.startup.homepage") == config.homePage) {
-              Preferences.reset("browser.startup.homepage");
+            if (config.homePage && !config.lockHomePage) {
+              Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
+              /* If you have a distribution.ini, we changed browser.startup.homepage */
+              /* Put it back */
+              if (Preferences.get("browser.startup.homepage") == config.homePage) {
+                Preferences.reset("browser.startup.homepage");
+              }
             }
-          }
-          if (config.network) {
-            for (var i in networkPrefMapping) {
-              if (i in config.network) {
-                Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
+            if (config.network) {
+              for (var i in networkPrefMapping) {
+                if (i in config.network) {
+                  Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
+                }
               }
             }
           }
-        }
-        if (!this.firstrun && this.installedVersion == config.version) {
-          return;
-        }
-        if ("certs" in config) {
-          if ("override" in config.certs) {
-            for (var i=0; i < config.certs.override.length; i++) {
-              var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+          if (!config.firstrun && config.installedVersion == config.version) {
+            return;
+          }
+          if ("certs" in config) {
+            if ("override" in config.certs) {
+              for (var i=0; i < config.certs.override.length; i++) {
+                var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+                try {
+                  xhr.open("GET", "https://" + config.certs.override[i]);
+                  xhr.channel.notificationCallbacks = SSLExceptions;
+                  xhr.send(null);
+                } catch (ex) {}
+              }
+            }
+            var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
+            var certdb2 = certdb;
+            try {
+              certdb2 = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB2);
+            } catch (e) {
+            }
+            if (config.certs.ca) {
+              for (var i=0; i < config.certs.ca.length; i++) {
+                if (config.certs.ca[i].url) {
+                  download(config.certs.ca[i].url, function(file) {
+                    var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
+                    istream.init(file, -1, -1, false);
+                    var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+                    bstream.setInputStream(istream);
+                    var cert = bstream.readBytes(bstream.available());
+                    bstream.close();
+                    istream.close();
+                    if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
+                      certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
+                    } else {
+                      certdb.addCert(cert, "C,C,C", "");
+                    }
+                  }, errorCritical);
+                } else if (config.certs.ca[i].cert) {
+                  certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), "C,C,C", "");
+                }
+              }
+            }
+            if (config.certs.server) {
+              for (var i=0; i < config.certs.server.length; i++) {
+                download(config.certs.server[i], function(file) {
+                  certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+                }, errorCritical);
+              }
+            }
+          }
+          if (config.removeSmartBookmarks) {
+            var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
+            for (var i = 0; i < smartBookmarks.length; i++) {
               try {
-                xhr.open("GET", "https://" + config.certs.override[i]);
-                xhr.channel.notificationCallbacks = SSLExceptions;
-                xhr.send(null);
+                bmsvc.removeItem(smartBookmarks[i]);
               } catch (ex) {}
             }
           }
-          var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-          var certdb2 = certdb;
-          try {
-            certdb2 = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB2);
-          } catch (e) {
-          }
-          if (config.certs.ca) {
-            for (var i=0; i < config.certs.ca.length; i++) {
-              if (config.certs.ca[i].url) {
-                download(config.certs.ca[i].url, function(file) {
-                  var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
-                  istream.init(file, -1, -1, false);
-                  var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
-                  bstream.setInputStream(istream);
-                  var cert = bstream.readBytes(bstream.available());
-                  bstream.close();
-                  istream.close();
-                  if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                    certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
-                  } else {
-                    certdb.addCert(cert, "C,C,C", "");
-                  }
-                }, errorCritical);
-              } else if (config.certs.ca[i].cert) {
-                certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), "C,C,C", "");
+          if (config.removeDefaultBookmarks) {
+            var firefoxFolder = bmsvc.getIdForItemAt(bmsvc.bookmarksMenuFolder, 3);
+            if ((firefoxFolder != -1) && (bmsvc.getItemType(firefoxFolder) == bmsvc.TYPE_FOLDER)) {
+              var aboutMozilla = bmsvc.getIdForItemAt(firefoxFolder, 3);
+              if (aboutMozilla != -1 &&
+                  bmsvc.getItemType(aboutMozilla) == bmsvc.TYPE_BOOKMARK &&
+                  /https?:\/\/www.mozilla.(com|org)\/.*\/about/.test(bmsvc.getBookmarkURI(aboutMozilla).spec)) {
+                bmsvc.removeItem(firefoxFolder);
               }
             }
-          }
-          if (config.certs.server) {
-            for (var i=0; i < config.certs.server.length; i++) {
-              download(config.certs.server[i], function(file) {
-                certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
-              }, errorCritical);
+            var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
+            var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
+            var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
+            if (bookmarks.length == 0) {
+              bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/firefox/central/"));
             }
-          }
-        }
-        if (config.removeSmartBookmarks) {
-          var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
-          for (var i = 0; i < smartBookmarks.length; i++) {
-            try {
-              bmsvc.removeItem(smartBookmarks[i]);
-            } catch (ex) {}
-          }
-        }
-        if (config.removeDefaultBookmarks) {
-          var firefoxFolder = bmsvc.getIdForItemAt(bmsvc.bookmarksMenuFolder, 3);
-          if ((firefoxFolder != -1) && (bmsvc.getItemType(firefoxFolder) == bmsvc.TYPE_FOLDER)) {
-            var aboutMozilla = bmsvc.getIdForItemAt(firefoxFolder, 3);
-            if (aboutMozilla != -1 &&
-                bmsvc.getItemType(aboutMozilla) == bmsvc.TYPE_BOOKMARK &&
-                /https?:\/\/www.mozilla.(com|org)\/.*\/about/.test(bmsvc.getBookmarkURI(aboutMozilla).spec)) {
-              bmsvc.removeItem(firefoxFolder);
+            if (bookmarks.length > 0) {
+              bmsvc.removeItem(bookmarks[0])
             }
-          }
-          var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
-          var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
-          var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
-          if (bookmarks.length == 0) {
-            bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/firefox/central/"));
-          }
-          if (bookmarks.length > 0) {
-            bmsvc.removeItem(bookmarks[0])
-          }
-          var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/about/"));
-          if (bookmarks.length == 0) {
-            bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/about/"));
-          }
-          if (bookmarks.length > 0) {
-            var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
-            if (mozillaFolder != -1) {
-              var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
-              var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
-              bmsvc.removeItem(mozillaFolder);
-              if (config.removeSmartBookmarks) {
-                var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
-                if (separator != -1) {
-                  bmsvc.removeItem(separator);
+            var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/about/"));
+            if (bookmarks.length == 0) {
+              bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/about/"));
+            }
+            if (bookmarks.length > 0) {
+              var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
+              if (mozillaFolder != -1) {
+                var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
+                var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
+                bmsvc.removeItem(mozillaFolder);
+                if (config.removeSmartBookmarks) {
+                  var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
+                  if (separator != -1) {
+                    bmsvc.removeItem(separator);
+                  }
                 }
               }
             }
           }
-        }
 
-        // If this is an upgrade, remove the previous version's bookmarks
-        if (this.installedVersion != config.version) {
-          var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + this.installedVersion, {});
-          for (var i = 0; i < oldBookmarks.length; i++) {
-            try {
-              bmsvc.removeItem(oldBookmarks[i]);
-            } catch (ex) {}
+          // If this is an upgrade, remove the previous version's bookmarks
+          if (this.installedVersion != config.version) {
+            var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + this.installedVersion, {});
+            for (var i = 0; i < oldBookmarks.length; i++) {
+              try {
+                bmsvc.removeItem(oldBookmarks[i]);
+              } catch (ex) {}
+            }
           }
-        }
-        if (config.bookmarks) {
-          if (config.bookmarks.toolbar) {
-            addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version);
+          if (config.bookmarks) {
+            if (config.bookmarks.toolbar) {
+              addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version);
+            }
+            if (config.bookmarks.menu) {
+              addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
+            }
           }
-          if (config.bookmarks.menu) {
-            addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
-          }
-        }
-        if (config.searchplugins || config.defaultSearchEngine) {
-          searchInitRun(function() {
-            for (var i in config.searchplugins) {
-              var engine = Services.search.getEngineByName(i);
-              // Should we remove engines and readd?
-              if (!engine) {
-                Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
-                  onSuccess: function (engine) {
-                    if (engine.name == config.defaultSearchEngine) {
-                      Services.search.currentEngine = engine;
+          if (config.searchplugins || config.defaultSearchEngine) {
+            searchInitRun(function() {
+              for (var i in config.searchplugins) {
+                var engine = Services.search.getEngineByName(i);
+                // Should we remove engines and readd?
+                if (!engine) {
+                  Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
+                    onSuccess: function (engine) {
+                      if (engine.name == config.defaultSearchEngine) {
+                        Services.search.currentEngine = engine;
+                      }
+                    },
+                    onError: function (errorCode) {
+                      // Ignore errors
                     }
-                  },
-                  onError: function (errorCode) {
-                    // Ignore errors
-                  }
-                });
+                  });
+                }
               }
-            }
-            var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
-            if (defaultSearchEngine) {
-              Services.search.currentEngine = defaultSearchEngine;
-            }
-          });
+              var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
+              if (defaultSearchEngine) {
+                Services.search.currentEngine = defaultSearchEngine;
+              }
+            });
+          }
         }
         break;
       case "final-ui-startup":
-        var config = this.config;
-        if (!config || (!this.firstrun && this.installedVersion == config.version)) {
-          return;
-        }
-        if (config.addons) {
-          Cu.import("resource://gre/modules/AddonManager.jsm");
-          var numAddonsInstalled = 0;
-          var numAddons = config.addons.length;
-          for (var i=0; i < config.addons.length; i++) {
-            try {
-            AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
-              let listener = {
-                onInstallEnded: function(install, addon) {
-                  if (addon.isActive) {
-                    // restartless add-on, so we don't need to restart
-                    numAddons--;
-                  } else {
-                    numAddonsInstalled++;
-                  }
-                  if (numAddonsInstalled > 0 &&
-                      numAddonsInstalled == config.addons.length) {
-                    Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
+        for (var id in this.configs) {
+          var config = this.configs[id];
+          if (!config.firstrun && config.installedVersion == config.version) {
+            return;
+          }
+          if (config.addons) {
+            Cu.import("resource://gre/modules/AddonManager.jsm");
+            var numAddonsInstalled = 0;
+            var numAddons = config.addons.length;
+            for (var i=0; i < config.addons.length; i++) {
+              try {
+              AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
+                let listener = {
+                  onInstallEnded: function(install, addon) {
+                    if (addon.isActive) {
+                      // restartless add-on, so we don't need to restart
+                      numAddons--;
+                    } else {
+                      numAddonsInstalled++;
+                    }
+                    if (numAddonsInstalled > 0 &&
+                        numAddonsInstalled == config.addons.length) {
+                      Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
+                    }
                   }
                 }
+                addonInstall.addListener(listener);
+                addonInstall.install();
+              }, "application/x-xpinstall");
+              } catch (e) {
+                errorCritical(e);
               }
-              addonInstall.addListener(listener);
-              addonInstall.install();
-            }, "application/x-xpinstall");
-            } catch (e) {
-              errorCritical(e);
             }
           }
         }
@@ -831,13 +832,16 @@ var documentObserver = {
       win.addEventListener("load", function(event) {
         win.removeEventListener("load", arguments.callee, false);
         var doc = event.target;
-        var config = CCK2.config;
-        if (config.hiddenUI) {
-          for (var i=0; i < config.hiddenUI.length; i++) {
-            var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
-            for (var j=0; j < uiElements.length; j++) {
-              var uiElement = uiElements[j];
-              uiElement.setAttribute("hidden", "true");
+        var configs = CCK2.getConfigs();
+        for (var id in configs) {
+          var config = configs[id];
+          if (config.hiddenUI) {
+            for (var i=0; i < config.hiddenUI.length; i++) {
+              var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
+              for (var j=0; j < uiElements.length; j++) {
+                var uiElement = uiElements[j];
+                uiElement.setAttribute("hidden", "true");
+              }
             }
           }
         }
