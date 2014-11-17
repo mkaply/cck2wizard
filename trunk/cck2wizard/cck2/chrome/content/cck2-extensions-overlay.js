@@ -19,33 +19,36 @@ Components.utils.import("resource://cck2/CCK2.jsm");
   {
     try {
       window.removeEventListener("load", startup, false);
-      var config = CCK2.getConfig();
-      if (config && "extension" in config && config.extension.hide) {
-	window.addEventListener("ViewChanged", function() {
-	  hideExtension(config.extension.id);
-	} , false)
-	hideExtension(config.extension.id);
-      }
-      var showDiscoverPane = Preferences.get("extensions.getAddons.showPane", true);
-      var xpinstallEnabled = Preferences.get("xpinstall.enabled", true);
-      if (!showDiscoverPane || !xpinstallEnabled) {
-	hide(gCategories.get("addons://discover/"));
-	hide(E("search-list-empty button"));
-	hide(E("addon-list-empty button"));
-	if (E("view-port") && E("view-port").selectedIndex == 0) {
-	  try {
-	    gViewController.loadView("addons://list/extension");
-	  } catch (ex) {
-	    // Ignore error from Webconverger
-	  }
-	}
-      }
-      if (!xpinstallEnabled) {
-	hide(E("search-filter-remote"));
-	if (E("search-filter-radiogroup"))
-	  E("search-filter-radiogroup").selectedIndex = 0; // Search in local addons
-	hide(E("utils-installFromFile-separator"));
-	hide(E("utils-installFromFile"));
+      var configs = CCK2.getConfigs();
+      for (var id in configs) {
+        config = configs[id];
+        if (config && "extension" in config && config.extension.hide) {
+          window.addEventListener("ViewChanged", function() {
+            hideExtension(config.extension.id);
+          } , false)
+          hideExtension(config.extension.id);
+        }
+        var showDiscoverPane = Preferences.get("extensions.getAddons.showPane", true);
+        var xpinstallEnabled = Preferences.get("xpinstall.enabled", true);
+        if (!showDiscoverPane || !xpinstallEnabled) {
+          hide(gCategories.get("addons://discover/"));
+          hide(E("search-list-empty button"));
+          hide(E("addon-list-empty button"));
+          if (E("view-port") && E("view-port").selectedIndex == 0) {
+            try {
+              gViewController.loadView("addons://list/extension");
+            } catch (ex) {
+              // Ignore error from Webconverger
+            }
+          }
+        }
+        if (!xpinstallEnabled) {
+          hide(E("search-filter-remote"));
+          if (E("search-filter-radiogroup"))
+            E("search-filter-radiogroup").selectedIndex = 0; // Search in local addons
+          hide(E("utils-installFromFile-separator"));
+          hide(E("utils-installFromFile"));
+        }
       }
     } catch (e) {
       errorCritical(e);
