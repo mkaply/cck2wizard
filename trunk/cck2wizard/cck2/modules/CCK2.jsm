@@ -347,6 +347,15 @@ var CCK2 = {
       if (config.dontRememberPasswords) {
         Preferences.lock("signon.rememberSignons", false);
       }
+      if (config.disableFirefoxHealthReport) {
+        Preferences.lock("datareporting.healthreport.uploadEnabled", false);
+        var aboutHealthReport = {};
+        aboutHealthReport.classID = Components.ID(uuid.generateUUID().toString());
+        aboutHealthReport.factory = disableAbout(aboutHealthReport.classID,
+                                                "Disable about:healthreport - CCK",
+                                                "healthreport");
+        CCK2.aboutFactories.push(aboutHealthReport);
+      }
       if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
