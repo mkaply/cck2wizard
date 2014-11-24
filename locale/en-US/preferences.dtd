@@ -28,6 +28,7 @@
 
 <!ENTITY disableCrashReporter.label "Disable the crash reporter">
 <!ENTITY disableTelemetry.label "Disable telemetry">
+<!ENTITY disableFirefoxHealthReport.label "Disable Firefox Health Report completely">
 <!ENTITY disableFirefoxHealthReportUpload.label "Disable Firefox Health Report upload">
 
 <!ENTITY disableaboutconfig.label "Prevent access to about:config">

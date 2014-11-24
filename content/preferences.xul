@@ -104,6 +104,7 @@
         <checkbox config="disableCrashReporter" label="&disableCrashReporter.label;" />
         <checkbox config="disableTelemetry" label="&disableTelemetry.label;" />
         <checkbox config="disableFirefoxHealthReportUpload" label="&disableFirefoxHealthReportUpload.label;" />
+        <checkbox config="disableFirefoxHealthReport" label="&disableFirefoxHealthReport.label;" />
       </groupbox>
     </vbox>
     <vbox id="update">

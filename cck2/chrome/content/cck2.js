@@ -223,6 +223,10 @@ try {
         if (config.disableErrorConsole) {
           disableErrorConsole();
         }
+        if (config.disableFirefoxHealthReport) {
+          var healthReportMenu = document.getElementById("healthReport");
+          healthReportMenu.parentNode.removeChild(healthReportMenu);
+        }
         if (config.removeSafeModeMenu) {
           hide(E("helpSafeMode"));
           try {
