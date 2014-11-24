@@ -182,6 +182,13 @@ try {
   {
     try {
       window.removeEventListener("load", startup, false);
+      // Replace setReportPhishingMenu so we can catch errors
+      var origSetReportPhishingMenu = gSafeBrowsing.setReportPhishingMenu;
+      gSafeBrowsing.setReportPhishingMenu = function() {
+        try {
+          origSetReportPhishingMenu();
+        } catch (e) {}
+      }
       window.XULBrowserWindow.inContentWhitelist =
         window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
           return element != "about:preferences";
@@ -260,6 +267,11 @@ try {
                     keys[k].removeAttribute("command");
                   }
                 }
+              }
+              // Horrible hack to work around the crappy Australis help menu
+              // Items on the menu always show up in the Australis menu, so we have to remove them.
+              if (uiElements[j].parentNode.id == "menu_HelpPopup") {
+                uiElements[j].parentNode.removeChild(uiElements[j]);
               }
             }
           }
