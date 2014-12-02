@@ -842,29 +842,33 @@ function disableAbout(aClass, aClassName, aboutType) {
 
 var documentObserver = {
   observe: function observe(subject, topic, data) {
-    if (subject instanceof Ci.nsIDOMWindow && topic == 'chrome-document-global-created') {
+    if (subject instanceof Ci.nsIDOMWindow) {
       var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
-      win.addEventListener("load", function(event) {
-        win.removeEventListener("load", arguments.callee, false);
-        var doc = event.target;
-        var configs = CCK2.getConfigs();
-        for (var id in configs) {
-          var config = configs[id];
-          if (config.hiddenUI) {
-            for (var i=0; i < config.hiddenUI.length; i++) {
-              var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
-              for (var j=0; j < uiElements.length; j++) {
-                var uiElement = uiElements[j];
-                uiElement.setAttribute("hidden", "true");
+      if (topic == "chrome-document-global-created" ||
+          (topic == "content-document-global-created" && win.document.documentURIObject.scheme == "about")) {
+        win.addEventListener("load", function(event) {
+          win.removeEventListener("load", arguments.callee, false);
+          var doc = event.target;
+          var configs = CCK2.getConfigs();
+          for (var id in configs) {
+            var config = configs[id];
+            if (config.hiddenUI) {
+              for (var i=0; i < config.hiddenUI.length; i++) {
+                var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
+                for (var j=0; j < uiElements.length; j++) {
+                  var uiElement = uiElements[j];
+                  uiElement.setAttribute("hidden", "true");
+                }
               }
             }
           }
-        }
-      }, false);
+        }, false);
+      }
     }
   }
 }
 
 Services.obs.addObserver(CCK2, "distribution-customization-complete", false);
 Services.obs.addObserver(CCK2, "final-ui-startup", false);
-Services.obs.addObserver(documentObserver, 'chrome-document-global-created', false);  
+Services.obs.addObserver(documentObserver, "chrome-document-global-created", false);  
+Services.obs.addObserver(documentObserver, "content-document-global-created", false);  
