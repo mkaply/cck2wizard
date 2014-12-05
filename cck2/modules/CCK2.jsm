@@ -124,6 +124,9 @@ var CCK2 = {
       Preferences.lock("distribution.version", config.version + " (CCK2)");
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
+      if (config.noAddonCompatibilityCheck) {
+        Preferences.reset("extensions.lastAppVersion");
+      }
       if (config.preferences) {
         for (var i in config.preferences) {
           // Ugly, but we need special handling for this pref
