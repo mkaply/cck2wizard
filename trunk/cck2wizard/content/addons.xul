@@ -26,6 +26,7 @@
         <checkbox config="noGetAddons" label="&noGetAddons.label;" />
         <checkbox config="disableAddonsManager" label="&disableAddonsManager.label;"/>
         <checkbox config="noAddons" label="&noAddons.label;"/>
+        <checkbox config="noAddonCompatibilityCheck" label="&noAddonCompatibilityCheck.label;"/>
       </groupbox>
     </vbox>
   </deck>

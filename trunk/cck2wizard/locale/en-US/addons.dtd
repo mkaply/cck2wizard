@@ -12,3 +12,4 @@
 <!ENTITY noGetAddons.label "Prevent Discovering Add-ons in the Add-ons Manager">
 <!ENTITY disableAddonsManager.label "Disable the Add-ons Manager">
 <!ENTITY noAddons.label "Don't allow add-ons to be installed">
+<!ENTITY noAddonCompatibilityCheck.label "Don't check add-on compatibility at startup">
