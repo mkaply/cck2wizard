@@ -127,7 +127,7 @@ function saveButtonPosition(event) {
 }
 
 function onCommand(event) {
-  if (event.target.id != idPrefix + "button")
+  if (event.originalTarget.id != idPrefix + "button")
     return;
   var win = Services.ww.getWindowByName("cck2wizard", null);
   if (win) {
