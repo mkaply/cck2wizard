@@ -418,8 +418,10 @@ function packageCCK2(type) {
               var str = scriptableStream.read(installRDFStream.available());
               scriptableStream.close();
               installRDFStream.close();
+              var utf8Converter = Cc["@mozilla.org/intl/utf8converterservice;1"].getService(Ci.nsIUTF8ConverterService);
+              var data = utf8Converter.convertURISpecToUTF8 (str, "UTF-8"); 
               var parser = new DOMParser();
-              var doc = parser.parseFromString(str, "application/xml");
+              var doc = parser.parseFromString(data, "application/xml");
               var id;
               var descriptions = doc.getElementsByTagNameNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "Description");
               for (var j=0; j < descriptions.length; j++) {
