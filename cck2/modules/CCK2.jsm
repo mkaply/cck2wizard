@@ -578,6 +578,28 @@ var CCK2 = {
           }
         }
         break;
+      case "browser-ui-startup-complete":
+        return;
+        try {
+          Cu.import("resource://gre/modules/WebappManager.jsm");
+        } catch (e) {
+          try {
+            Cu.import("resource:///modules/WebappManager.jsm");
+          } catch (e) {}
+        }
+        WebappManager.doInstall = function() {
+          var win = Services.wm.getMostRecentWindow("navigator:browser");
+          var gBrowser = win.gBrowser;
+          var gNavigatorBundle = win.gNavigatorBundle
+          messageString = gNavigatorBundle.getString("xpinstallDisabledMessageLocked");;
+          var options = {
+            timeout: Date.now() + 30000
+          };
+          win.PopupNotifications.show(gBrowser.selectedBrowser, "xpinstall-disabled",
+                                      messageString, "addons-notification-icon",
+                                      null, null, options);
+        };
+        break;
       case "final-ui-startup":
         for (var id in this.configs) {
           var config = this.configs[id];
@@ -873,5 +895,6 @@ var documentObserver = {
 
 Services.obs.addObserver(CCK2, "distribution-customization-complete", false);
 Services.obs.addObserver(CCK2, "final-ui-startup", false);
+Services.obs.addObserver(CCK2, "browser-ui-startup-complete", false);
 Services.obs.addObserver(documentObserver, "chrome-document-global-created", false);  
 Services.obs.addObserver(documentObserver, "content-document-global-created", false);  
