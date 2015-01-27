@@ -362,6 +362,23 @@ var CCK2 = {
       if (config.disableFirefoxHealthReportUpload) {
         Preferences.lock("datareporting.healthreport.uploadEnabled", false);
       }
+      if (config.disableResetFirefox) {
+        try {
+          Cu.import("resource:///modules/UITour.jsm");
+          UITour.origOnPageEvent = UITour.onPageEvent;
+          UITour.onPageEvent = function(a, b) {
+            var aEvent = b;
+            if (!aEvent) {
+              aEvent = a;
+            }
+            if (aEvent.detail.action == "resetFirefox") {
+              Services.prompt.alert(null, "CCK2", "This has been disabled by your administrator");
+              return;
+            }
+            UITour.origOnPageEvent(a, b);
+          }
+        } catch (e) {}
+      }
       if (config.disableFirefoxUpdates) {
         Preferences.lock("app.update.auto", false);
         Preferences.lock("app.update.enabled", false);
