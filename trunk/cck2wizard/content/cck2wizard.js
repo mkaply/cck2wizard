@@ -89,6 +89,7 @@ function onRecentPopup(event) {
       try {
         config = JSON.parse(Services.prefs.getCharPref(configs[i]))
         menuitem.setAttribute("label", config.name);
+        menuitem.setAttribute("tooltiptext", config.id + " - " + config.version);
         menuitem.config = config;
         if (gCurrentConfig && gCurrentConfig.id == config.id) {
           menuitem.setAttribute("checked", "true");
