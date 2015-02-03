@@ -618,6 +618,8 @@ var CCK2 = {
         };
         break;
       case "final-ui-startup":
+//        let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+//        globalMM.loadFrameScript("resource://cck2/CAPSClipboard-fs.js", true);
         for (var id in this.configs) {
           var config = this.configs[id];
           if (!config.firstrun && config.installedVersion == config.version) {
