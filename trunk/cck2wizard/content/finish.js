@@ -404,53 +404,8 @@ function packageCCK2(type) {
         var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           addonFile.initWithPath(config.addons[i]);
-          if (type == "extension") {
-            copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
-            config.addons[i] = "chrome://" + packageName + "/content/addons/" + addonFile.leafName;
-          } else {
-            var zipReaderCache = Cc["@mozilla.org/libjar/zip-reader-cache;1"].createInstance(Ci.nsIZipReaderCache);
-            var zipReader = zipReaderCache.getZip(addonFile);
-            try {
-              var installRDFStream = zipReader.getInputStreamWithSpec(null, "install.rdf");
-              var scriptableStream = Cc["@mozilla.org/scriptableinputstream;1"].
-                                     getService(Ci.nsIScriptableInputStream);
-              scriptableStream.init(installRDFStream);
-              var str = scriptableStream.read(installRDFStream.available());
-              scriptableStream.close();
-              installRDFStream.close();
-              var utf8Converter = Cc["@mozilla.org/intl/utf8converterservice;1"].getService(Ci.nsIUTF8ConverterService);
-              var data = utf8Converter.convertURISpecToUTF8 (str, "UTF-8"); 
-              var parser = new DOMParser();
-              var doc = parser.parseFromString(data, "application/xml");
-              var id;
-              var descriptions = doc.getElementsByTagNameNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "Description");
-              for (var j=0; j < descriptions.length; j++) {
-                if (descriptions[j].getAttributeNS("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "about") == "urn:mozilla:install-manifest" ||
-                    descriptions[j].getAttribute("about") == "urn:mozilla:install-manifest"){
-                  if (descriptions[j].hasAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id")) {
-                    id = descriptions[j].getAttributeNS("http://www.mozilla.org/2004/em-rdf#", "id");
-                    break;
-                  } else {
-                    var ids = descriptions[j].getElementsByTagNameNS("http://www.mozilla.org/2004/em-rdf#", "id");
-                    if (ids.length > 0) {
-                      id = ids[0].textContent
-                      break;
-                    }
-                  }
-                }
-              }
-              var extensionsDir = dir.clone();
-              extensionsDir.append("distribution");
-              extensionsDir.append("extensions");
-              if (!extensionsDir.exists()) {
-                extensionsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-              }
-              copyAndAddFileToZip(zipwriter, addonFile, extensionsDir, id + ".xpi");
-            } finally {
-              zipReader.close();
-            }
-            config.addons[i] = null;
-          }
+          copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
+          config.addons[i] = "chrome://" + packageName + "/content/addons/" + addonFile.leafName;
         } catch (e) {
           copyFileError(config.addons[i]);
         }
