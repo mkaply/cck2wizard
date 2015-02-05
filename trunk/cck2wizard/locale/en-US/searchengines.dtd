@@ -9,3 +9,4 @@
 
 <!ENTITY defaultSearchEngine.label "Default Search Engine">
 <!ENTITY browserDefault.label "(use the browser default)">
+<!ENTITY disableSearchEngineInstall.label "Do not allow search engines to be installed from web pages">
