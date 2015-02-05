@@ -593,6 +593,20 @@ var CCK2 = {
               }
             });
           }
+          if (config.disableSearchEngineInstall) {
+            try {
+              Cu.import("resource:///modules/ContentLinkHandler.jsm");
+              ContentLinkHandler.origOnLinkAdded = ContentLinkHandler.onLinkAdded;
+              ContentLinkHandler.onLinkAdded = function(event, chromeGlobal) {
+                if (event.originalTarget.rel == "search") {
+                  return;
+                }
+                ContentLinkHandler.origOnLinkAdded(event, chromeGlobal);
+              };
+            } catch (e) {
+              // Just in case we are pre Firefox 31
+            }
+          }
         }
         break;
       case "browser-ui-startup-complete":
@@ -907,6 +921,15 @@ var documentObserver = {
             }
           }
         }, false);
+      }
+      if (topic == "content-document-global-created") {
+        var configs = CCK2.getConfigs();
+        for (var id in configs) {
+          var config = configs[id];
+          if (config.disableSearchEngineInstall) {
+            subject.wrappedJSObject.external.AddSearchProvider = function() {};
+          }
+        }
       }
     }
   }
