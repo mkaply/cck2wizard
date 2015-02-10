@@ -553,8 +553,8 @@ var CCK2 = {
           }
 
           // If this is an upgrade, remove the previous version's bookmarks
-          if (this.installedVersion != config.version) {
-            var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + this.installedVersion, {});
+          if (config.installedVersion != config.version) {
+            var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {});
             for (var i = 0; i < oldBookmarks.length; i++) {
               try {
                 bmsvc.removeItem(oldBookmarks[i]);
