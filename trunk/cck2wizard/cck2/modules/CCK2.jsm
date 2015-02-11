@@ -504,6 +504,12 @@ var CCK2 = {
                 }, errorCritical);
               }
             }
+            if (config.certs.devices) {
+              var pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+              for (var i=0; i < config.certs.devices.length; i++) {
+                pkcs11.addModule(config.certs.devices[i].name, config.certs.devices[i].path, 0, 0);
+              }
+            }
           }
           if (config.removeSmartBookmarks) {
             var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
