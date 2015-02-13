@@ -456,7 +456,7 @@ var CCK2 = {
             }
           }
           if (!config.firstrun && config.installedVersion == config.version) {
-            return;
+            continue;
           }
           if ("certs" in config) {
             if ("override" in config.certs) {
