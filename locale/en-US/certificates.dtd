@@ -12,10 +12,12 @@
 <!ENTITY certificateAuthorties.label "Authorities">
 <!ENTITY serverCertificatesTab.label "Servers">
 <!ENTITY certificateOverrides.label "Overrides">
+<!ENTITY devices.label "Devices">
 
 <!ENTITY certificateAuthorties.description "Certificates that identify certificate authorities">
 <!ENTITY serverCertificates.description "Certificates that identify servers">
 <!ENTITY certificateOverrides.description "Domains for which self-signed certificates are allowed">
+<!ENTITY devices.description "Security Devices">
 
 <!ENTITY cert.trustSSL                  "Trust this CA to identify web sites.">
 <!ENTITY cert.trustEmail                "Trust this CA to identify email users.">
