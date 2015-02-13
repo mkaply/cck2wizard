@@ -18,6 +18,7 @@
           <tab label="&certificateAuthorties.label;" />
           <tab label="&serverCertificatesTab.label;" />
           <tab label="&certificateOverrides.label;" />
+          <tab label="&devices.label;" />
         </tabs>
         <tabpanels flex="1">
           <tabpanel orient="vertical">
@@ -43,6 +44,13 @@
               <button id="certoverrides-addfile" label="&adddomain.label;" oncommand="addCertificateOverride();" />
             </hbox>
           </tabpanel>
+          <tabpanel orient="vertical">
+            <description class="cck2wizard-description">&devices.description;</description>
+            <listbox id="devices-listbox" context="devices-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
+            <hbox>
+              <button id="devices-addfile" label="&addfile.label;" oncommand="addDeviceFromFile();" />
+            </hbox>
+          </tabpanel>
         </tabpanels>
       </tabbox>
     </vbox>
@@ -61,6 +69,9 @@
     <menupopup id="servercerts-listbox-contextmenu">
       <menuitem label="&addfile.label;" oncommand="addServerCertificateFromFile()" />
       <menuitem label="&addurl.label;" oncommand="addServerCertificateFromURL()" />
+    </menupopup>
+    <menupopup id="devices-contextmenu">
+      <menuitem label="&delete.label;" oncommand="onDeleteDevice()" />
     </menupopup>
   </popupset>
 </overlay>

@@ -1,11 +1,13 @@
 var gCertificatesListbox = null;
 var gServerCertsListbox = null;
 var gCertOverridesListbox = null;
+var gDevicesListbox = null;
 
 function onCertificatesLoad() {
   gCertificatesListbox = document.getElementById("certificates-listbox");
   gServerCertsListbox = document.getElementById("servercerts-listbox");
   gCertOverridesListbox = document.getElementById("certoverrides-listbox");
+  gDevicesListbox = document.getElementById("devices-listbox");
 }
 window.addEventListener("load", onCertificatesLoad, false);
 
@@ -27,6 +29,12 @@ function setCertificates(config) {
       for (var i=0; i < config.certs.override.length; i++) {
         var listitem = gCertOverridesListbox.appendItem(config.certs.override[i]);
         listitem.setAttribute("context", "certoverride-contextmenu");
+      }
+    }
+    if ("devices" in config.certs) {
+      for (var i=0; i < config.certs.devices.length; i++) {
+        var listitem = gDevicesListbox.appendItem(config.certs.devices[i].name, config.certs.devices[i].path);
+        listitem.setAttribute("context", "devices-contextmenu");
       }
     }
   }
@@ -64,6 +72,19 @@ function getCertificates(config) {
     
     for (var i=0; i < gCertOverridesListbox.itemCount; i++) {
       config.certs.override.push(gCertOverridesListbox.getItemAtIndex(i).label);
+    }
+  }
+  if (gDevicesListbox.itemCount > 0) {
+    if (!("certs" in config)) {
+      config.certs = {};
+    }
+    config.certs.devices = [];
+    
+    for (var i=0; i < gDevicesListbox.itemCount; i++) {
+      var device = {};
+      device.name = gDevicesListbox.getItemAtIndex(i).label;
+      device.path = gDevicesListbox.getItemAtIndex(i).value;
+      config.certs.devices.push(device);
     }
   }
   return config;
@@ -166,11 +187,31 @@ function addServerCertificateFromFile() {
   }
 }
 
+function addDeviceFromFile() {
+  var deviceFile = chooseFile(window);
+  if (deviceFile) {
+    var check = {value: false};
+    var input = {value: ""};                  // default the edit field to Bob
+    var result = Services.prompt.prompt(window, "CCK2", "Enter the name of your device:", input, null, check);
+    if (result) {
+      var listitem = gDevicesListbox.appendItem(input.value, deviceFile.path);
+      listitem.setAttribute("context", "devices-contextmenu");
+    }
+  }
+}
+
 function onDeleteCertificate() {
   if (gCertificatesListbox.selectedIndex == -1) {
     return;
   }
   gCertificatesListbox.removeChild(gCertificatesListbox.selectedItem);
+}
+
+function onDeleteDevice() {
+  if (gDevicesListbox.selectedIndex == -1) {
+    return;
+  }
+  gDevicesListbox.removeChild(gDevicesListbox.selectedItem);
 }
 
 function onDeleteServerCertificate() {
