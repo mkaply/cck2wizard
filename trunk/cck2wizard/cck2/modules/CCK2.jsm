@@ -565,8 +565,21 @@ var CCK2 = {
           }
 
           // If this is an upgrade, remove the previous version's bookmarks
-          if (config.installedVersion != config.version) {
-            var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {});
+          var oldCCKVersion = null;
+          try {
+            oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version");
+            if (oldCCKVersion) {
+              Preferences.reset("extensions." + config.extension.id + ".version");
+            }
+          } catch(e) {}
+          if (config.installedVersion != config.version || oldCCKVersion) {
+            var annotationString;
+            if (oldCCKVersion) {
+              annotationString = config.extension.id + "/" + oldCCKVersion;
+            } else {
+              annotationString = config.id + "/" + config.installedVersion;
+            }
+            var oldBookmarks = annos.getItemsWithAnnotation(annotationString, {});
             for (var i = 0; i < oldBookmarks.length; i++) {
               try {
                 bmsvc.removeItem(oldBookmarks[i]);
