@@ -477,8 +477,14 @@ var CCK2 = {
             }
             if (config.certs.ca) {
               for (var i=0; i < config.certs.ca.length; i++) {
+                var certTrust;
+                if (config.certs.ca[i].trust){
+                  certTrust = config.certs.ca[i].trust
+                } else {
+                  certTrust = "C,C,C";
+                }
                 if (config.certs.ca[i].url) {
-                  download(config.certs.ca[i].url, function(file) {
+                  download(config.certs.ca[i].url, function(file, extraParams) {
                     var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
                     istream.init(file, -1, -1, false);
                     var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
@@ -487,13 +493,13 @@ var CCK2 = {
                     bstream.close();
                     istream.close();
                     if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                      certdb2.addCertFromBase64(fixupCert(cert), "C,C,C", "");
+                      certdb2.addCertFromBase64(fixupCert(cert), extraParams.trust, "");
                     } else {
-                      certdb.addCert(cert, "C,C,C", "");
+                      certdb.addCert(cert, extraParams.trust, "");
                     }
-                  }, errorCritical);
+                  }, errorCritical, {trust: certTrust});
                 } else if (config.certs.ca[i].cert) {
-                  certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), "C,C,C", "");
+                  certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), certTrust, "");
                 }
               }
             }
@@ -807,9 +813,10 @@ function fixupCert(cert) {
  * @param {String} URL of the file
  * @param {function} Function to call on success - called with nsIFile
  * @param {String} Function to call on failure
+ * @param {Object} extraParams passed to callback
  * @returns {nsIFile} Downloaded file
  */
-function download(url, successCallback, errorCallback) {
+function download(url, successCallback, errorCallback, extraParams) {
   var uri = Services.io.newURI(url, null, null);
 
   var channel = Services.io.newChannelFromURI(uri);
@@ -820,11 +827,11 @@ function download(url, successCallback, errorCallback) {
       if (Components.isSuccessCode(status)) {
         result.QueryInterface(Ci.nsIFile);
         if (result.exists() && result.fileSize > 0) {
-          successCallback(result);
+          successCallback(result, extraParams);
           return;
         }
       }
-      errorCallback(new Error("Download failed"));
+      errorCallback(new Error("Download failed (" + status + " for " + url));
     }
   }
   downloader.init(listener, null);
