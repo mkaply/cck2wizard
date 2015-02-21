@@ -42,10 +42,17 @@ try {
           snippets.style.display = "none";
         }
       }
-      /* Remove the reset button from about:support */
-      if ((config && config.disableResetFirefox) &&
-         /^about:support/.test(doc.location.href)) {
-        remove(E("reset-box", doc));
+      if (/^about:support/.test(doc.location.href)) {
+        if (config && config.disableResetFirefox) {
+          remove(E("reset-box", doc));
+        }
+        if (config && config.disableSafeMode) {
+          remove(E("safe-mode-box", doc));
+        }
+        if (config && config.disableResetFirefox
+                   && config.disableSafeMode) {
+          remove(E("action-box", doc));
+        }
       }
 
       /* If health reporter upload is locked, remove the activation widget */
