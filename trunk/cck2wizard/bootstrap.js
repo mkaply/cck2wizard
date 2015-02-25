@@ -3,7 +3,7 @@ Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 var gAustralis = false;
 try {
-  Cu.import("resource://app/modules/CustomizableUI.jsm");
+  Cu.import("resource:///modules/CustomizableUI.jsm");
   gAustralis = true;
 } catch (e) {}
 
