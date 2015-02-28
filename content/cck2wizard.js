@@ -87,7 +87,7 @@ function onRecentPopup(event) {
       var menuitem = document.createElement("menuitem");
       menuitem.setAttribute("type", "checkbox");
       try {
-        config = JSON.parse(Services.prefs.getCharPref(configs[i]))
+        config = JSON.parse(Services.prefs.getComplexValue(configs[i], Ci.nsISupportsString).data);
         menuitem.setAttribute("label", config.name);
         menuitem.setAttribute("tooltiptext", config.id + " - " + config.version);
         menuitem.config = config;
@@ -320,7 +320,9 @@ function onClose() {
 
 function onSave() {
   var config = getConfig();
-  Services.prefs.setCharPref(prefsPrefix + "configs." + config.id, JSON.stringify(config))
+  let str = Cc["@mozilla.org/supports-string;1"].createInstance(Ci.nsISupportsString);
+  str.data = JSON.stringify(config);
+  Services.prefs.setComplexValue(prefsPrefix + "configs." + config.id, Ci.nsISupportsString, str);
   gCurrentConfig = config;
   return true;
 }
