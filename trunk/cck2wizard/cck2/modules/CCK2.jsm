@@ -25,6 +25,45 @@ XPCOMUtils.defineLazyServiceGetter(this, "override",
 XPCOMUtils.defineLazyServiceGetter(this, "uuid",
     "@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
 
+/* Hack to work around bug that AutoConfig is loaded in the wrong charset */
+var fixupUTF8 = null;
+
+if ('ä'[0] != 'ä') {
+  fixupUTF8 = function(str) {
+    var out, i, len, c;
+    var char2, char3;
+  
+    out = "";
+    len = str.length;
+    i = 0;
+    while(i < len) {
+      c = str.charCodeAt(i++);
+      switch(c >> 4)
+      { 
+        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+          // 0xxxxxxx
+          out += str.charAt(i-1);
+          break;
+        case 12: case 13:
+          // 110x xxxx   10xx xxxx
+          char2 = str.charCodeAt(i++);
+          out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+          break;
+        case 14:
+          // 1110 xxxx  10xx xxxx  10xx xxxx
+          char2 = str.charCodeAt(i++);
+          char3 = str.charCodeAt(i++);
+          out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));  
+          break;
+      }
+    }
+  
+    return out;
+  };
+} else {
+  fixupUTF8 = function(str) { return str };
+}
+
 /* Crazy hack to work around distribution.ini bug */
 /* Basically if the distribution can't be parsed,  make it null */
 let dirSvc = Cc["@mozilla.org/file/directory_service;1"].
@@ -393,6 +432,19 @@ var CCK2 = {
           }
         }
       }
+      // Fixup bad strings
+      if (config.helpMenu && config.helpMenu.label); {
+        config.helpMenu.label = fixupUTF8(config.helpMenu.label);
+      }
+      if (config.helpMenu && config.helpMenu.accesskey); {
+        config.helpMenu.accesskey = fixupUTF8(config.helpMenu.accesskey);
+      }
+      if (config.titlemodifier) {
+        config.titlemodifier = fixupUTF8(config.titlemodifier);
+      }
+      if (config.defaultSearchEngine) {
+        config.defaultSearchEngine = fixupUTF8(config.defaultSearchEngine);
+      }
       this.configs[config.id] = config;
     } catch (e) {
       errorCritical(e);
@@ -750,14 +802,14 @@ function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
 function addBookmarks(bookmarks, destination, annotation) {
   for (var i =0; i < bookmarks.length; i++) {
     if (bookmarks[i].folder) {
-      var newFolderId = bmsvc.createFolder(destination, bookmarks[i].name, bmsvc.DEFAULT_INDEX);
+      var newFolderId = bmsvc.createFolder(destination, fixupUTF8(bookmarks[i].name), bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
       addBookmarks(bookmarks[i].folder, newFolderId, annotation);
     } else if (bookmarks[i].type == "separator") {
       bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
     } else {
       try {
-        var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, bookmarks[i].name);
+        var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, fixupUTF8(bookmarks[i].name));
         annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
       } catch(e) {}
     }
