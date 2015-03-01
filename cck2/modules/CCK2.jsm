@@ -433,10 +433,10 @@ var CCK2 = {
         }
       }
       // Fixup bad strings
-      if (config.helpMenu && config.helpMenu.label); {
+      if (config.helpMenu && config.helpMenu.label) {
         config.helpMenu.label = fixupUTF8(config.helpMenu.label);
       }
-      if (config.helpMenu && config.helpMenu.accesskey); {
+      if (config.helpMenu && config.helpMenu.accesskey) {
         config.helpMenu.accesskey = fixupUTF8(config.helpMenu.accesskey);
       }
       if (config.titlemodifier) {
