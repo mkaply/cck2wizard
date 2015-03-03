@@ -551,20 +551,24 @@ var CCK2 = {
                   certTrust = "C,C,C";
                 }
                 if (config.certs.ca[i].url) {
-                  download(config.certs.ca[i].url, function(file, extraParams) {
-                    var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
-                    istream.init(file, -1, -1, false);
-                    var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
-                    bstream.setInputStream(istream);
-                    var cert = bstream.readBytes(bstream.available());
-                    bstream.close();
-                    istream.close();
-                    if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                      certdb2.addCertFromBase64(fixupCert(cert), extraParams.trust, "");
-                    } else {
-                      certdb.addCert(cert, extraParams.trust, "");
-                    }
-                  }, errorCritical, {trust: certTrust});
+                  try {
+                    download(config.certs.ca[i].url, function(file, extraParams) {
+                      var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
+                      istream.init(file, -1, -1, false);
+                      var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+                      bstream.setInputStream(istream);
+                      var cert = bstream.readBytes(bstream.available());
+                      bstream.close();
+                      istream.close();
+                      if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
+                        certdb2.addCertFromBase64(fixupCert(cert), extraParams.trust, "");
+                      } else {
+                        certdb.addCert(cert, extraParams.trust, "");
+                      }
+                    }, errorCritical, {trust: certTrust});
+                  } catch (e) {
+                    errorCritical("Unable to install " + config.certs.ca[i].url);
+                  }
                 } else if (config.certs.ca[i].cert) {
                   certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), certTrust, "");
                 }
@@ -572,9 +576,13 @@ var CCK2 = {
             }
             if (config.certs.server) {
               for (var i=0; i < config.certs.server.length; i++) {
-                download(config.certs.server[i], function(file) {
-                  certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
-                }, errorCritical);
+                try {
+                  download(config.certs.server[i], function(file) {
+                    certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+                  }, errorCritical);
+                } catch (e) {
+                  errorCritical("Unable to install " + config.certs.server[i]);
+                }
               }
             }
           }
