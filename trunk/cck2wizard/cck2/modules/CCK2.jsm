@@ -433,16 +433,18 @@ var CCK2 = {
         }
       }
       // Fixup bad strings
-      if (config.helpMenu && config.helpMenu.label) {
-        config.helpMenu.label = fixupUTF8(config.helpMenu.label);
+      if ("helpMenu" in config) {
+        if ("label" in config.helpMenu) {
+          config.helpMenu.label = fixupUTF8(config.helpMenu.label);
+        }
+        if ("accesskey" in config.helpMenu) {
+          config.helpMenu.accesskey = fixupUTF8(config.helpMenu.accesskey);
+        }
       }
-      if (config.helpMenu && config.helpMenu.accesskey) {
-        config.helpMenu.accesskey = fixupUTF8(config.helpMenu.accesskey);
-      }
-      if (config.titlemodifier) {
+      if ("titlemodifier" in config) {
         config.titlemodifier = fixupUTF8(config.titlemodifier);
       }
-      if (config.defaultSearchEngine) {
+      if ("defaultSearchEngine" in config) {
         config.defaultSearchEngine = fixupUTF8(config.defaultSearchEngine);
       }
       this.configs[config.id] = config;
