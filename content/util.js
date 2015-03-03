@@ -1,6 +1,11 @@
+Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://gre/modules/FileUtils.jsm");
+Cu.import("resource://gre/modules/NetUtil.jsm");
+
+
 function errorCritical(e) {
   try {
-    Services.prompt.alert(window, "CC2", "An error has occurred. Please report the following information at http://cck2.freshdesk.com\n\n" + e.toString() + "\n\n" + e.stack);
+    Services.prompt.alert(window, "CCK2", "An error has occurred. Please report the following information at http://cck2.freshdesk.com\n\n" + e.toString() + "\n\n" + e.stack);
   } catch (ex) {
     console.log(e.toString() + "\n\n" + e.stack);
   }
@@ -8,8 +13,8 @@ function errorCritical(e) {
 
 function writeFile(file, data, successCallback, errorCallback) {
   var ostream = FileUtils.openSafeFileOutputStream(file);
-  var converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
-                    createInstance(Ci.nsIScriptableUnicodeConverter);
+  var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
+                    createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
   converter.charset = "UTF-8";
   var istream = converter.convertToInputStream(data);
   NetUtil.asyncCopy(istream, ostream, function(status) {
@@ -66,4 +71,60 @@ function onChooseFile(selector) {
   if (outputFile) {
     document.querySelector(selector).value = outputFile.path;
   }
+}
+
+function chooseFile(win, path) {
+  var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+  fp.init(win, "", Components.interfaces.nsIFilePicker.modeOpen);
+  if (path) {
+    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+    try {
+      file.initWithPath(path);
+      fp.defaultString = file.leafName;
+      fp.displayDirectory = file;
+    } catch(e) {
+      // Ignore path errors in case we are on different OSes
+    }
+  }
+  fp.appendFilters(Components.interfaces.nsIFilePicker.filterAll);
+  if (fp.show() == Components.interfaces.nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
+    return fp.file;
+  }
+  return null;
+}
+
+function showErrorMessage(id) {
+  Services.prompt.alert(window,
+                        gStringBundle.getString("titlebar"),
+                        gStringBundle.getString(id));
+}
+
+function saveFile(win, filename) {
+  var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+  fp.init(win, "", Components.interfaces.nsIFilePicker.modeSave);
+  fp.defaultString = filename;
+  fp.appendFilters(Components.interfaces.nsIFilePicker.filterAll);
+  if (fp.show() != Components.interfaces.nsIFilePicker.returnCancel && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
+    return fp.file;
+  }
+  return null;
+}
+
+function chooseDir(win, dir) {
+  var nsIFilePicker = Components.interfaces.nsIFilePicker;
+  var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+  fp.init(win, "", nsIFilePicker.modeGetFolder);
+  if (dir) {
+    var dirFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+    try {
+      dirFile.initWithPath(dir);
+      fp.displayDirectory = dirFile;
+    } catch(e) {
+      // Ignore path errors in case we are on different OSes
+    }
+  }
+  if (fp.show() == nsIFilePicker.returnOK && fp.fileURL.spec && fp.fileURL.spec.length > 0) {
+    return fp.file;
+  }
+  return null;
 }

@@ -187,16 +187,24 @@ function addServerCertificateFromFile() {
   }
 }
 
-function addDeviceFromFile() {
-  var deviceFile = chooseFile(window);
-  if (deviceFile) {
-    var check = {value: false};
-    var input = {value: ""};                  // default the edit field to Bob
-    var result = Services.prompt.prompt(window, "CCK2", "Enter the name of your device:", input, null, check);
-    if (result) {
-      var listitem = gDevicesListbox.appendItem(input.value, deviceFile.path);
-      listitem.setAttribute("context", "devices-contextmenu");
-    }
+function addDevice() {
+  var retVals = { deviceName: null, devicePath: null};
+  window.openDialog("chrome://cck2wizard/content/device-dialog.xul", "cck2wizard-device", "modal,centerscreen", retVals);
+  if (!retVals.cancel) {
+    var listitem = gDevicesListbox.appendItem(retVals.deviceName, retVals.devicePath);
+    listitem.setAttribute("context", "devices-contextmenu");
+  }
+}
+
+function onEditDevice() {
+  if (gDevicesListbox.selectedIndex == -1) {
+    return;
+  }
+  var retVals = { deviceName: gDevicesListbox.selectedItem.label, devicePath: gDevicesListbox.selectedItem.value};
+  window.openDialog("chrome://cck2wizard/content/device-dialog.xul", "cck2wizard-device", "modal,centerscreen", retVals);
+  if (!retVals.cancel) {
+    gDevicesListbox.selectedItem.label = retVals.deviceName;
+    gDevicesListbox.selectedItem.value = retVals.devicePath;
   }
 }
 

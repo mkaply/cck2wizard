@@ -46,9 +46,9 @@
           </tabpanel>
           <tabpanel orient="vertical">
             <description class="cck2wizard-description">&devices.description;</description>
-            <listbox id="devices-listbox" context="devices-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
+            <listbox id="devices-listbox" context="devices-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" ondblclick="onEditDevice();" flex="1" />
             <hbox>
-              <button id="devices-addfile" label="&addfile.label;" oncommand="addDeviceFromFile();" />
+              <button id="devices-addfile" label="&add.label;" oncommand="addDevice();" />
             </hbox>
           </tabpanel>
         </tabpanels>
@@ -71,6 +71,7 @@
       <menuitem label="&addurl.label;" oncommand="addServerCertificateFromURL()" />
     </menupopup>
     <menupopup id="devices-contextmenu">
+      <menuitem label="&edit.label;" oncommand="onEditDevice()"/>
       <menuitem label="&delete.label;" oncommand="onDeleteDevice()" />
     </menupopup>
   </popupset>
