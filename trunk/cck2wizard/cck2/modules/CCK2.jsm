@@ -507,6 +507,21 @@ var CCK2 = {
               }
             }
           }
+          // Try to install devices every time just in case get added after install
+          if ("certs" in config && "devices" in config.certs) {
+            var pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+            for (var i=0; i < config.certs.devices.length; i++) {
+              var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+              try {
+                file.initWithPath(config.certs.devices[i].path);
+                if (file.exists()) {
+                  pkcs11.addModule(config.certs.devices[i].name, config.certs.devices[i].path, 0, 0);
+                }
+              } catch(e) {
+                // Ignore path errors in case we are on different OSes
+              }
+            }
+          }
           if (!config.firstrun && config.installedVersion == config.version) {
             continue;
           }
@@ -560,12 +575,6 @@ var CCK2 = {
                 download(config.certs.server[i], function(file) {
                   certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
                 }, errorCritical);
-              }
-            }
-            if (config.certs.devices) {
-              var pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
-              for (var i=0; i < config.certs.devices.length; i++) {
-                pkcs11.addModule(config.certs.devices[i].name, config.certs.devices[i].path, 0, 0);
               }
             }
           }
