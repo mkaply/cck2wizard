@@ -30,6 +30,9 @@ var fixupUTF8 = null;
 
 if ('ä'[0] != 'ä') {
   fixupUTF8 = function(str) {
+    if (!str) {
+      return null;
+    }
     var out, i, len, c;
     var char2, char3;
   
