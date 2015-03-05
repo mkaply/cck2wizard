@@ -639,13 +639,19 @@ var CCK2 = {
           }
 
           // If we detect an old CCK Wizard, remote it's bookmarks
+          var bmFolders = [];
           var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
           if (oldCCKVersion) {
             Preferences.reset("extensions." + config.extension.id + ".version");
             var oldBookmarks = annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {});
             for (var i = 0; i < oldBookmarks.length; i++) {
               try {
-                bmsvc.removeItem(oldBookmarks[i]);
+                var itemType = bmsvc.getItemType(oldBookmarks[i]);
+                if (itemType == bmsvc.TYPE_FOLDER) {
+                  bmFolders.push(oldBookmarks[i]);
+                } else {
+                  bmsvc.removeItem(oldBookmarks[i]);
+                }
               } catch (ex) {}
             }
           }
@@ -653,8 +659,29 @@ var CCK2 = {
             var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {});
             for (var i = 0; i < oldBookmarks.length; i++) {
               try {
-                bmsvc.removeItem(oldBookmarks[i]);
+                var itemType = bmsvc.getItemType(oldBookmarks[i]);
+                if (itemType == bmsvc.TYPE_FOLDER) {
+                  bmFolders.push(oldBookmarks[i]);
+                } else {
+                  bmsvc.removeItem(oldBookmarks[i]);
+                }
               } catch (ex) {}
+            }
+          }
+          if (bmFolders.length > 0) {
+            // Only remove folders if they are empty
+            for (var i = 0; i < bmFolders.length; i++) {
+              try {
+                var bmID = bmsvc.getIdForItemAt(bmFolders[i], 0);
+                if (bmID == -1) {
+                  bmsvc.removeItem(bmFolders[i]);
+                } else {
+                  var newTitle = bmsvc.getItemTitle(bmFolders[i]) + " (" + (oldCCKVersion || config.installedVersion) + ")";
+                  bmsvc.setItemTitle(bmFolders[i], newTitle);
+                }
+              } catch (e) {
+                bmsvc.removeItem(bmFolders[i]);
+              }
             }
           }
           if (config.bookmarks) {
