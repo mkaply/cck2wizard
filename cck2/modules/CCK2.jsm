@@ -553,7 +553,7 @@ var CCK2 = {
                 if (config.certs.ca[i].trust){
                   certTrust = config.certs.ca[i].trust
                 } else {
-                  certTrust = "C,C,C";
+                  certTrust = ",,";
                 }
                 if (config.certs.ca[i].url) {
                   try {
