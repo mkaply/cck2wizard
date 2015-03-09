@@ -116,9 +116,11 @@
     </vbox>
   </deck>
     <popupset>
-      <menupopup id="preferences-contextmenu" onpopupshowing="onPreferencesPopup()">
-        <menuitem id="preferences-lock" label="&lock.label;" oncommand="onLockUnlockPreference()"/>
-        <menuitem id="preferences-unlock" label="&unlock.label;" oncommand="onLockUnlockPreference()"/>
+      <menupopup id="preferences-contextmenu">
+        <menuitem id="preferences-lock" label="&locked.label;" oncommand="onLockedPreference()"/>
+        <menuitem id="preferences-userset" label="&userset.label;" oncommand="onUserSetPreference()"/>
+        <menuitem id="preferences-default" label="&default.label;" oncommand="onDefaultPreference()"/>
+        <menuseparator/>
         <menuitem label="&edit.label;" oncommand="onEditPreference()"/>
         <menuitem label="&delete.label;" oncommand="onDeletePreference()"/>
       </menupopup>

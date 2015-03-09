@@ -20,7 +20,8 @@ function setPreferences(config) {
     for (var preference in config.preferences) {
       addPreference(preference, config.preferences[preference].value,
                        typeof config.preferences[preference].value,
-                       config.preferences[preference].locked)
+                       config.preferences[preference].locked,
+                       config.preferences[preference].userset)
     }
   }
 }
@@ -48,6 +49,9 @@ function getPreferences(config) {
     if (listitem.hasAttribute("locked")) {
       prefinfo.locked = true;
     }
+    if (listitem.hasAttribute("userset")) {
+      prefinfo.userset = true;
+    }
     config.preferences[name] = prefinfo;
   }
   return config;
@@ -65,10 +69,10 @@ function onAddPreference() {
   if ("cancel" in retVals) {
     return;
   }
-  addPreference(retVals.name, retVals.value, retVals.type, false);
+  addPreference(retVals.name, retVals.value, retVals.type, false, false);
 }
 
-function addPreference(name, value, type, locked) {
+function addPreference(name, value, type, locked, userset) {
   for (var i=0; i < gPreferencesListbox.itemCount; i++) {
     var listitem = gPreferencesListbox.getItemAtIndex(i);
     var label = listitem.firstChild.getAttribute("label");
@@ -77,15 +81,15 @@ function addPreference(name, value, type, locked) {
       return;
     }
     if (label > name) {
-      gPreferencesListbox.insertBefore(createPreferenceListItem(name, value, type, locked),
+      gPreferencesListbox.insertBefore(createPreferenceListItem(name, value, type, locked, userset),
                                        listitem);
       return;
     }
   }
-  gPreferencesListbox.appendChild(createPreferenceListItem(name, value, type, locked));
+  gPreferencesListbox.appendChild(createPreferenceListItem(name, value, type, locked, userset));
 }
 
-function createPreferenceListItem(name, value, type, locked) {
+function createPreferenceListItem(name, value, type, locked, userset) {
   var listitem = document.createElement("listitem");
   listitem.setAttribute("equalsize", "always");
   listitem.setAttribute("tooltiptext", name + ": " + value);
@@ -104,6 +108,9 @@ function createPreferenceListItem(name, value, type, locked) {
   if (locked) {
     statusCell.setAttribute("label", "locked");
     listitem.setAttribute("locked", "true");
+  } else if (userset) {
+    statusCell.setAttribute("label", "user set");
+    listitem.setAttribute("userset", "true");
   } else {
     statusCell.setAttribute("label", "default");
   }
@@ -118,7 +125,7 @@ function createPreferenceListItem(name, value, type, locked) {
   return listitem;
 }
 
-function updatePreferenceListItem(listitem, name, value, type, locked) {
+function updatePreferenceListItem(listitem, name, value, type) {
   listitem.childNodes[0].setAttribute("label", name);
   listitem.childNodes[2].setAttribute("label", type);
   listitem.childNodes[3].setAttribute("label", value);
@@ -150,26 +157,28 @@ function convertListItemToPreference(listitem) {
   return preference;
 }
 
-function onLockUnlockPreference() {
+function onLockedPreference() {
   var listitem = gPreferencesListbox.selectedItem;
-  if (listitem.getAttribute("locked")) {
-    listitem.removeAttribute("locked");
-    listitem.childNodes[1].setAttribute("label", "default");
-  } else {
-    listitem.setAttribute("locked", "true");
-    listitem.childNodes[1].setAttribute("label", "locked");
-  }
+  listitem.setAttribute("locked", "true");
+  listitem.childNodes[1].setAttribute("label", "locked");
+  // Can't have user set and locked
+  listitem.removeAttribute("userset");
 }
 
-function onPreferencesPopup(event) {
+function onUserSetPreference() {
   var listitem = gPreferencesListbox.selectedItem;
-  if (listitem.hasAttribute("locked")) {
-    document.getElementById("preferences-lock").hidden = true;
-    document.getElementById("preferences-unlock").hidden = false;
-  } else {
-    document.getElementById("preferences-lock").hidden = false;
-    document.getElementById("preferences-unlock").hidden = true;
-  }
+  listitem.setAttribute("userset", "true");
+  listitem.childNodes[1].setAttribute("label", "user set");
+  // Can't have user set and locked
+  listitem.removeAttribute("locked");
+}
+
+function onDefaultPreference() {
+  var listitem = gPreferencesListbox.selectedItem;
+  listitem.childNodes[1].setAttribute("label", "default");
+  // Can't have user set and locked
+  listitem.removeAttribute("locked");
+  listitem.removeAttribute("userset");
 }
 
 function onEditPreference() {
@@ -181,9 +190,8 @@ function onEditPreference() {
   if ("cancel" in retVals) {
     return;
   }
-  updatePreferenceListItem(gPreferencesListbox.selectedItem, retVals.name, retVals.value, retVals.type, false);
+  updatePreferenceListItem(gPreferencesListbox.selectedItem, retVals.name, retVals.value, retVals.type);
 }
-
 
 function onKeyPressPreference(event) {
   if (event.keyCode == event.DOM_VK_ENTER ||
