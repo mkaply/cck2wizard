@@ -10,23 +10,23 @@ var gPrefValueBool = null;
 var gPrefValueDeck = null;
 
 var preferencesToIgnore = {
-  "browser.startup.homepage": true,
-  "startup.homepage_welcome_url": true,
-  "browser.startup.homepage_override.mstone": true,
-  "startup.homepage_override_url": true,
-  "network.proxy.type": true,
-  "network.proxy.http": true,
-  "network.proxy.http_port": true,
-  "network.proxy.share_proxy_settings": true,
-  "network.proxy.ssl": true,
-  "network.proxy.ssl_port": true,
-  "network.proxy.ftp": true,
-  "network.proxy.ftp_port": true,
-  "network.proxy.socks": true,
-  "network.proxy.socks_port": true,
-  "network.proxy.socks_version": true,
-  "network.proxy.no_proxies_on": true,
-  "network.proxy.autoconfig_url": true
+  //"browser.startup.homepage": true,
+  //"startup.homepage_welcome_url": true,
+  //"browser.startup.homepage_override.mstone": true,
+  //"startup.homepage_override_url": true,
+  //"network.proxy.type": true,
+  //"network.proxy.http": true,
+  //"network.proxy.http_port": true,
+  //"network.proxy.share_proxy_settings": true,
+  //"network.proxy.ssl": true,
+  //"network.proxy.ssl_port": true,
+  //"network.proxy.ftp": true,
+  //"network.proxy.ftp_port": true,
+  //"network.proxy.socks": true,
+  //"network.proxy.socks_port": true,
+  //"network.proxy.socks_version": true,
+  //"network.proxy.no_proxies_on": true,
+  //"network.proxy.autoconfig_url": true
 }
 
 function onLoad() {
