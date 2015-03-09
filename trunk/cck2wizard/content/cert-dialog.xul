@@ -9,7 +9,17 @@
         onload="onLoad();"
         width="480">
   <script src="chrome://cck2wizard/content/cert-dialog.js"/>
-    <checkbox class="indent" id="trustSSL" label="&cert.trustSSL;"/>
-    <checkbox class="indent" id="trustEmail" label="&cert.trustEmail;"/>
-    <checkbox class="indent" id="trustObjSign" label="&cert.trustObjSign;"/>
+  <label value="&cert.trustSSL.label;:"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustSSLServer" label="&cert.trustSSLServer;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustSSLClient" label="&cert.trustSSLClient;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustSSLForce" label="&cert.trustSSLForce;"/>
+  <label value="&cert.trustEmail.label;:"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustEmailServer" label="&cert.trustEmailServer;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustEmailClient" label="&cert.trustEmailClient;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustEmailForce" label="&cert.trustEmailForce;"/>
+  <label value="&cert.trustObjSign.label;:"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustObjSignServer" label="&cert.trustObjSignServer;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustObjSignClient" label="&cert.trustObjSignClient;"/>
+    <checkbox oncommand="updateTrustString();" class="indent" id="trustObjSignForce" label="&cert.trustObjSignForce;"/>
+    <hbox pack="center"><label value="&trustString.label;:"/><label id="trustString" value=",,"/></hbox>
 </dialog>
