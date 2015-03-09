@@ -17,8 +17,9 @@
 <!ENTITY type.label "Type">
 <!ENTITY value.label "Value">
 
-<!ENTITY lock.label "Lock">
-<!ENTITY unlock.label "Unlock">
+<!ENTITY locked.label "Locked">
+<!ENTITY userset.label "User Set">
+<!ENTITY default.label "Default">
 <!ENTITY edit.label "Edit...">
 <!ENTITY delete.label "Delete">
 

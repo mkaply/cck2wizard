@@ -1,3 +1,7 @@
 #preferences-listbox listitem[locked] {
   font-style: italic;
 }
+
+#preferences-listbox listitem[userset] {
+  font-weight: bold;
+}
