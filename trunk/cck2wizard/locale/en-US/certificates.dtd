@@ -22,9 +22,22 @@
 <!ENTITY certificateOverrides.description "Domains for which self-signed certificates are allowed">
 <!ENTITY devices.description "Security Devices">
 
-<!ENTITY cert.trustSSL                  "Trust this CA to identify web sites.">
-<!ENTITY cert.trustEmail                "Trust this CA to identify email users.">
-<!ENTITY cert.trustObjSign              "Trust this CA to identify software developers.">
+<!ENTITY cert.trustSSLServer            "Trust this CA to issue server certificates.">
+<!ENTITY cert.trustEmailServer          "Trust this CA to issue server certificates.">
+<!ENTITY cert.trustObjSignServer        "Trust this CA to issue server certificates.">
+<!ENTITY cert.trustSSLClient            "Trust this CA to issue client certificates.">
+<!ENTITY cert.trustEmailClient          "Trust this CA to issue client certificates.">
+<!ENTITY cert.trustObjSignClient        "Trust this CA to issue client certificates.">
+<!ENTITY cert.trustSSLForce             "Force this CA to be valid.">
+<!ENTITY cert.trustEmailForce           "Force this CA to be valid.">
+<!ENTITY cert.trustObjSignForce         "Force this CA to be valid.">
+
+<!ENTITY cert.trustSSL.label            "Web sites">
+<!ENTITY cert.trustEmail.label          "Email users">
+<!ENTITY cert.trustObjSign.label        "Software developers">
+
+
+<!ENTITY trustString.label              "Trust String">
 
 <!ENTITY devices-name.label "Name">
 <!ENTITY devices-path.label "Path">
