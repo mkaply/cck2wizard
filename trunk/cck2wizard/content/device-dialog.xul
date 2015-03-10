@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE preferences-dialog SYSTEM "chrome://cck2wizard/locale/certificates.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog title="&devices.label;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons="accept,cancel"
+        ondialogaccept="return onOK()"
+        ondialogcancel="return onCancel()"
+        onload="onLoad();"
+        width="480">
+  <script src="device-dialog.js"/>
+  <script src="util.js" />
+  <vbox>
+    <hbox align="center">
+    <label value="&devices-name.label;:"/>
+    <textbox id="deviceName" flex="1"/>
+    </hbox>
+    <hbox align="center" id="location-hbox">
+    <label value="&devices-path.label;:"/>
+    <textbox id="devicePath" flex="1"/>
+    <button label="&choose.label;" oncommand="onFile()"/>
+    </hbox>
+  </vbox>
+</dialog>
