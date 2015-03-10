@@ -87,3 +87,59 @@ function onKeyPressHiddenUI(event) {
     onDeleteHiddenUI();
   }
 }
+
+function setPersona(config) {
+  if ("persona" in config) {
+    document.getElementById("persona").value = JSON.stringify(config.persona, null, 2);
+  }
+}
+
+function getPersona(config) {
+  if (document.getElementById("persona").value) {
+    config.persona = JSON.parse(document.getElementById("persona").value);
+  }
+  return config;
+}
+
+function resetPersona() {
+  document.getElementById("persona").value = "";
+}
+
+function removePersona() {
+  document.getElementById("persona").value = "";
+}
+
+function getPersonaInfo(args) {
+  var retVals = { name: null, location: null};
+  window.openDialog("chrome://cck2wizard/content/url-dialog.xul", "cck2wizard-persona", "modal,centerscreen", retVals);
+  if (retVals.cancel) {
+    return;
+  }
+  var url = retVals.url;
+  try {
+    Services.io.newURI(url, null, null);
+  } catch (ex) {
+    showErrorMessage("invalidurl");
+    return;
+  }
+  var splitPersonaURL = url.split("/");
+  var personaSlug = null;
+  for (var i = splitPersonaURL.length-1; i >=0; i--) {
+    if (splitPersonaURL[i]) {
+      personaSlug = splitPersonaURL[i];
+      break;
+    }
+  }
+  var request = new XMLHttpRequest();
+  request.open("GET", "https://services.addons.mozilla.org/firefox/api/addon/" + personaSlug);
+  request.onload = function() {
+    var id = request.responseXML.documentElement.getAttribute("id");
+    var personaRequest = new XMLHttpRequest();
+    personaRequest.open("GET", "https://versioncheck.addons.mozilla.org/en-US/themes/update-check/" + id);
+    personaRequest.onload = function() {
+      document.getElementById("persona").value = JSON.stringify(JSON.parse(personaRequest.response), null, 2);
+    }
+    personaRequest.send();
+  }
+  request.send();
+}

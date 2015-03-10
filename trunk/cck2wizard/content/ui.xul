@@ -37,6 +37,13 @@
           <textbox id="titlemodifier" config="titlemodifier" flex="1"/>
         </hbox>
       </groupbox>
+      <groupbox setconfig="setPersona" getconfig="getPersona" resetConfig="resetPersona">
+        <hbox>
+          <button label="&getPersona.label;" oncommand="getPersonaInfo();"/>
+          <button label="&removePersona.label;" oncommand="removePersona();"/>
+        </hbox>
+        <textbox rows="5" id="persona" multiline="true" readonly="true"/>
+      </groupbox>
     </vbox>
     <vbox id="helpmenu">
       <groupbox>
