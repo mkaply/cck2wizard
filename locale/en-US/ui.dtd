@@ -22,3 +22,5 @@ It is recommended that you use the format Mozilla Firefox: Companyname Edition">
 <!ENTITY hideui.description2 "You can specify them using a CSS selector. For instance, if you want to hide the 'Show All History' Menu, you could specify menuitem[label=&quot;Show All History&quot;] or use its ID - #menu_showAllHistory">
 <!ENTITY delete.label "Delete">
 <!ENTITY add.label "Add">
+<!ENTITY getPersona.label "Select a Persona from AMO...">
+<!ENTITY removePersona.label "Remove Persona">
