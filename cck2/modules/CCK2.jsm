@@ -173,9 +173,9 @@ var CCK2 = {
         for (var i in config.preferences) {
           // Ugly, but we need special handling for this pref
           // since Firefox doesn't honor the default pref
-          // So we set a regular pref if first run
+          // So we set a regular pref if first run or if user set
           if (i == "plugin.disable_full_page_plugin_for_types") {
-            if (this.firstrun) {
+            if (config.firstrun || config.preferences[i].userset) {
               Preferences.set(i, config.preferences[i].value);
             }
             continue;
