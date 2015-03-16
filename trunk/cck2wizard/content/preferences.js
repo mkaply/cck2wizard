@@ -56,6 +56,7 @@ function getPreferences(config) {
     if (listitem.hasAttribute("clear")) {
       prefinfo.clear = true;
       delete prefinfo.value;
+      delete prefinfo.type;
     }
     config.preferences[name] = prefinfo;
   }
@@ -107,7 +108,9 @@ function createPreferenceListItem(name, value, type, locked, userset, clear) {
   if (type == "number") {
     type = "integer";
   }
-  typeCell.setAttribute("label", type);
+  if (!clear) {
+    typeCell.setAttribute("label", type);
+  }
   var statusCell = document.createElement("listcell");
   statusCell.setAttribute("flex", "1");
   if (locked) {
@@ -124,7 +127,9 @@ function createPreferenceListItem(name, value, type, locked, userset, clear) {
   }
   var valueCell = document.createElement("listcell");
   valueCell.setAttribute("flex", "1");
-  valueCell.setAttribute("label", value);
+  if (!clear) {
+    valueCell.setAttribute("label", value);
+  }
   listitem.appendChild(nameCell);
   listitem.appendChild(statusCell);
   listitem.appendChild(typeCell);
