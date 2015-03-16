@@ -484,7 +484,9 @@ var CCK2 = {
                   if (i == "toolkit.telemetry.prompted") {
                      config.preferences[i].value = parseInt(config.preferences[i].value);
                   }
-                  if (!("locked" in config.preferences[i])) {
+                  if (!("locked" in config.preferences[i]) &&
+                      !("userset" in config.preferences[i]) &&
+                      !("clear" in config.preferences[i])) {
                     if (Preferences.defaults.has(i)) {
                       try {
                         // If it's a complex preference, we need to set it differently
