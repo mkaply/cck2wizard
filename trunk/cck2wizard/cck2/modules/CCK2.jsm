@@ -188,6 +188,8 @@ var CCK2 = {
             Preferences.lock(i, config.preferences[i].value);
           } else if (config.preferences[i].userset) {
             Preferences.set(i, config.preferences[i].value);
+          } else if (config.preferences[i].clear) {
+            Preferences.reset(i);
           } else {
             if (Preferences.defaults.has(i)) {
               try {
