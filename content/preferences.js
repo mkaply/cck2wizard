@@ -24,13 +24,6 @@ function setPreferences(config) {
                        config.preferences[preference].userset,
                        config.preferences[preference].clear)
     }
-    for (var preference in config.preferences) {
-      addPreference(preference, config.preferences[preference].value,
-                       typeof config.preferences[preference].value,
-                       config.preferences[preference].locked,
-                       config.preferences[preference].userset,
-                       config.preferences[preference].clear)
-    }
   }
 }
 
@@ -62,6 +55,7 @@ function getPreferences(config) {
     }
     if (listitem.hasAttribute("clear")) {
       prefinfo.clear = true;
+      delete prefinfo.value;
     }
     config.preferences[name] = prefinfo;
   }
