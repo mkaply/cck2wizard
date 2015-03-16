@@ -161,22 +161,30 @@ function onLockedPreference() {
   var listitem = gPreferencesListbox.selectedItem;
   listitem.setAttribute("locked", "true");
   listitem.childNodes[1].setAttribute("label", "locked");
-  // Can't have user set and locked
   listitem.removeAttribute("userset");
+  listitem.removeAttribute("clear");
 }
 
 function onUserSetPreference() {
   var listitem = gPreferencesListbox.selectedItem;
   listitem.setAttribute("userset", "true");
   listitem.childNodes[1].setAttribute("label", "user set");
-  // Can't have user set and locked
   listitem.removeAttribute("locked");
+  listitem.removeAttribute("clear");
 }
 
 function onDefaultPreference() {
   var listitem = gPreferencesListbox.selectedItem;
   listitem.childNodes[1].setAttribute("label", "default");
-  // Can't have user set and locked
+  listitem.removeAttribute("locked");
+  listitem.removeAttribute("userset");
+  listitem.removeAttribute("clear");
+}
+
+function onClearPreference() {
+  var listitem = gPreferencesListbox.selectedItem;
+  listitem.setAttribute("clear", "true");
+  listitem.childNodes[1].setAttribute("label", "clear");
   listitem.removeAttribute("locked");
   listitem.removeAttribute("userset");
 }

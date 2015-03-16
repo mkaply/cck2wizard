@@ -5,3 +5,7 @@
 #preferences-listbox listitem[userset] {
   font-weight: bold;
 }
+
+#preferences-listbox listitem[clear] {
+  color: lightgray;
+}

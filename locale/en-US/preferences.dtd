@@ -22,6 +22,7 @@
 <!ENTITY default.label "Default">
 <!ENTITY edit.label "Edit...">
 <!ENTITY delete.label "Delete">
+<!ENTITY clear.label "Clear">
 
 <!ENTITY disableprivatebrowsing.label "Disable Private Browsing">
 <!ENTITY disablesync.label "Disable Sync">
