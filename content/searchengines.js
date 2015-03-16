@@ -53,7 +53,7 @@ function getSearchEngines(config) {
       config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i).value);
     }
   }
-  if (document.getElementById("defaultSearchEngine").value) {
+  if (document.getElementById("defaultSearchEngine").selectedIndex > 0) {
     config.defaultSearchEngine = document.getElementById("defaultSearchEngine").value;
   }
   return config;
@@ -191,5 +191,9 @@ function onDefaultEnginePopup(event) {
   menuSearchEngines.forEach(function(enginename) {
       menulist.appendItem(enginename, enginename);
   });
-  menulist.value = currentEngine;
+  if (currentEngine) {
+    menulist.value = currentEngine;
+  } else {
+    menulist.selectedIndex = 0;
+  }
 }
