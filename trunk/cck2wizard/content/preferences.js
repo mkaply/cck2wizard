@@ -21,7 +21,15 @@ function setPreferences(config) {
       addPreference(preference, config.preferences[preference].value,
                        typeof config.preferences[preference].value,
                        config.preferences[preference].locked,
-                       config.preferences[preference].userset)
+                       config.preferences[preference].userset,
+                       config.preferences[preference].clear)
+    }
+    for (var preference in config.preferences) {
+      addPreference(preference, config.preferences[preference].value,
+                       typeof config.preferences[preference].value,
+                       config.preferences[preference].locked,
+                       config.preferences[preference].userset,
+                       config.preferences[preference].clear)
     }
   }
 }
@@ -52,6 +60,9 @@ function getPreferences(config) {
     if (listitem.hasAttribute("userset")) {
       prefinfo.userset = true;
     }
+    if (listitem.hasAttribute("clear")) {
+      prefinfo.clear = true;
+    }
     config.preferences[name] = prefinfo;
   }
   return config;
@@ -69,10 +80,10 @@ function onAddPreference() {
   if ("cancel" in retVals) {
     return;
   }
-  addPreference(retVals.name, retVals.value, retVals.type, false, false);
+  addPreference(retVals.name, retVals.value, retVals.type, false, false, false);
 }
 
-function addPreference(name, value, type, locked, userset) {
+function addPreference(name, value, type, locked, userset, clear) {
   for (var i=0; i < gPreferencesListbox.itemCount; i++) {
     var listitem = gPreferencesListbox.getItemAtIndex(i);
     var label = listitem.firstChild.getAttribute("label");
@@ -81,15 +92,15 @@ function addPreference(name, value, type, locked, userset) {
       return;
     }
     if (label > name) {
-      gPreferencesListbox.insertBefore(createPreferenceListItem(name, value, type, locked, userset),
+      gPreferencesListbox.insertBefore(createPreferenceListItem(name, value, type, locked, userset, clear),
                                        listitem);
       return;
     }
   }
-  gPreferencesListbox.appendChild(createPreferenceListItem(name, value, type, locked, userset));
+  gPreferencesListbox.appendChild(createPreferenceListItem(name, value, type, locked, userset, clear));
 }
 
-function createPreferenceListItem(name, value, type, locked, userset) {
+function createPreferenceListItem(name, value, type, locked, userset, clear) {
   var listitem = document.createElement("listitem");
   listitem.setAttribute("equalsize", "always");
   listitem.setAttribute("tooltiptext", name + ": " + value);
@@ -111,6 +122,9 @@ function createPreferenceListItem(name, value, type, locked, userset) {
   } else if (userset) {
     statusCell.setAttribute("label", "user set");
     listitem.setAttribute("userset", "true");
+  } else if (clear) {
+    statusCell.setAttribute("label", "clear");
+    listitem.setAttribute("clear", "true");
   } else {
     statusCell.setAttribute("label", "default");
   }
