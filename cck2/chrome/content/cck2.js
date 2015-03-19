@@ -232,7 +232,9 @@ try {
         }
         if (config.disableFirefoxHealthReport) {
           var healthReportMenu = document.getElementById("healthReport");
-          healthReportMenu.parentNode.removeChild(healthReportMenu);
+          if (healthReportMenu) {
+            healthReportMenu.parentNode.removeChild(healthReportMenu);
+          }
         }
         if (config.removeSafeModeMenu) {
           hide(E("helpSafeMode"));
