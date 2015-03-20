@@ -133,13 +133,21 @@ function getPersonaInfo(args) {
   var request = new XMLHttpRequest();
   request.open("GET", "https://services.addons.mozilla.org/firefox/api/addon/" + personaSlug);
   request.onload = function() {
-    var id = request.responseXML.documentElement.getAttribute("id");
-    var personaRequest = new XMLHttpRequest();
-    personaRequest.open("GET", "https://versioncheck.addons.mozilla.org/en-US/themes/update-check/" + id);
-    personaRequest.onload = function() {
-      document.getElementById("persona").value = JSON.stringify(JSON.parse(personaRequest.response), null, 2);
+    try {
+      var id = request.responseXML.documentElement.getAttribute("id");
+      var personaRequest = new XMLHttpRequest();
+      personaRequest.open("GET", "https://versioncheck.addons.mozilla.org/en-US/themes/update-check/" + id);
+      personaRequest.onload = function() {
+        try {
+          document.getElementById("persona").value = JSON.stringify(JSON.parse(personaRequest.response), null, 2);
+        } catch (e) {
+          showErrorMessage("invalidpersona");
+        }
+      }
+      personaRequest.send();
+    } catch (e) {
+      showErrorMessage("invalidpersona");
     }
-    personaRequest.send();
   }
   request.send();
 }
