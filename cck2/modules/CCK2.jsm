@@ -765,13 +765,13 @@ var CCK2 = {
 //        globalMM.loadFrameScript("resource://cck2/CAPSClipboard-fs.js", true);
         for (var id in this.configs) {
           var config = this.configs[id];
-          if (!config.firstrun && config.installedVersion == config.version) {
-            return;
-          }
           if (config.persona) {
             var temp = {};
             Components.utils.import("resource://gre/modules/LightweightThemeManager.jsm", temp);
             temp.LightweightThemeManager.currentTheme = config.persona;
+          }
+          if (!config.firstrun && config.installedVersion == config.version) {
+            return;
           }
           if (config.addons) {
             Cu.import("resource://gre/modules/AddonManager.jsm");
