@@ -299,7 +299,7 @@ try {
             if ("accesskey" in config.helpMenu) {
               menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
             }
-            menuitem.setAttribute("oncommand", "openUILink(" + config.helpMenu.url.quote() + ");");
+            menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
             menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
             if (!E("aboutName") || E("aboutName").hidden) {
               // Mac
