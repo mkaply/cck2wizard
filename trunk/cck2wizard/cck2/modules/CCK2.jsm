@@ -171,14 +171,17 @@ var CCK2 = {
       }
       if (config.preferences) {
         for (var i in config.preferences) {
-          // Ugly, but we need special handling for this pref
-          // since Firefox doesn't honor the default pref
-          // So we set a regular pref if first run or if user set
+          // For plugin.disable_full_page_plugin_for_types, there is
+          // a default user value (application/pdf).
+          // Because of this, setting the default value doesn't work.
+          // So if a user is trying to set the default value, we set
+          // the user value as well.
           if (i == "plugin.disable_full_page_plugin_for_types") {
-            if (config.firstrun || config.preferences[i].userset) {
+            if (!config.preferences[i].userset &&
+                !config.preferences[i].locked &&
+                !config.preferences[i].clear) {
               Preferences.set(i, config.preferences[i].value);
             }
-            continue;
           }
           // Workaround bug where this pref is coming is as a string from import
           if (i == "toolkit.telemetry.prompted") {
@@ -191,7 +194,7 @@ var CCK2 = {
           } else if (config.preferences[i].clear) {
             Preferences.reset(i);
           } else {
-            if (Preferences.defaults.has(i)) {
+            if (Preferences.defaults.has(i) && Preferences.defaults.get(i)) {
               try {
                 // If it's a complex preference, we need to set it differently
                 Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
@@ -475,11 +478,6 @@ var CCK2 = {
             if (iniFile.exists()) {
               if (config.preferences) {
                 for (var i in config.preferences) {
-                  // Ugly, but we need special handling for this pref
-                  // since Firefox doesn't honor the default pref
-                  if (i == "plugin.disable_full_page_plugin_for_types") {
-                    continue;
-                  }
                   // Workaround bug where this pref is coming is as a string from import
                   if (i == "toolkit.telemetry.prompted") {
                      config.preferences[i].value = parseInt(config.preferences[i].value);
