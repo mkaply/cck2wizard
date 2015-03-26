@@ -87,7 +87,11 @@ function onRecentPopup(event) {
       var menuitem = document.createElement("menuitem");
       menuitem.setAttribute("type", "checkbox");
       try {
-        config = JSON.parse(Services.prefs.getComplexValue(configs[i], Ci.nsISupportsString).data);
+        try {
+          config = JSON.parse(Services.prefs.getComplexValue(configs[i], Ci.nsISupportsString).data);
+        } catch (e) {
+          config = JSON.parse(Services.prefs.getCharPref(configs[i]));
+        }
         menuitem.setAttribute("label", config.name);
         var tooltipText = config.id;
         if (config.version) {
