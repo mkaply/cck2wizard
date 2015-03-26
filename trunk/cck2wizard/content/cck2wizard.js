@@ -89,7 +89,11 @@ function onRecentPopup(event) {
       try {
         config = JSON.parse(Services.prefs.getComplexValue(configs[i], Ci.nsISupportsString).data);
         menuitem.setAttribute("label", config.name);
-        menuitem.setAttribute("tooltiptext", config.id + " - " + config.version);
+        var tooltipText = config.id;
+        if (config.version) {
+          tooltipText += " - " + config.version;
+        }
+        menuitem.setAttribute("tooltiptext", tooltipText);
         menuitem.config = config;
         if (gCurrentConfig && gCurrentConfig.id == config.id) {
           menuitem.setAttribute("checked", "true");
