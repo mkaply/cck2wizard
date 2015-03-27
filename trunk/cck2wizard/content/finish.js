@@ -4,7 +4,6 @@ const cck2Files = [
   "chrome/content/cck2.xul",
   "chrome/content/cck2-extensions-overlay.js",
   "chrome/content/cck2-prefs-overlay.xul",
-  "chrome/content/migration-overlay.xul",
   "chrome/content/cck2-extensions-overlay.xul",
   "chrome/content/cck2.js",
   "chrome/content/util.js",
