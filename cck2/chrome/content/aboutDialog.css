@@ -1,8 +1,0 @@
-#version {
-  font-weight: bold !important;
-}
-
-#distribution,
-#distributionId {
-  font-weight: normal !important;
-}
