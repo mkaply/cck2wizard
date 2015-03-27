@@ -5,7 +5,6 @@ overlay chrome://browser/content/browser.xul chrome://cck2/content/cck2.xul
 overlay about:addons chrome://cck2/content/cck2-extensions-overlay.xul
 overlay chrome://mozapps/content/extensions/extensions.xul chrome://cck2/content/cck2-extensions-overlay.xul
 overlay chrome://browser/content/preferences/preferences.xul chrome://cck2/content/cck2-prefs-overlay.xul
-style chrome://browser/content/aboutDialog.xul chrome://cck2/content/aboutDialog.css
 
 component {26e7afc9-e22d-4d12-bb57-c184fe24b828} components/CCK2FileBlockService.js
 contract @kaply.com/cck2-fileblock-service;1 {26e7afc9-e22d-4d12-bb57-c184fe24b828}

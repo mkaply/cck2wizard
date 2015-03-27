@@ -763,6 +763,9 @@ var CCK2 = {
 //        globalMM.loadFrameScript("resource://cck2/CAPSClipboard-fs.js", true);
         for (var id in this.configs) {
           var config = this.configs[id];
+          // Delay loading unnecessary modules
+          // We should do this on a timeout
+          loadModules(config);
           if (config.persona) {
             var temp = {};
             Components.utils.import("resource://gre/modules/LightweightThemeManager.jsm", temp);
@@ -809,6 +812,10 @@ var CCK2 = {
         break;
     }
   }
+}
+
+function loadModules(config) {
+  Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
 }
 
 function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
