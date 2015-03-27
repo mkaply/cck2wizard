@@ -9,6 +9,7 @@ const EXPORTED_SYMBOLS = [];
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://cck2/CCK2.jsm");
 
 var observer = {
   observe: function observe(subject, topic, data) {
@@ -23,14 +24,15 @@ var observer = {
             case "about:addons":
             case "chrome://mozapps/content/extensions/extensions.xul":
               var configs = CCK2.getConfigs();
-              configs.forEach(function(config) {
+              for (id in configs) {
+                var config = configs[id];
                 if (config && "extension" in config && config.extension.hide) {
                   win.addEventListener("ViewChanged", function() {
-                    hideExtension(config.extension.id);
+                    hide(doc.querySelector("richlistitem[value='" + config.extension.id + "']"));
                   } , false)
-                  hideExtension(config.extension.id);
+                  hide(doc.querySelector("richlistitem[value='" + config.extension.id + "']"));
                 }
-              });
+              }
               var showDiscoverPane = true;
               var xpinstallEnabled = true;
               try {
