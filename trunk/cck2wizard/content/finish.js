@@ -1,8 +1,6 @@
 const cck2Files = [
   "chrome.manifest",
-  "chrome/content/cck2-prefs-overlay.js",
   "chrome/content/cck2.xul",
-  "chrome/content/cck2-prefs-overlay.xul",
   "chrome/content/cck2.js",
   "chrome/content/util.js",
   "components/CCK2FileBlockService.js",
@@ -14,7 +12,8 @@ const cck2Files = [
   "modules/CAPSClipboard.jsm",
   "modules/CAPSCheckLoadURI.jsm",
   "modules/CCK2AboutDialogOverlay.jsm",
-  "modules/CCK2AboutAddonsOverlay.jsm"
+  "modules/CCK2AboutAddonsOverlay.jsm",
+  "modules/CCK2PreferencesOverlay.jsm"
 ]
 
 const disablesafemodeFiles = [

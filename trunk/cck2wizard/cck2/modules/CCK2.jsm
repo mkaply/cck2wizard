@@ -139,17 +139,6 @@ var CCK2 = {
         }
       }
   
-      // We don't handle in content preferences right now, so make sure they
-      // can't be used. We redirect this to an invalid about: page so
-      // it doesn't look like the admin disabled it.
-      Preferences.lock("browser.preferences.inContent", false);
-      var aboutPreferences = {};
-      aboutPreferences.classID = Components.ID(uuid.generateUUID().toString());
-      aboutPreferences.factory = disableAbout(aboutPreferences.classID,
-                                              "",
-                                              "preferences");
-      CCK2.aboutFactories.push(aboutPreferences);
-  
       if (!config)
         return;
       if (!config.id) {
@@ -817,6 +806,7 @@ var CCK2 = {
 function loadModules(config) {
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
+  Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
 }
 
 function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
@@ -1016,9 +1006,6 @@ function disableAbout(aClass, aClassName, aboutType) {
   var gAbout = {
     newChannel : function (aURI) {
       var url = "chrome://cck2/content/about.xhtml";
-      if (aboutType == "preferences") {
-        url = "about:preferences-no";
-      }
       var channel = Services.io.newChannel(url, null, null);
       channel.originalURI = aURI;
       return channel;
