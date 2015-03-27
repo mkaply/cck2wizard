@@ -807,6 +807,8 @@ function loadModules(config) {
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
+  Cu.import("resource://cck2/CCK2AboutHomeOverlay.jsm");
+  Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
 }
 
 function addRegistryKey(RootKey, Key, Name, NameValue, Type) {

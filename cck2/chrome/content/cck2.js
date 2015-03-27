@@ -17,58 +17,6 @@ try {
 
   var config;
 
-  function onPageLoad(event) {
-    try {
-      var doc = event.target;
-      var win = doc.defaultView;
-      if (!doc.location) {
-        return;
-      }
-      /* Remove the sync button from about:home */
-      if ((config && config.disableSync) &&
-         /^about:home/.test(doc.location.href)) {
-        remove(E("sync", doc));
-      }
-      /* Remove the addons button from about:home */
-      if ((config && config.disableAddonsManager) &&
-         /^about:home/.test(doc.location.href)) {
-        remove(E("addons", doc));
-      }
-      /* Remove the addons button from about:home */
-      if ((config && config.removeSnippets) &&
-         /^about:home/.test(doc.location.href)) {
-        var snippets = E("snippets", doc);
-        if (snippets) {
-          snippets.style.display = "none";
-        }
-      }
-      if (/^about:support/.test(doc.location.href)) {
-        if (config && config.disableResetFirefox) {
-          remove(E("reset-box", doc));
-        }
-        if (config && config.disableSafeMode) {
-          remove(E("safe-mode-box", doc));
-        }
-        if (config && config.disableResetFirefox
-                   && config.disableSafeMode) {
-          remove(E("action-box", doc));
-        }
-      }
-
-      /* If health reporter upload is locked, remove the activation widget */
-      if (Preferences.locked("datareporting.healthreport.uploadEnabled", false)) {
-        if (/^https:\/\/fhr.cdn.mozilla.net\//.test(doc.location.href)) {
-          var activationWidget = event.target.querySelector(".activationWidget");
-          if (activationWidget) {
-            remove(activationWidget);
-          }
-        }
-      }
-    } catch (e) {
-      errorCritical(e);
-    }
-  }
-
   function disableSync() {
     window.XULBrowserWindow.inContentWhitelist =
       window.XULBrowserWindow.inContentWhitelist.filter(function(element) {
@@ -217,7 +165,6 @@ try {
         if (config.disableSync) {
           disableSync();
         }
-        E("appcontent").addEventListener("DOMContentLoaded", onPageLoad, false);
     
         if (config.disableAddonsManager) {
           disableAddonsManager();
@@ -359,10 +306,6 @@ try {
   function shutdown()
   {
     window.removeEventListener("unload", shutdown, false);
-    var appcontent = E("appcontent");
-    if (appcontent) {
-       appcontent.removeEventListener("DOMContentLoaded", onPageLoad, false);
-    }
     var panelUIPopup = document.getElementById("PanelUI-popup");
     if (panelUIPopup) {
       document.getElementById("PanelUI-popup").removeEventListener("popupshowing", onPanelShowing, false);
