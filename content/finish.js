@@ -13,7 +13,10 @@ const cck2Files = [
   "modules/CAPSCheckLoadURI.jsm",
   "modules/CCK2AboutDialogOverlay.jsm",
   "modules/CCK2AboutAddonsOverlay.jsm",
-  "modules/CCK2PreferencesOverlay.jsm"
+  "modules/CCK2PreferencesOverlay.jsm",
+  "modules/CCK2AboutHomeOverlay.jsm",
+  "modules/CCK2AboutSupportOverlay.jsm",
+  "modules/CCK2BrowserOverlay.jsm"
 ]
 
 const disablesafemodeFiles = [
