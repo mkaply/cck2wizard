@@ -810,6 +810,7 @@ function loadModules(config) {
   Cu.import("resource://cck2/CCK2AboutHomeOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
   Cu.import("resource://cck2/CCK2BrowserOverlay.jsm");
+  Cu.import("resource://cck2/CCK2FileBlock.jsm");
 }
 
 function addRegistryKey(RootKey, Key, Name, NameValue, Type) {

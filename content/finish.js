@@ -13,7 +13,8 @@ const cck2Files = [
   "modules/CCK2PreferencesOverlay.jsm",
   "modules/CCK2AboutHomeOverlay.jsm",
   "modules/CCK2AboutSupportOverlay.jsm",
-  "modules/CCK2BrowserOverlay.jsm"
+  "modules/CCK2BrowserOverlay.jsm",
+  "modules/CCK2FileBlock.jsm"
 ]
 
 const disablesafemodeFiles = [
