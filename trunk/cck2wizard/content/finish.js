@@ -1,8 +1,5 @@
 const cck2Files = [
   "chrome.manifest",
-  "chrome/content/cck2.xul",
-  "chrome/content/cck2.js",
-  "chrome/content/util.js",
   "components/CCK2FileBlockService.js",
   "modules/CCK2.jsm",
   "modules/Preferences.jsm",
