@@ -31,6 +31,7 @@ var observer = {
                 try {
                   origSetReportPhishingMenu();
                 } catch (e) {}
+              }
 
               win.addEventListener("unload", function(event) {
                 win.removeEventListener("unload", arguments.callee, false);
