@@ -1,6 +1,5 @@
 const cck2Files = [
   "chrome.manifest",
-  "components/CCK2FileBlockService.js",
   "modules/CCK2.jsm",
   "modules/Preferences.jsm",
   "modules/Timer.jsm",
