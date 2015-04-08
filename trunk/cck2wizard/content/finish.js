@@ -46,11 +46,6 @@ const installRDFTemplate = [
 
 const chromeManifestTemplate = [
 'resource %packagename% resources/',
-'content %packagename% resources/',
-'manifest cck2/chrome.manifest',
-''].join("\n");
-
-const chromeManifestComponentTemplate = [
 '',
 'component %uuid% components/CCK2Service.js',
 'contract @kaply.com/cck2-%id-nospecialchars%-service;1 %uuid%',
@@ -102,6 +97,26 @@ const autoconfigPrefs = [
 
 const autoconfigTemplate = [
 'var config = %config%;',
+'',
+'var io = Components.classes["@mozilla.org/network/io-service;1"]',
+'                   .getService(Components.interfaces.nsIIOService);',
+'var resource = io.getProtocolHandler("resource")',
+'                 .QueryInterface(Components.interfaces.nsIResProtocolHandler);',
+'',
+'var greDir = Components.classes["@mozilla.org/file/directory_service;1"]',
+'                       .getService(Components.interfaces.nsIProperties)',
+'                       .get("GreD", Components.interfaces.nsIFile);',
+'var cck2ModuleDir = greDir.clone();',
+'cck2ModuleDir.append("cck2");',
+'cck2ModuleDir.append("modules");',
+'var cck2Alias = io.newFileURI(cck2ModuleDir);',
+'resource.setSubstitution("cck2", cck2Alias);',
+'',
+'var configModuleDir = greDir.clone();',
+'configModuleDir.append(config.id);',
+'configModuleDir.append("modules");',
+'var configAlias = io.newFileURI(configModuleDir);',
+'resource.setSubstitution(config.id, configAlias);',
 '',
 'Components.utils.import("resource://cck2/CCK2.jsm");',
 'CCK2.init(config);',
@@ -248,37 +263,30 @@ function packageCCK2(type) {
     writeFile(configFile, JSON.stringify(getConfig(), null, 2), addFileToZip(zipwriter));
   }
   var uuidGenerator = Cc["@mozilla.org/uuid-generator;1"].getService(Ci.nsIUUIDGenerator);
-  var uuid = uuidGenerator.generateUUID().toString();
-  var chromeManifest = chromeManifestTemplate;
-  if (type == "extension") {
-    chromeManifest += chromeManifestComponentTemplate;
-  }
-  chromeManifest = chromeManifest.replace(/%packagename%/g, packageName);
-  // Remove all special characters from ID so it can be used for JavaScript
-  chromeManifest = chromeManifest.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
-  chromeManifest = chromeManifest.replace(/%uuid%/g, uuid);
-  
-  var chromeManifestFile = dir.clone();
-  if (type == "distribution") {
-    chromeManifestFile.append("distribution");
-    chromeManifestFile.append("bundles");
-    chromeManifestFile.append(packagePath);
-    if (!chromeManifestFile.exists()) {
-      chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+  var cck2UUID = uuidGenerator.generateUUID().toString();
+
+  if (type == "extension") {  
+    var chromeManifest = chromeManifestTemplate.replace(/%packagename%/g, packageName);
+    // Remove all special characters from ID so it can be used for JavaScript
+    chromeManifest = chromeManifest.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
+    chromeManifest = chromeManifest.replace(/%uuid%/g, cck2UUID);
+    
+    var chromeManifestFile = dir.clone();
+    if (type == "distribution") {
+      chromeManifestFile.append(packagePath);
+      if (!chromeManifestFile.exists()) {
+        chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      }
+      chromeManifest = chromeManifest.split("\n").filter(function(element) {
+        return !/chrome\.manifest/.test(element);
+      }).join("\n");
     }
-    chromeManifest = chromeManifest.split("\n").filter(function(element) {
-      return !/chrome\.manifest/.test(element);
-    }).join("\n");
+    chromeManifestFile.append("chrome.manifest");
+    numFilesToWrite += 1;
+    writeFile(chromeManifestFile, chromeManifest, addFileToZip(zipwriter));
   }
-  chromeManifestFile.append("chrome.manifest");
-  numFilesToWrite += 1;
-  writeFile(chromeManifestFile, chromeManifest, addFileToZip(zipwriter));
   
   var cck2Dir = dir.clone();
-  if (type == "distribution") {
-    cck2Dir.append("distribution");
-    cck2Dir.append("bundles");
-  }
   cck2Dir.append("cck2");
   cck2Dir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   numFilesToWrite += cck2Files.length;
@@ -293,7 +301,8 @@ function packageCCK2(type) {
     writeFile(destfile, data, addFileToZip(zipwriter));
   }
 
-  if (type == "distribution") {  
+  if (type == "distribution") {
+    // I HAVE NO SOLUTION FOR DISABLING SAFE MODE IF DISTRIBUTION/BUNDLES is gone
     if ("autoconfig" in config && config.autoconfig.disableSafeMode) {
       var disablesafemodeDir = dir.clone();
       if (type == "distribution") {
@@ -348,9 +357,7 @@ function packageCCK2(type) {
   if ("plugins" in config) {
     var pluginsDir = dir.clone();
     if (type == "distribution") {
-      pluginsDir.append("distribution");
-      pluginsDir.append("bundles");
-      pluginsDir.append(packagePath);
+      pluginsDir.append("browser"); // Will this work on Mac?
     }
     pluginsDir.append("plugins");
     pluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -367,18 +374,19 @@ function packageCCK2(type) {
   }
   var resourceDir = dir.clone();
   if (type == "distribution") {
-    resourceDir.append("distribution");
-    resourceDir.append("bundles");
     resourceDir.append(packagePath);
   }
   resourceDir.append("resources");
-  resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
   if ("searchplugins" in config) {
     var searchpluginsDir = resourceDir.clone();
     searchpluginsDir.append("searchplugins");
     searchpluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
     for (var i=0; i < config.searchplugins.length; i++) {
       if (!/^https?:/.test(config.searchplugins[i])) {
+        // Only create resource dir if we need to
+        try {
+          resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+        } catch (e) {}
         var searchpluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           searchpluginFile.initWithPath(config.searchplugins[i]);
@@ -398,11 +406,15 @@ function packageCCK2(type) {
     }
     for (var i=0; i < config.addons.length; i++) {
       if (!/^https?:/.test(config.addons[i])) {
+        // Only create resource dir if we need to
+        try {
+          resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+        } catch (e) {}
         var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           addonFile.initWithPath(config.addons[i]);
           copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
-          config.addons[i] = "chrome://" + packageName + "/content/addons/" + addonFile.leafName;
+          config.addons[i] = "resource://" + packageName + "/addons/" + addonFile.leafName;
         } catch (e) {
           copyFileError(config.addons[i]);
         }
@@ -423,6 +435,10 @@ function packageCCK2(type) {
     if ("ca" in config.certs) {
       for (var i=0; i < config.certs.ca.length; i++) {
         if (!/^https?:/.test(config.certs.ca[i].url)) {
+          // Only create resource dir if we need to
+          try {
+            resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+          } catch (e) {}
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
           try {
             certFile.initWithPath(config.certs.ca[i].url);
@@ -437,6 +453,10 @@ function packageCCK2(type) {
     if ("server" in config.certs) {
       for (var i=0; i < config.certs.server.length; i++) {
         if (!/^https?:/.test(config.certs.server[i])) {
+          // Only create resource dir if we need to
+          try {
+            resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+          } catch (e) {}
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
           try {
             certFile.initWithPath(config.certs.server[i]);
@@ -452,6 +472,10 @@ function packageCCK2(type) {
   if ("network" in config) {
     if ("proxyAutoConfig" in config.network) {
       if (!/^https?:/.test(config.network.proxyAutoConfig)) {
+        // Only create resource dir if we need to
+        try {
+          resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+        } catch (e) {}
         var proxyAutoConfigDir = resourceDir.clone();
         proxyAutoConfigDir.append("proxyautoconfig");
         proxyAutoConfigDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -465,6 +489,18 @@ function packageCCK2(type) {
         }
       }
     }
+  }
+
+  if (type == "distribution" && resourceDir.exists()) {
+    var chromeManifestFile = dir.clone();
+    chromeManifestFile.append(packagePath);
+    if (!chromeManifestFile.exists()) {
+      chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+    }
+    chromeManifestFile.append("chrome.manifest");
+    numFilesToWrite += 1;
+    writeFile(chromeManifestFile, "resource " + packageName + " resources/", addFileToZip(zipwriter));
+
   }
 
   if (type == "distribution") {
@@ -512,7 +548,7 @@ function packageCCK2(type) {
     var CCK2Service = CCK2ServiceTemplate;
     CCK2Service = CCK2Service.replace(/%id%/g, config.id);
     CCK2Service = CCK2Service.replace(/%id-nospecialchars%/g, config.id.replace(/[^A-Za-z0-9_]/gi, ''));
-    CCK2Service = CCK2Service.replace(/%uuid%/g, uuid);
+    CCK2Service = CCK2Service.replace(/%uuid%/g, cck2UUID);
     CCK2Service = CCK2Service.replace("%config%", JSON.stringify(config, null, 2))
     var CCK2ServiceFile = dir.clone();
     CCK2ServiceFile.append("components");
