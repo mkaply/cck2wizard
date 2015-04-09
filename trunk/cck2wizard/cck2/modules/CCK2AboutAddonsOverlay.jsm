@@ -41,10 +41,6 @@ var observer = {
               try {
                 showDiscoverPane = Services.prefs.getBoolPref("extensions.getAddons.showPane");
               } catch (e) {}
-              if (!xpinstallEnabled && showDiscoverPane) {
-                // Keep old behavior of hiding the discover pane if xpinstall.enabled is false
-                hide(win.gCategories.get("addons://discover/"));
-              }
               if (!xpinstallEnabled || !showDiscoverPane) {
                 // Work around Mozilla bug 1132971
                 // Hide the discover pane if it is the selected pane
