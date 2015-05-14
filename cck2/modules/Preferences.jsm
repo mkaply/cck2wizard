@@ -81,6 +81,8 @@ Preferences.prototype = {
     return this._get(prefName, defaultValue);
   },
 
+// In all cases below, the preference might exist as a user pref, but not
+//  have a default value. In those cases, get* throws. Return the default value.
   _get: function(prefName, defaultValue) {
     switch (this._prefSvc.getPrefType(prefName)) {
       case Ci.nsIPrefBranch.PREF_STRING:
@@ -88,18 +90,24 @@ Preferences.prototype = {
           return this._prefSvc.getComplexValue(prefName, Ci.nsISupportsString).data;
         } catch (ex) {
           if (this.isDefaultBranch)
-            // The preference might exist as a user pref, but not have a default
-            // value. In that case, getComplexValue throws. Just return null.
-            return null;
+            return defaultValue;
           else
             return this._prefSvc.getCharPref(prefName);
         }
 
       case Ci.nsIPrefBranch.PREF_INT:
-        return this._prefSvc.getIntPref(prefName);
+        try {
+          return this._prefSvc.getIntPref(prefName);
+        } catch (ex) {
+          return defaultValue;
+        }
 
       case Ci.nsIPrefBranch.PREF_BOOL:
-        return this._prefSvc.getBoolPref(prefName);
+        try {
+          return this._prefSvc.getBoolPref(prefName);
+        } catch (ex) {
+          return defaultValue;
+        }
 
       case Ci.nsIPrefBranch.PREF_INVALID:
         return defaultValue;
