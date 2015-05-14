@@ -114,7 +114,7 @@ const autoconfigTemplate = [
 '',
 'var configModuleDir = greDir.clone();',
 'configModuleDir.append(config.id);',
-'configModuleDir.append("modules");',
+'configModuleDir.append("resources");',
 'var configAlias = io.newFileURI(configModuleDir);',
 'resource.setSubstitution(config.id, configAlias);',
 '',
