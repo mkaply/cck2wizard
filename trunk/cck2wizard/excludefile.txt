@@ -6,3 +6,4 @@ buildit.sh
 excludefile.txt
 idls
 builds
+README

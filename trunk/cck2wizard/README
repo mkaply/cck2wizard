@@ -1,0 +1,59 @@
+What does the CCK2 do?
+
+CAPSCheckLoadURI.jsm
+
+Allows pref("capability.policy.default.checkloaduri.enabled", "allAccess"); to work.
+
+CAPSClipboard.jsm
+CAPSClipboard-fs.js
+
+Brings back the clipboard security API
+
+CCK2AboutAddonsOverlay.jsm
+
+Fixes the bolding on the about dialog
+
+CCK2AboutDialogOverlay.jsm
+
+Workaround https://bugzilla.mozilla.org/show_bug.cgi?id=1132971
+Hide the "Install Add-on From File" menu if xpinstall.enabled is false
+Hides the discover pane if xpinstall.enabled is false
+Hides the add-on entry if specified in the CCK2 config
+
+CCK2AboutHomeOverlay.jsm
+
+Remove the sync button if Sync is disabled
+Remove the Addons button if Sync is disabled
+Remove the snippets if snippets are disabled
+
+CCK2AboutSupportOverlay.jsm
+
+Remove the reset Firefox button if disableResetFirefox is set
+Remove the safe mode Button if disableSafeMode is set
+Remove the box if both are set
+
+CCK2BrowserOverlay.jsm
+
+Modify the browser UI
+
+CCK2FileBlock.jsm
+
+Prevent certain files from being loaded in the browser (browser.xul)
+
+CCK2PreferencesOverlay.jsm
+
+Removes private browsing from the pref UI if it is disabled
+Removes Sync from the pref UI if it is diabled
+Disables the crash reporter button if crash reporter is disabled
+Removed the master password UI if it is disabled
+Goes through the hiddenUI list and hides any UI
+
+CCK2.jsm
+
+Sets prefs
+disables about
+disable in page search providers
+hide UI
+Bookmarks
+Certs
+
