@@ -304,7 +304,10 @@ var CCK2 = {
         var shellSvc = Cc["@mozilla.org/browser/shell-service;1"].getService(Ci.nsIShellService);
         if (shellSvc) {
           try {
-            shellSvc.setDefaultBrowser(true, false);
+            var isDefault = shellSvc.isDefaultBrowser(true, false);
+            if (!isDefault) {
+              shellSvc.setDefaultBrowser(true, false);
+            }
           } catch (e) {
             // setDefaultBrowser errors on Yosemite, so we're just ignoring the error.
             // See Bugzilla bug #1063529
