@@ -568,7 +568,7 @@ var CCK2 = {
                       }
                     }, errorCritical, {trust: certTrust});
                   } catch (e) {
-                    errorCritical("Unable to install " + config.certs.ca[i].url);
+                    errorCritical("Unable to install " + config.certs.ca[i].url + " - " + e);
                   }
                 } else if (config.certs.ca[i].cert) {
                   certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), certTrust, "");
@@ -582,7 +582,7 @@ var CCK2 = {
                     certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
                   }, errorCritical);
                 } catch (e) {
-                  errorCritical("Unable to install " + config.certs.server[i]);
+                  errorCritical("Unable to install " + config.certs.server[i] + " - " + e);
                 }
               }
             }
