@@ -113,10 +113,10 @@ const autoconfigTemplate = [
 'resource.setSubstitution("cck2", cck2Alias);',
 '',
 'var configModuleDir = greDir.clone();',
-'configModuleDir.append(config.id);',
+'configModuleDir.append("%packagepath%");',
 'configModuleDir.append("resources");',
 'var configAlias = io.newFileURI(configModuleDir);',
-'resource.setSubstitution(config.id, configAlias);',
+'resource.setSubstitution("%packagename%", configAlias);',
 '',
 'Components.utils.import("resource://cck2/CCK2.jsm");',
 'CCK2.init(config);',
@@ -207,6 +207,8 @@ function packageCCK2(type) {
   // These characters are not allowed in the packagename for chrome.manifest
   var packageName = config.id.replace("@", "").replace("#", "").replace(";", "")
                              .replace(":", "").replace("?", "").replace("/", "");
+  // resource.setSubstitution doesn't handle case nicely.
+  packageName = packageName.toLowerCase();
 
   // These characters are not allowed in Windows paths (NTFS and FAT)
   var packagePath = config.id.replace("/", "").replace("?", "").replace("<", "")
@@ -534,7 +536,9 @@ function packageCCK2(type) {
       file.initWithPath(config.AutoConfigJSBefore);
       autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
     }
-    autoconfigcontent += autoconfigTemplate.replace("%config%", JSON.stringify(config, null, 2));
+    autoconfigcontent += autoconfigTemplate.replace(/%packagename%/g, packageName)
+                                           .replace(/%packagepath%/g, packagePath)
+                                           .replace("%config%", JSON.stringify(config, null, 2));
     if ("AutoConfigJSAfter" in config) {
       var file = Components.classes["@mozilla.org/file/local;1"]
                             .createInstance(Components.interfaces.nsIFile);
