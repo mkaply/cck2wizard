@@ -782,7 +782,7 @@ var CCK2 = {
                       numAddonsInstalled++;
                     }
                     if (numAddonsInstalled > 0 &&
-                        numAddonsInstalled == config.addons.length) {
+                        numAddonsInstalled == numAddons) {
                       Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
                     }
                   }
