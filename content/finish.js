@@ -113,7 +113,7 @@ const autoconfigTemplate = [
 'resource.setSubstitution("cck2", cck2Alias);',
 '',
 'var configModuleDir = greDir.clone();',
-'configModuleDir.append("%packagepath%");',
+'configModuleDir.append("cck2");',
 'configModuleDir.append("resources");',
 'var configAlias = io.newFileURI(configModuleDir);',
 'resource.setSubstitution("%packagename%", configAlias);',
@@ -376,7 +376,7 @@ function packageCCK2(type) {
   }
   var resourceDir = dir.clone();
   if (type == "distribution") {
-    resourceDir.append(packagePath);
+    resourceDir.append("cck2");
   }
   resourceDir.append("resources");
   if ("searchplugins" in config) {
@@ -491,18 +491,6 @@ function packageCCK2(type) {
         }
       }
     }
-  }
-
-  if (type == "distribution" && resourceDir.exists()) {
-    var chromeManifestFile = dir.clone();
-    chromeManifestFile.append(packagePath);
-    if (!chromeManifestFile.exists()) {
-      chromeManifestFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    }
-    chromeManifestFile.append("chrome.manifest");
-    numFilesToWrite += 1;
-    writeFile(chromeManifestFile, "resource " + packageName + " resources/", addFileToZip(zipwriter));
-
   }
 
   if (type == "distribution") {
