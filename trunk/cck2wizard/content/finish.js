@@ -46,6 +46,7 @@ const installRDFTemplate = [
 
 const chromeManifestTemplate = [
 'resource %packagename% resources/',
+'manifest cck2/chrome.manifest',
 '',
 'component %uuid% components/CCK2Service.js',
 'contract @kaply.com/cck2-%id-nospecialchars%-service;1 %uuid%',
