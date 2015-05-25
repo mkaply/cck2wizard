@@ -19,6 +19,7 @@
       <checkbox config="disableHello" label="&disableHello.label;" />
       <checkbox config="disableSendPage" label="&disableSendPage.label;" />
       <checkbox config="disableForget" label="&disableForget.label;" />
+      <checkbox config="disableHeartbeat" label="&disableHeartbeat.label;" />
       </groupbox>
     </vbox>
   </deck>
