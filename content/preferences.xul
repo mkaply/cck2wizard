@@ -63,6 +63,7 @@
       </hbox>
       <groupbox>
       <checkbox config="disableAboutConfig" label="&disableaboutconfig.label;" />
+      <checkbox config="disableInContentPrefs" label="&disableInContentPrefs.label;" />
       </groupbox>
     </vbox>
     <vbox id="general">

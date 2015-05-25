@@ -34,6 +34,7 @@
 <!ENTITY disableFirefoxHealthReportUpload.label "Disable Firefox Health Report upload">
 
 <!ENTITY disableaboutconfig.label "Prevent access to about:config">
+<!ENTITY disableInContentPrefs.label "Do not use in content preferences (FF38-FF40 only)">
 
 <!ENTITY noMasterPassword.label "No Master Password">
 <!ENTITY dontRememberPasswords.label "Don't Remember passwords">

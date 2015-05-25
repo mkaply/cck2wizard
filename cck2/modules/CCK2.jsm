@@ -261,6 +261,9 @@ var CCK2 = {
       if (config.disableHeartbeat) {
         Preferences.lock("browser.selfsupport.url", "");
       }
+      if (config.disableInContentPrefs) {
+        Preferences.lock("browser.preferences.inContent", false);
+      }
       if (config.disableSync) {
         var aboutAccounts = {};
         aboutAccounts.classID = Components.ID(uuid.generateUUID().toString());
