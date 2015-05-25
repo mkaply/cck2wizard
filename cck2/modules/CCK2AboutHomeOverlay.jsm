@@ -36,6 +36,9 @@ var observer = {
                 if (config.disableAddonsManager) {
                   remove(E("addons", doc));
                 }
+                if (config.disableWebApps) {
+                  remove(E("apps", doc));
+                }
                 if (config.removeSnippets) {
                   var snippets = E("snippets", doc);
                   if (snippets) {
