@@ -258,6 +258,9 @@ var CCK2 = {
       if (config.disableHello) {
         Preferences.lock("loop.enabled", false);
       }
+      if (config.disableHeartbeat) {
+        Preferences.lock("browser.selfsupport.url", "");
+      }
       if (config.disableSync) {
         var aboutAccounts = {};
         aboutAccounts.classID = Components.ID(uuid.generateUUID().toString());
