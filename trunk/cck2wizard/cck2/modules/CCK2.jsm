@@ -255,6 +255,9 @@ var CCK2 = {
       if (config.disablePDFjs) {
         Preferences.lock("pdfjs.disabled", true);
       }
+      if (config.disableHello) {
+        Preferences.lock("loop.enabled", false);
+      }
       if (config.disableSync) {
         var aboutAccounts = {};
         aboutAccounts.classID = Components.ID(uuid.generateUUID().toString());
@@ -1063,6 +1066,9 @@ var documentObserver = {
           var config = configs[id];
           if (config.disableSearchEngineInstall) {
             subject.wrappedJSObject.external.AddSearchProvider = function() {};
+          }
+          if (config.disableWebApps) {
+            subject.wrappedJSObject.navigator.mozApps = {};
           }
         }
       }

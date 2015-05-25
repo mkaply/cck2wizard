@@ -89,9 +89,23 @@ var observer = {
                   }
                   if (config.removeSetDesktopBackground) {
                     // Because this is on a context menu, we can't use "hidden"
-                    if (E("context-setDesktopBackground", doc))
+                    if (E("context-setDesktopBackground", doc)) {
                       E("context-setDesktopBackground", doc).setAttribute("style", "display: none;");
                     }
+                  }
+                  if (config.disableWebApps) {
+                    CustomizableUI.destroyWidget("web-apps-button");
+                    hide(E("menu_openApps", doc));
+                  }
+                  if (config.disableHello) {
+                    CustomizableUI.destroyWidget("loop-button");
+                  }
+                  if (config.disableSharePage) {
+                    CustomizableUI.destroyWidget("social-share-button");
+                  }
+                  if (config.disableForget) {
+                    CustomizableUI.destroyWidget("panic-button");
+                  }
                   if (config.hiddenUI) {
                     for (var i=0; i < config.hiddenUI.length; i++) {
                       var uiElements = doc.querySelectorAll(config.hiddenUI[i]);

@@ -15,6 +15,10 @@
       <checkbox config="removeSnippets" label="&removeSnippets.label;"/>
       <checkbox config="disableResetFirefox" label="&disableResetFirefox.label;"/>
       <checkbox config="disablePDFjs" label="&disablePDFjs.label;" />
+      <checkbox config="disableWebApps" label="&disableWebApps.label;" />
+      <checkbox config="disableHello" label="&disableHello.label;" />
+      <checkbox config="disableSendPage" label="&disableSendPage.label;" />
+      <checkbox config="disableForget" label="&disableForget.label;" />
       </groupbox>
     </vbox>
   </deck>
