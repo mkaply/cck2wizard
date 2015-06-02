@@ -107,6 +107,8 @@ function alert(string) {
   Services.prompt.alert(Services.wm.getMostRecentWindow("navigator:browser"), "", string);
 } 
 
+var gBundlePrefFiles = [];
+
 var CCK2 = {
   configs: {},
   firstrun: false,
@@ -806,6 +808,20 @@ var CCK2 = {
           }
         }
         break;
+      case "load-extension-defaults":
+        if (gBundlePrefFiles.length > 0) {
+          // Create a temporary scope so the pref function works
+          var temp = {};
+          temp.pref = function(a, b) {
+            Preferences.defaults.set(a, b);
+          }
+          gBundlePrefFiles.forEach(function(prefFile) {
+            Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
+                      .getService(Components.interfaces.mozIJSSubScriptLoader)
+                      .loadSubScript(prefFile, temp);
+          });
+        }
+        break;
       case "quit-application":
         var registrar = Components.manager.QueryInterface(Ci.nsIComponentRegistrar);
         for (var i=0; i < CCK2.aboutFactories.length; i++)
@@ -1082,8 +1098,45 @@ var documentObserver = {
   }
 }
 
+
+function loadBundleDirs() {
+  var cck2BundleDir = Services.dirsvc.get("GreD", Ci.nsIFile);
+  cck2BundleDir.append("cck2");
+  cck2BundleDir.append("bundles");
+  if (!cck2BundleDir.exists() || !cck2BundleDir.isDirectory()) {
+    return;
+  }
+  var enumerator = cck2BundleDir.directoryEntries;
+  while (enumerator.hasMoreElements()) {
+    var file = enumerator.getNext().QueryInterface(Ci.nsIFile);
+    var dirName = file.leafName;
+    file.append("chrome.manifest");
+    Components.manager.QueryInterface(Ci.nsIComponentRegistrar).autoRegister(file);    
+    file.leafName = "defaults";
+    file.append("preferences");
+    if (!file.exists() || !file.isDirectory()) {
+      continue;
+    }
+    // In order to load prefs, we have to use a chrome URL.
+    // Create a resource that maps to the prefs directory.
+    var prefAlias = io.newFileURI(file);
+    resource.setSubstitution(dirName + "_prefs", prefAlias);
+    var prefEnumerator = file.directoryEntries;
+    while (prefEnumerator.hasMoreElements()) {
+      var prefFile = prefEnumerator.getNext().QueryInterface(Ci.nsIFile);
+      gPrefBundleFiles.push("resource://" + dirName + "_prefs/" + prefFile.leafName);
+    }
+  }
+}
+
 Services.obs.addObserver(CCK2, "distribution-customization-complete", false);
 Services.obs.addObserver(CCK2, "final-ui-startup", false);
 Services.obs.addObserver(CCK2, "browser-ui-startup-complete", false);
 Services.obs.addObserver(documentObserver, "chrome-document-global-created", false);  
 Services.obs.addObserver(documentObserver, "content-document-global-created", false);  
+Services.obs.addObserver(CCK2, "load-extension-defaults", false);
+try {
+  loadBundleDirs()
+} catch (e) {
+  Components.utils.reportError(e);
+}
