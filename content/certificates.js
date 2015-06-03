@@ -15,13 +15,29 @@ function setCertificates(config) {
   if ("certs" in config) {
     if ("ca" in config.certs) {
       for (var i=0; i < config.certs.ca.length; i++) {
-        var listitem = gCertificatesListbox.appendItem(config.certs.ca[i].url, config.certs.ca[i].trust);
+        var label = config.certs.ca[i].url;
+        try {
+          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+          certFile.initWithPath(config.certs.ca[i].url);
+          label = certFile.leafName;
+        } catch (e) {}
+        var listitem = gCertificatesListbox.appendItem(label, config.certs.ca[i].trust);
+        listitem.setAttribute("tooltiptext", config.certs.ca[i].url);
+        listitem.setAttribute("path", config.certs.ca[i].url);
         listitem.setAttribute("context", "certificate-contextmenu");
       }
     }
     if ("server" in config.certs) {
       for (var i=0; i < config.certs.server.length; i++) {
+        var label = config.certs.server[i];
+        try {
+          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+          certFile.initWithPath(config.certs.server[i]);
+          label = certFile.leafName;
+        } catch (e) {          }
         var listitem = gServerCertsListbox.appendItem(config.certs.server[i]);
+        listitem.setAttribute("tooltiptext", config.certs.server[i]);
+        listitem.setAttribute("path", config.certs.server[i]);
         listitem.setAttribute("context", "servercert-contextmenu");
       }
     }
@@ -49,8 +65,8 @@ function getCertificates(config) {
     
     for (var i=0; i < gCertificatesListbox.itemCount; i++) {
       var cert = {};
-      cert.url = gCertificatesListbox.getItemAtIndex(i).label;
-      cert.trust = gCertificatesListbox.getItemAtIndex(i).value;
+      cert.url = gCertificatesListbox.getItemAtIndex(i).getAttribute("path");
+      cert.trust = gCertificatesListbox.getItemAtIndex(i).getAttribute("value");
       config.certs.ca.push(cert);
     }
   }
@@ -61,7 +77,7 @@ function getCertificates(config) {
     config.certs.server = [];
     
     for (var i=0; i < gServerCertsListbox.itemCount; i++) {
-      config.certs.server.push(gServerCertsListbox.getItemAtIndex(i).label);
+      config.certs.server.push(gServerCertsListbox.getItemAtIndex(i).getAttribute("path"));
     }
   }
   if (gCertOverridesListbox.itemCount > 0) {
@@ -71,7 +87,7 @@ function getCertificates(config) {
     config.certs.override = [];
     
     for (var i=0; i < gCertOverridesListbox.itemCount; i++) {
-      config.certs.override.push(gCertOverridesListbox.getItemAtIndex(i).label);
+      config.certs.override.push(gCertOverridesListbox.getItemAtIndex(i).getAttribute("label"));
     }
   }
   if (gDevicesListbox.itemCount > 0) {
@@ -82,8 +98,8 @@ function getCertificates(config) {
     
     for (var i=0; i < gDevicesListbox.itemCount; i++) {
       var device = {};
-      device.name = gDevicesListbox.getItemAtIndex(i).label;
-      device.path = gDevicesListbox.getItemAtIndex(i).value;
+      device.name = gDevicesListbox.getItemAtIndex(i).getAttribute("label");
+      device.path = gDevicesListbox.getItemAtIndex(i).getAttribute("value");
       config.certs.devices.push(device);
     }
   }
@@ -173,7 +189,8 @@ function addCertificateFromFile() {
   if (certFile) {
     var certString = getCertString();
     if (certString) {
-      var listitem = gCertificatesListbox.appendItem(certFile.path, certString);
+      var listitem = gCertificatesListbox.appendItem(certFile.leafName, certString);
+      lisitem.setAttribute("path", certFile.path);
       listitem.setAttribute("context", "certificate-contextmenu");
     }
   }
@@ -182,7 +199,8 @@ function addCertificateFromFile() {
 function addServerCertificateFromFile() {
   var certFile = chooseFile(window);
   if (certFile) {
-    var listitem = gServerCertsListbox.appendItem(certFile.path, "C,C,C");
+    var listitem = gServerCertsListbox.appendItem(certFile.leafName, "C,C,C");
+    lisitem.setAttribute("path", certFile.path);
     listitem.setAttribute("context", "servercert-contextmenu");
   }
 }
