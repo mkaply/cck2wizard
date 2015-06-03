@@ -25,16 +25,21 @@ function setSearchEngines(config) {
         // Filename
         var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
         searchengineFile.initWithPath(config.searchplugins[i]);
-        getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
-          if (response) {
-            var listitem = gSearchEnginesListbox.appendItem(response.name, path);
-            listitem.setAttribute("context", "searchengines-contextmenu");
-            if (response.image) {
-              listitem.setAttribute("class", "listitem-iconic");
-              listitem.setAttribute("image", response.image);
+        if (searchengineFile.exists()) {
+          getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
+            if (response) {
+              var listitem = gSearchEnginesListbox.appendItem(response.name, path);
+              listitem.setAttribute("context", "searchengines-contextmenu");
+              if (response.image) {
+                listitem.setAttribute("class", "listitem-iconic");
+                listitem.setAttribute("image", response.image);
+              }
             }
-          }
-        });
+          });
+        } else {
+          var listitem = gSearchEnginesListbox.appendItem(searchengineFile.leafName, config.searchplugins[i]);
+          listitem.setAttribute("context", "searchengines-contextmenu");
+        }
       }
     }
   }
