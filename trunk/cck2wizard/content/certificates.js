@@ -227,8 +227,8 @@ function addCertificateFromFile() {
 function addServerCertificateFromFile() {
   var certFile = chooseFile(window);
   if (certFile) {
-    var listitem = gServerCertsListbox.appendItem(certFile.leafName, certFile.path.replace(getOutputDirectory(), ""));
-    listitem.setAttribute("tooltiptext", certFile.path.replace(getOutputDirectory(), ""));
+    var listitem = gServerCertsListbox.appendItem(certFile.leafName, certFile.path);
+    listitem.setAttribute("tooltiptext", certFile.path);
     listitem.setAttribute("context", "servercert-contextmenu");
   }
 }
