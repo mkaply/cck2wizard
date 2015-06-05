@@ -743,7 +743,17 @@ var CCK2 = {
         }
         break;
       case "browser-ui-startup-complete":
-        return;
+        var disableWebApps = false;
+        for (var id in this.configs) {
+          var config = this.configs[id];
+          if (config.disableWebApps) {
+            disableWebApps = true;
+            break;
+          }
+        }
+        if (!disableWebApps) {
+          return;
+        }
         try {
           Cu.import("resource://gre/modules/WebappManager.jsm");
         } catch (e) {
@@ -1093,7 +1103,7 @@ var documentObserver = {
             subject.wrappedJSObject.external.AddSearchProvider = function() {};
           }
           if (config.disableWebApps) {
-            subject.wrappedJSObject.navigator.mozApps = {};
+//            subject.wrappedJSObject.navigator.mozApps = {};
           }
         }
       }
