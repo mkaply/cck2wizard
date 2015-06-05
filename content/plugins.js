@@ -14,18 +14,22 @@ function setPlugins(config) {
       } catch (e) {
         file.initWithPath(config.outputDirectory + config.plugins[i]);
       }
-      var listitem = gPluginsListbox.appendItem(file.leafName, config.plugins[i]);
-      listitem.setAttribute("tooltiptext", config.plugins[i]);
+      var listitem = gPluginsListbox.appendItem(file.leafName, file.path);
+      listitem.setAttribute("tooltiptext", file.path);
       listitem.setAttribute("context", "plugins-contextmenu");
     }
   }
 }
 
-function getPlugins(config) {
+function getPlugins(config, relativePaths) {
   if (gPluginsListbox.itemCount > 0) {
     config.plugins = [];
     for (var i=0; i < gPluginsListbox.itemCount; i++) {
-      config.plugins.push(gPluginsListbox.getItemAtIndex(i).getAttribute("value").replace(config.outputDirectory, ""));
+      if (relativePaths) {
+        config.plugins.push(gPluginsListbox.getItemAtIndex(i).getAttribute("value").replace(config.outputDirectory, ""));
+      } else {
+        config.plugins.push(gPluginsListbox.getItemAtIndex(i).getAttribute("value"));
+      }
     }
   }
   return config;
@@ -42,8 +46,8 @@ function onAddPlugin() {
   if (!file) {
     return;
   }
-  var listitem = gPluginsListbox.appendItem(file.leafName, file.path.replace(getOutputDirectory(), ""));
-  listitem.setAttribute("tooltiptext", file.path.replace(getOutputDirectory(), ""));
+  var listitem = gPluginsListbox.appendItem(file.leafName, file.path);
+  listitem.setAttribute("tooltiptext", file.path);
   listitem.setAttribute("context", "plugins-contextmenu");
 }
 

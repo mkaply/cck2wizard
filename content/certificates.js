@@ -23,20 +23,17 @@ function setCertificates(config) {
           try {
             file.initWithPath(config.certs.ca[i].url);
           } catch (e) {
-            try {
-              file.initWithPath(config.outputDirectory + config.certs.ca[i].url);
-            } catch(e) {
-              file = null;
-            }
+            file.initWithPath(config.outputDirectory + config.certs.ca[i].url);
           }
           if (file) {
             listitem = gCertificatesListbox.appendItem(file.leafName, config.certs.ca[i].trust);
+            listitem.setAttribute("path", file.path);
           } else {
             listitem = gCertificatesListbox.appendItem(config.certs.ca[i].url, config.certs.ca[i].trust);           
+            listitem.setAttribute("path", config.certs.ca[i].url);
           }
         }
         listitem.setAttribute("tooltiptext", config.certs.ca[i].url);
-        listitem.setAttribute("path", config.certs.ca[i].url);
         listitem.setAttribute("context", "certificate-contextmenu");
       }
     }
@@ -50,14 +47,10 @@ function setCertificates(config) {
           try {
             file.initWithPath(config.certs.server[i]);
           } catch (e) {
-            try {
-              file.initWithPath(config.outputDirectory + config.certs.server[i]);
-            } catch (e) {
-              file = null;
-            }
+            file.initWithPath(config.outputDirectory + config.certs.server[i]);
           }
           if (file) {
-            listitem = gServerCertsListbox.appendItem(file.leafName,  config.certs.server[i]);
+            listitem = gServerCertsListbox.appendItem(file.leafName, file.path);
           } else {
             listitem = gServerCertsListbox.appendItem(config.certs.server[i],  config.certs.server[i]);
           }
@@ -81,7 +74,7 @@ function setCertificates(config) {
   }
 }
 
-function getCertificates(config) {
+function getCertificates(config, relativePaths) {
   if (gCertificatesListbox.itemCount > 0) {
     if (!("certs" in config)) {
       config.certs = {};
@@ -91,8 +84,10 @@ function getCertificates(config) {
     for (var i=0; i < gCertificatesListbox.itemCount; i++) {
       var cert = {};
       cert.url = gCertificatesListbox.getItemAtIndex(i)
-                                     .getAttribute("path")
-                                     .replace(config.outputDirectory, "");
+                                     .getAttribute("path");
+      if (relativePaths) {
+        cert.url = cert.url.replace(config.outputDirectory, "");
+      }
       cert.trust = gCertificatesListbox.getItemAtIndex(i).getAttribute("value");
       config.certs.ca.push(cert);
     }
@@ -104,9 +99,11 @@ function getCertificates(config) {
     config.certs.server = [];
     
     for (var i=0; i < gServerCertsListbox.itemCount; i++) {
-      config.certs.server.push(gServerCertsListbox.getItemAtIndex(i)
-                                                  .getAttribute("value")
-                                                  .replace(config.outputDirectory, ""));
+      var value = gServerCertsListbox.getItemAtIndex(i).getAttribute("value");
+      if (relativePaths) {
+        value = value.replace(config.outputDirectory, "")
+      }
+      config.certs.server.push(value);
     }
   }
   if (gCertOverridesListbox.itemCount > 0) {
@@ -220,8 +217,8 @@ function addCertificateFromFile() {
     var certString = getCertString();
     if (certString) {
       var listitem = gCertificatesListbox.appendItem(certFile.leafName, certString);
-      listitem.setAttribute("path", certFile.path.replace(getOutputDirectory(), ""));
-      listitem.setAttribute("tooltiptext", certFile.path.replace(getOutputDirectory(), ""));
+      listitem.setAttribute("path", certFile.path);
+      listitem.setAttribute("tooltiptext", certFile.path);
       listitem.setAttribute("context", "certificate-contextmenu");
     }
   }
