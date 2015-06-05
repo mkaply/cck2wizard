@@ -24,11 +24,20 @@ function setSearchEngines(config) {
       } else {
         // Filename
         var searchengineFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-        searchengineFile.initWithPath(config.searchplugins[i]);
-        if (searchengineFile.exists()) {
+        try {
+          searchengineFile.initWithPath(config.searchplugins[i]);
+        } catch (e) {
+          try {
+            searchengineFile.initWithPath(config.outputDirectory + config.searchplugins[i]);
+          } catch (e) {
+            searchengineFile = null;
+          }
+        }
+        if (searchengineFile  && searchengineFile.exists()) {
           getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
             if (response) {
-              var listitem = gSearchEnginesListbox.appendItem(response.name, path);
+              var listitem = gSearchEnginesListbox.appendItem(response.name, path.replace(config.outputDirectory, ""));
+              listitem.setAttribute("tooltiptext", path.replace(config.outputDirectory, ""));
               listitem.setAttribute("context", "searchengines-contextmenu");
               if (response.image) {
                 listitem.setAttribute("class", "listitem-iconic");
@@ -37,7 +46,8 @@ function setSearchEngines(config) {
             }
           });
         } else {
-          var listitem = gSearchEnginesListbox.appendItem(searchengineFile.leafName, config.searchplugins[i]);
+          var listitem = gSearchEnginesListbox.appendItem(config.searchplugins[i], config.searchplugins[i]);
+          listitem.setAttribute("tooltiptext",  config.searchplugins[i]);
           listitem.setAttribute("context", "searchengines-contextmenu");
         }
       }
@@ -50,12 +60,13 @@ function setSearchEngines(config) {
     menulist.value = config.defaultSearchEngine;
   }
 }
-
 function getSearchEngines(config) {
   if (gSearchEnginesListbox.itemCount > 0) {
     config.searchplugins = [];
     for (var i=0; i < gSearchEnginesListbox.itemCount; i++) {
-      config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i).value);
+      config.searchplugins.push(gSearchEnginesListbox.getItemAtIndex(i)
+                                                     .getAttribute("value")
+                                                     .replace(config.outputDirectory, ""));
     }
   }
   if (document.getElementById("defaultSearchEngine").selectedIndex > 0) {
@@ -86,6 +97,7 @@ function addSearchEngineFromURL() {
   getSearchEngineInfoFromURL(url, function(response) {
     var listitem = gSearchEnginesListbox.appendItem(response.name, url);
     listitem.setAttribute("context", "searchengines-contextmenu");
+    listitem.setAttribute("tooltiptext", url);
     if (response.image) {
       listitem.setAttribute("class", "listitem-iconic");
       listitem.setAttribute("image", response.image);
@@ -96,9 +108,10 @@ function addSearchEngineFromURL() {
 
 function addSearchEngineFromFile() {
   var searchengineFile = chooseFile(window);
-  getSearchEngineInfoFromFile(searchengineFile, function(response) {
+  getSearchEngineInfoFromFile(searchengineFile, function(response, path) {
     if (response) {
-      var listitem = gSearchEnginesListbox.appendItem(response.name, searchengineFile.path);
+      var listitem = gSearchEnginesListbox.appendItem(response.name, path.replace(getOutputDirectory(), ""));
+      listitem.setAttribute("tooltiptext", path.replace(getOutputDirectory(), ""));
       listitem.setAttribute("context", "searchengines-contextmenu");
       if (response.image) {
         listitem.setAttribute("class", "listitem-iconic");

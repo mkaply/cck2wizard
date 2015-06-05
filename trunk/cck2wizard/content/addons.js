@@ -8,7 +8,20 @@ window.addEventListener("load", onAddonsLoad, false);
 function setAddons(config) {
   if (config.hasOwnProperty("addons")) {
     for (var i=0; i < config.addons.length; i++) {
-      gAddonsListbox.appendItem(config.addons[i]);
+      var listitem;
+      if (/^https?:/.test(config.addons[i])) {
+        listitem = gAddonsListbox.appendItem(config.addons[i], config.addons[i]);
+      } else {
+        var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+        try {
+          file.initWithPath(config.addons[i]);
+        } catch (e) {
+          file.initWithPath(config.outputDirectory + config.addons[i]);
+        }
+        listitem = gAddonsListbox.appendItem(file.leafName, config.addons[i]);
+      }
+      listitem.setAttribute("tooltiptext", config.addons[i]);
+      listitem.setAttribute("context", "addons-contextmenu");
     }
   }
 }
@@ -17,7 +30,7 @@ function getAddons(config) {
   if (gAddonsListbox.itemCount > 0) {
     config.addons = [];
     for (var i=0; i < gAddonsListbox.itemCount; i++) {
-      config.addons.push(gAddonsListbox.getItemAtIndex(i).label);
+      config.addons.push(gAddonsListbox.getItemAtIndex(i).getAttribute("value").replace(config.outputDirectory, ""));
     }
   }
   return config;
@@ -42,7 +55,7 @@ function onAddAddonFromURL() {
     showErrorMessage("invalidurl");
     return;
   }
-  var listitem = gAddonsListbox.appendItem(url);
+  var listitem = gAddonsListbox.appendItem(url, url);
   listitem.setAttribute("context", "addons-contextmenu");
 }
 
@@ -51,7 +64,8 @@ function onAddAddonFromFile() {
   if (!addonfile) {
     return;
   }
-  var listitem = gAddonsListbox.appendItem(addonfile.path);
+  var listitem = gAddonsListbox.appendItem(addonfile.leafName, addonfile.path.replace(getOutputDirectory(), ""));
+  listitem.setAttribute("tooltiptext", addonfile.path.replace(getOutputDirectory(), ""));
   listitem.setAttribute("context", "addons-contextmenu");
 }
 

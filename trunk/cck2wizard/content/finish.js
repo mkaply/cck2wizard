@@ -165,6 +165,7 @@ function packageCCK2(type) {
   } else {
     document.querySelector('textbox[config="outputDirectory"]').value = basedir.path;
   }
+  
   var dir = basedir.clone();
   if (type == "distribution") {
     dir.append("firefox");
@@ -175,7 +176,7 @@ function packageCCK2(type) {
     try {
       dir.remove(true);
     }  catch (ex) {
-      Services.prompt.alert(window, "CC2", "Unable to remove directory. It might be in use.");
+      Services.prompt.alert(window, "CC2", "Unable to remove directory " + dir.path + ". It might be in use.");
       return;
     }
   }
@@ -346,10 +347,14 @@ function packageCCK2(type) {
       writeFile(blankBookmarksFile, "", addFileToZip(zipwriter));
     }
   }
-  if ("icon" in config.extension) {
+  if (type == "extension" && "icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
     try {
       iconFile.initWithPath(config.extension.icon);
+    } catch (e) {
+      iconFile.initWithPath(basedir.path + config.extension.icon);
+    }
+    try {
       copyAndAddFileToZip(zipwriter, iconFile, dir, "icon.png");
       // Since icon gives away local path, remove it
       delete(config.extension.icon);
@@ -368,6 +373,10 @@ function packageCCK2(type) {
       var pluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
       try {
         pluginFile.initWithPath(config.plugins[i]);
+      } catch (e) {
+        pluginFile.initWithPath(basedir.path + config.plugins[i]);
+      }
+      try {
         copyAndAddFileToZip(zipwriter, pluginFile, pluginsDir, null);
       } catch (e) {
         copyFileError(config.plugins[i]);
@@ -393,6 +402,10 @@ function packageCCK2(type) {
         var searchpluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           searchpluginFile.initWithPath(config.searchplugins[i]);
+        } catch (e) {
+          searchpluginFile.initWithPath(basedir.path + config.searchplugins[i]);
+        }
+        try {
           copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
           config.searchplugins[i] = "resource://" + packageName + "/searchplugins/" + searchpluginFile.leafName;
         } catch (e) {
@@ -416,6 +429,10 @@ function packageCCK2(type) {
         var addonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           addonFile.initWithPath(config.addons[i]);
+        } catch (e) {
+          addonFile.initWithPath(basedir.path + config.addons[i]);
+        }
+        try {
           copyAndAddFileToZip(zipwriter, addonFile, addonsDir, null);
           config.addons[i] = "resource://" + packageName + "/addons/" + addonFile.leafName;
         } catch (e) {
@@ -445,6 +462,10 @@ function packageCCK2(type) {
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
           try {
             certFile.initWithPath(config.certs.ca[i].url);
+          } catch (e) {
+            certFile.initWithPath(basedir.path + config.certs.ca[i].url);
+          }
+          try {
             copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
             config.certs.ca[i].url = "resource://" + packageName + "/certs/" + certFile.leafName;
           } catch (e) {
@@ -463,6 +484,10 @@ function packageCCK2(type) {
           var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
           try {
             certFile.initWithPath(config.certs.server[i]);
+          } catch(e) {
+            certFile.initWithPath(basedir.path + config.certs.server[i]);
+          }
+          try {
             copyAndAddFileToZip(zipwriter, certFile, certsDir, null);
             config.certs.server[i] = "resource://" + packageName + "/certs/" + certFile.leafName;
           } catch(e) {
@@ -485,6 +510,10 @@ function packageCCK2(type) {
         var proxyAutoConfigFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
           proxyAutoConfigFile.initWithPath(config.network.proxyAutoConfig);
+        } catch (e) {
+          proxyAutoConfigFile.initWithPath(basedir.path + config.network.proxyAutoConfig);
+        }
+        try {
           copyAndAddFileToZip(zipwriter, proxyAutoConfigFile, proxyAutoConfigDir, null);
           config.network.proxyAutoConfig = "resource://" + packageName + "/proxyautoconfig/" + proxyAutoConfigFile.leafName;
         } catch (e) {
@@ -522,8 +551,14 @@ function packageCCK2(type) {
     if ("AutoConfigJSBefore" in config) {
       var file = Components.classes["@mozilla.org/file/local;1"]
                             .createInstance(Components.interfaces.nsIFile);
-      file.initWithPath(config.AutoConfigJSBefore);
+      try {
+        file.initWithPath(config.AutoConfigJSBefore);
+      } catch(e) {
+        file.initWithPath(basedir.path + config.AutoConfigJSBefore);
+      }
       autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
+      // Gives away local path
+      delete(config.AutoConfigJSBefore);
     }
     autoconfigcontent += autoconfigTemplate.replace(/%packagename%/g, packageName)
                                            .replace(/%packagepath%/g, packagePath)
@@ -531,8 +566,14 @@ function packageCCK2(type) {
     if ("AutoConfigJSAfter" in config) {
       var file = Components.classes["@mozilla.org/file/local;1"]
                             .createInstance(Components.interfaces.nsIFile);
-      file.initWithPath(config.AutoConfigJSAfter);
+      try {
+        file.initWithPath(config.AutoConfigJSAfter);
+      } catch(e) {
+        file.initWithPath(basedir.path + config.AutoConfigJSAfter);      
+      }
       autoconfigcontent += readChromeFile(Services.io.newFileURI(file).spec) + "\n\n";
+      // Gives away local path
+      delete(config.AutoConfigJSAfter);
     }
     numFilesToWrite += 1;
     writeFile(autoconfigFile, autoconfigcontent, addFileToZip(zipwriter));

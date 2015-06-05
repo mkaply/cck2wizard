@@ -15,13 +15,26 @@ function setCertificates(config) {
   if ("certs" in config) {
     if ("ca" in config.certs) {
       for (var i=0; i < config.certs.ca.length; i++) {
-        var label = config.certs.ca[i].url;
-        try {
-          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-          certFile.initWithPath(config.certs.ca[i].url);
-          label = certFile.leafName;
-        } catch (e) {}
-        var listitem = gCertificatesListbox.appendItem(label, config.certs.ca[i].trust);
+        var listitem;
+        if (/^https?:/.test(config.certs.ca[i].url)) {
+          listitem = gCertificatesListbox.appendItem(config.certs.ca[i].url, config.certs.ca[i].trust);
+        } else {
+          var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+          try {
+            file.initWithPath(config.certs.ca[i].url);
+          } catch (e) {
+            try {
+              file.initWithPath(config.outputDirectory + config.certs.ca[i].url);
+            } catch(e) {
+              file = null;
+            }
+          }
+          if (file) {
+            listitem = gCertificatesListbox.appendItem(file.leafName, config.certs.ca[i].trust);
+          } else {
+            listitem = gCertificatesListbox.appendItem(config.certs.ca[i].url, config.certs.ca[i].trust);           
+          }
+        }
         listitem.setAttribute("tooltiptext", config.certs.ca[i].url);
         listitem.setAttribute("path", config.certs.ca[i].url);
         listitem.setAttribute("context", "certificate-contextmenu");
@@ -29,15 +42,27 @@ function setCertificates(config) {
     }
     if ("server" in config.certs) {
       for (var i=0; i < config.certs.server.length; i++) {
-        var label = config.certs.server[i];
-        try {
-          var certFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-          certFile.initWithPath(config.certs.server[i]);
-          label = certFile.leafName;
-        } catch (e) {          }
-        var listitem = gServerCertsListbox.appendItem(config.certs.server[i]);
-        listitem.setAttribute("tooltiptext", config.certs.server[i]);
-        listitem.setAttribute("path", config.certs.server[i]);
+        var listitem;
+        if (/^https?:/.test(config.certs.server[i])) {
+          listitem = gServerCertsListbox.appendItem(config.certs.server[i],  config.certs.server[i]);
+        } else {
+          var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+          try {
+            file.initWithPath(config.certs.server[i]);
+          } catch (e) {
+            try {
+              file.initWithPath(config.outputDirectory + config.certs.server[i]);
+            } catch (e) {
+              file = null;
+            }
+          }
+          if (file) {
+            listitem = gServerCertsListbox.appendItem(file.leafName,  config.certs.server[i]);
+          } else {
+            listitem = gServerCertsListbox.appendItem(config.certs.server[i],  config.certs.server[i]);
+          }
+        }
+        listitem.setAttribute("tooltiptext", config.certs.server[i], config.certs.server[i]);
         listitem.setAttribute("context", "servercert-contextmenu");
       }
     }
@@ -65,7 +90,9 @@ function getCertificates(config) {
     
     for (var i=0; i < gCertificatesListbox.itemCount; i++) {
       var cert = {};
-      cert.url = gCertificatesListbox.getItemAtIndex(i).getAttribute("path");
+      cert.url = gCertificatesListbox.getItemAtIndex(i)
+                                     .getAttribute("path")
+                                     .replace(config.outputDirectory, "");
       cert.trust = gCertificatesListbox.getItemAtIndex(i).getAttribute("value");
       config.certs.ca.push(cert);
     }
@@ -77,7 +104,9 @@ function getCertificates(config) {
     config.certs.server = [];
     
     for (var i=0; i < gServerCertsListbox.itemCount; i++) {
-      config.certs.server.push(gServerCertsListbox.getItemAtIndex(i).getAttribute("path"));
+      config.certs.server.push(gServerCertsListbox.getItemAtIndex(i)
+                                                  .getAttribute("value")
+                                                  .replace(config.outputDirectory, ""));
     }
   }
   if (gCertOverridesListbox.itemCount > 0) {
@@ -160,8 +189,7 @@ function addServerCertificateFromURL() {
     showErrorMessage("invalidurl");
     return;
   }
-  var listitem = gServerCertsListbox.appendItem(url);
-  listitem.setAttribute("path", url);
+  var listitem = gServerCertsListbox.appendItem(url, url);
   listitem.setAttribute("context", "servercert-contextmenu");
 }
 
@@ -192,8 +220,8 @@ function addCertificateFromFile() {
     var certString = getCertString();
     if (certString) {
       var listitem = gCertificatesListbox.appendItem(certFile.leafName, certString);
-      listitem.setAttribute("path", certFile.path);
-      listitem.setAttribute("tooltiptext", certFile.path);
+      listitem.setAttribute("path", certFile.path.replace(getOutputDirectory(), ""));
+      listitem.setAttribute("tooltiptext", certFile.path.replace(getOutputDirectory(), ""));
       listitem.setAttribute("context", "certificate-contextmenu");
     }
   }
@@ -202,9 +230,8 @@ function addCertificateFromFile() {
 function addServerCertificateFromFile() {
   var certFile = chooseFile(window);
   if (certFile) {
-    var listitem = gServerCertsListbox.appendItem(certFile.leafName, "C,C,C");
-    listitem.setAttribute("path", certFile.path);
-    listitem.setAttribute("tooltiptext", certFile.path);
+    var listitem = gServerCertsListbox.appendItem(certFile.leafName, certFile.path.replace(getOutputDirectory(), ""));
+    listitem.setAttribute("tooltiptext", certFile.path.replace(getOutputDirectory(), ""));
     listitem.setAttribute("context", "servercert-contextmenu");
   }
 }
