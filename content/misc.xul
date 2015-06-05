@@ -20,6 +20,7 @@
       <checkbox config="disableSendPage" label="&disableSendPage.label;" />
       <checkbox config="disableForget" label="&disableForget.label;" />
       <checkbox config="disableHeartbeat" label="&disableHeartbeat.label;" />
+      <checkbox config="disablePocket" label="&disablePocket.label;" />
       </groupbox>
     </vbox>
   </deck>

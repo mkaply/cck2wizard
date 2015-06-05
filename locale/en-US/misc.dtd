@@ -10,3 +10,4 @@
 <!ENTITY disableSendPage.label "Disable Social Sharing">
 <!ENTITY disableForget.label "Disable the Forget button">
 <!ENTITY disableHeartbeat.label "Disable Heartbeat">
+<!ENTITY disablePocket.label "Disable Pocket">

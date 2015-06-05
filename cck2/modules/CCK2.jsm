@@ -260,6 +260,9 @@ var CCK2 = {
       if (config.disableHello) {
         Preferences.lock("loop.enabled", false);
       }
+      if (config.disablePocket) {
+        Preferences.lock("browser.pocket.enabled", false);
+      }
       if (config.disableHeartbeat) {
         Preferences.lock("browser.selfsupport.url", "");
       }
