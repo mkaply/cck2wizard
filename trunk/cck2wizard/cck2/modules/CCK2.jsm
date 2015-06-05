@@ -772,13 +772,13 @@ var CCK2 = {
           // Delay loading unnecessary modules
           // We should do this on a timeout
           loadModules(config);
+          if (!config.firstrun && config.installedVersion == config.version) {
+            return;
+          }
           if (config.persona) {
             var temp = {};
             Components.utils.import("resource://gre/modules/LightweightThemeManager.jsm", temp);
             temp.LightweightThemeManager.currentTheme = config.persona;
-          }
-          if (!config.firstrun && config.installedVersion == config.version) {
-            return;
           }
           if (config.addons) {
             Cu.import("resource://gre/modules/AddonManager.jsm");
