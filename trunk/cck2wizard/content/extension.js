@@ -33,11 +33,12 @@ function onExtensionChooseIcon() {
 }
 
 function setIcon(path) {
-  var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+  var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
   try {
-    iconFile.initWithPath(path);
+    file.initWithPath(path);
   } catch (e) {
-    iconFile.initWithPath(getOutputDirectory() + path);
+    file.initWithPath(getOutputDirectory() + path);
   }
-  document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
+  document.querySelector("textbox[config='extension.icon']").value = file.path;
+  document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(file).spec);
 }

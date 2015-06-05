@@ -340,7 +340,7 @@ function onDebug() {
 }
 
 function onExport() {
-  var config = getConfig();
+  var config = getConfig(true);
   var configJSON = JSON.stringify(config, null, 2);
   var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
@@ -449,7 +449,7 @@ function setConfig(config) {
 /** This function queries all of the user interface elements to create a
   * config file.
   */
-function getConfig(destdir) {
+function getConfig(relativePaths) {
   try {
     var config = {};
     if (gVersion) {
@@ -469,7 +469,7 @@ function getConfig(destdir) {
           }
         } else {
           value = textboxes[i].value;
-          if (textboxes[i].getAttribute("config") != "outputDirectory") {
+          if (relativePaths && textboxes[i].getAttribute("config") != "outputDirectory") {
             value = value.replace(getOutputDirectory(), "");
           }
         }
@@ -501,7 +501,7 @@ function getConfig(destdir) {
     var getconfigs = gDeck.querySelectorAll("*[getconfig]");
     for (var i=0; i < getconfigs.length; i++) {
       var getconfig = getconfigs[i].getAttribute("getconfig");
-      config = window[getconfig](config, destdir);
+      config = window[getconfig](config, relativePaths);
     }
   } catch (e) {
     errorCritical(e);

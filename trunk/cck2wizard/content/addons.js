@@ -18,19 +18,23 @@ function setAddons(config) {
         } catch (e) {
           file.initWithPath(config.outputDirectory + config.addons[i]);
         }
-        listitem = gAddonsListbox.appendItem(file.leafName, config.addons[i]);
+        listitem = gAddonsListbox.appendItem(file.leafName, file.path);
       }
-      listitem.setAttribute("tooltiptext", config.addons[i]);
+      listitem.setAttribute("tooltiptext", file.path);
       listitem.setAttribute("context", "addons-contextmenu");
     }
   }
 }
 
-function getAddons(config) {
+function getAddons(config, relativePaths) {
   if (gAddonsListbox.itemCount > 0) {
     config.addons = [];
     for (var i=0; i < gAddonsListbox.itemCount; i++) {
-      config.addons.push(gAddonsListbox.getItemAtIndex(i).getAttribute("value").replace(config.outputDirectory, ""));
+      var addon = gAddonsListbox.getItemAtIndex(i).getAttribute("value");
+      if (relativePaths) {
+        addon = addon.replace(config.outputDirectory, "");
+      }
+      config.addons.push(addon);
     }
   }
   return config;
@@ -64,8 +68,8 @@ function onAddAddonFromFile() {
   if (!addonfile) {
     return;
   }
-  var listitem = gAddonsListbox.appendItem(addonfile.leafName, addonfile.path.replace(getOutputDirectory(), ""));
-  listitem.setAttribute("tooltiptext", addonfile.path.replace(getOutputDirectory(), ""));
+  var listitem = gAddonsListbox.appendItem(addonfile.leafName, addonfile.path);
+  listitem.setAttribute("tooltiptext", addonfile.path);
   listitem.setAttribute("context", "addons-contextmenu");
 }
 
