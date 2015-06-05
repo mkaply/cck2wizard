@@ -36,8 +36,8 @@ function setIcon(path) {
   var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
   try {
     iconFile.initWithPath(path);
-    document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
-  } catch(e) {
-    document.querySelector("textbox[config='extension.icon']").value = "";
+  } catch (e) {
+    iconFile.initWithPath(getOutputDirectory() + path);
   }
+  document.getElementById("extension-icon").setAttribute("src", Services.io.newFileURI(iconFile).spec);
 }

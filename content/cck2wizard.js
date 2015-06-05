@@ -340,7 +340,8 @@ function onDebug() {
 }
 
 function onExport() {
-  var configJSON = JSON.stringify(getConfig(), null, 2);
+  var config = getConfig();
+  var configJSON = JSON.stringify(config, null, 2);
   var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
     writeFile(configFile, configJSON);
@@ -468,6 +469,9 @@ function getConfig(destdir) {
           }
         } else {
           value = textboxes[i].value;
+          if (textboxes[i].getAttribute("config") != "outputDirectory") {
+            value = value.replace(getOutputDirectory(), "");
+          }
         }
         var configPath = textboxes[i].getAttribute("config").split('.');
         if (configPath.length > 1) {
@@ -525,4 +529,11 @@ function resetConfig() {
   } catch (e) {
     errorCritical(e);
   }
+}
+
+/* A little hacky. We need the output directory for relative paths, but we don't have
+ * a config in those case.
+ */
+function getOutputDirectory() {
+  return document.querySelector("textbox[config='outputDirectory']").value;
 }
