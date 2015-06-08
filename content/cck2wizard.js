@@ -169,6 +169,9 @@ function onImport() {
           if (!validConfigID(config)) {
             return;
           }
+          if (config.relativePaths) {
+            delete(config.relativePaths);
+          }
           setConfig(config);
           // This seems odd, but the imported JSON doesn't match
           // the order of the regular JSON. I want it to.
@@ -340,7 +343,13 @@ function onDebug() {
 }
 
 function onExport() {
+  // With relative paths
   var config = getConfig(true);
+  // Without relative paths
+  var configNoRelative = getConfig(false);
+  if (JSON.stringify(config) != JSON.stringify(configNoRelative)) {
+    config.relativePaths = true;
+  }
   var configJSON = JSON.stringify(config, null, 2);
   var configFile = saveFile(window, "cck2config.json");
   if (configFile) {
