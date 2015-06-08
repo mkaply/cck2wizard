@@ -11,6 +11,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="autoconfig" setconfig="setAutoConfig">
+      <label class="cck2wizard-heading" value="&autoconfig.label;"/>
       <checkbox config="autoconfig.disableSafeMode" label="&disableSafeMode.label;" />
       <checkbox config="autoconfig.disableProfileMigrator" label="&disableProfileMigrator.label;" />
       <description>&autoconfigjs.description;</description>

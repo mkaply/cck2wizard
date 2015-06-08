@@ -23,6 +23,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="ui">
+    <label class="cck2wizard-heading" value="&ui.label;"/>
       <groupbox>
         <checkbox config="displayMenuBar" label="&displayMenuBar.label;" />
         <checkbox config="removeDeveloperTools" label="&removeDeveloperTools.label;" />
@@ -46,22 +47,20 @@
       </groupbox>
     </vbox>
     <vbox id="helpmenu">
-      <groupbox>
-        <caption label="&helpMenu.caption;"/>
-        <description>&helpMenu.description;</description>
-        <vbox>
-          <label control="HelpMenuCommandName">&helpMenuText.label;</label>
-          <textbox id="HelpMenuCommandName" config="helpMenu.label" flex="1"/>
-        </vbox>
-        <vbox>
-          <label control="HelpMenuCommandURL">&helpMenuURL.label;</label>
-          <textbox id="HelpMenuCommandURL" config="helpMenu.url" flex="1"/>
-        </vbox>
-        <vbox>
-          <label control="HelpMenuCommandAccessKey">&helpMenuAccesskey.label;</label>
-          <textbox id="HelpMenuCommandAccesskey" config="helpMenu.accesskey" flex="1"/>
-        </vbox>
-      </groupbox>
+      <label class="cck2wizard-heading" value="&helpmenu.label;"/>
+      <description>&helpMenu.description;</description>
+      <vbox>
+        <label control="HelpMenuCommandName">&helpMenuText.label;</label>
+        <textbox id="HelpMenuCommandName" config="helpMenu.label" flex="1"/>
+      </vbox>
+      <vbox>
+        <label control="HelpMenuCommandURL">&helpMenuURL.label;</label>
+        <textbox id="HelpMenuCommandURL" config="helpMenu.url" flex="1"/>
+      </vbox>
+      <vbox>
+        <label control="HelpMenuCommandAccessKey">&helpMenuAccesskey.label;</label>
+        <textbox id="HelpMenuCommandAccesskey" config="helpMenu.accesskey" flex="1"/>
+      </vbox>
     </vbox>
     <vbox id="hideui" setconfig="setHiddenUI" getconfig="getHiddenUI" resetconfig="resetHiddenUI">
       <label class="cck2wizard-heading" value="&hideui.label;"/>

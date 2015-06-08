@@ -9,7 +9,9 @@
     </treeitem>
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
+    <label class="cck2wizard-heading" value="&misc.label;"/>
     <vbox id="misc">
+      <label class="cck2wizard-heading" value="&misc.label;"/>
       <groupbox>
       <checkbox config="dontShowRights" label="&dontShowRights.label;" />
       <checkbox config="removeSnippets" label="&removeSnippets.label;"/>

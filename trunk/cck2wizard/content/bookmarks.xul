@@ -25,11 +25,13 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="bookmarks" setconfig="setBookmarks" getconfig="getBookmarks" resetconfig="resetBookmarks">
+      <label class="cck2wizard-heading" value="&bookmarks.label;"/>
       <checkbox config="displayBookmarksToolbar" label="&displayBookmarksToolbar.label;" />
       <checkbox config="removeSmartBookmarks" label="&removeSmartBookmarks.label;" />
       <checkbox config="removeDefaultBookmarks" label="&removeDefaultBookmarks.label;" />
     </vbox>
     <vbox id="bookmarks-toolbar">
+      <label class="cck2wizard-heading" value="&bookmarks-toolbar.label;"/>
         <richlistbox id="bookmarks-toolbar-listbox"
                  class="bookmarks-listbox"
                  ondragstart="onDragStart(event);"
@@ -52,6 +54,7 @@
       </hbox>
     </vbox>
     <vbox id="bookmarks-menu">
+      <label class="cck2wizard-heading" value="&bookmarks-menu.label;"/>
         <richlistbox id="bookmarks-menu-listbox"
                  class="bookmarks-listbox"
                  ondragstart="onDragStart(event);"
