@@ -16,6 +16,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="network" setconfig="setNetwork" getconfig="getNetwork" resetconfig="resetNetwork">
+    <label class="cck2wizard-heading" value="&network.label;"/>
       <hbox pack="center">
         <menulist id="networkProxyType" oncommand="onProxyType(event)">
           <menupopup>

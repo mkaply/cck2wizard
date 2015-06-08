@@ -11,6 +11,7 @@
   </treechildren>
   <deck id="cck2wizard-deck" flex="1">
     <vbox id="finish">
+    <label class="cck2wizard-heading" value="&finish.label;"/>
       <description>&extension.description;</description>
       <hbox pack="center"><button id="finish-extension" label="&extension.label;" oncommand="onFinishExtension()"/></hbox>
       <description>&autoconfig.description;</description>
