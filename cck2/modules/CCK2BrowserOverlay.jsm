@@ -105,14 +105,19 @@ var observer = {
                     // Because these are on a context menu, we can't use "hidden"
                     if (E("context-sharelink", doc)) {
                       E("context-sharelink", doc).setAttribute("style", "display: none;");
+                    }
                     if (E("context-shareselect", doc)) {
                       E("context-shareselect", doc).setAttribute("style", "display: none;");
+                    }
                     if (E("context-shareimage", doc)) {
                       E("context-shareimage", doc).setAttribute("style", "display: none;");
+                    }
                     if (E("context-sharevideo", doc)) {
                       E("context-sharevideo", doc).setAttribute("style", "display: none;");
+                    }
                     if (E("context-sharepage", doc)) {
                       E("context-sharepage", doc).setAttribute("style", "display: none;");
+                    }
                   }
                   if (config.disableForget) {
                     CustomizableUI.destroyWidget("panic-button");
