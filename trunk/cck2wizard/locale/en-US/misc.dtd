@@ -7,7 +7,7 @@
 <!ENTITY disablePDFjs.label "Disable the built-in PDF viewer">
 <!ENTITY disableWebApps.label "Disable the Firefox Marketplace">
 <!ENTITY disableHello.label "Disable Firefox Hello">
-<!ENTITY disableSendPage.label "Disable Social Sharing">
+<!ENTITY disableSharePage.label "Disable Social Sharing">
 <!ENTITY disableForget.label "Disable the Forget button">
 <!ENTITY disableHeartbeat.label "Disable Heartbeat">
 <!ENTITY disablePocket.label "Disable Pocket">
