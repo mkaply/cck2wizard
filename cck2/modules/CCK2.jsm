@@ -28,7 +28,7 @@ XPCOMUtils.defineLazyServiceGetter(this, "uuid",
 /* Hack to work around bug that AutoConfig is loaded in the wrong charset */
 var fixupUTF8 = null;
 
-if ('ä'[0] != 'ä') {
+if ('Ã¤'[0] != 'Ã¤') {
   fixupUTF8 = function(str) {
     if (!str) {
       return null;
@@ -540,67 +540,6 @@ var CCK2 = {
           if (!config.firstrun && config.installedVersion == config.version) {
             continue;
           }
-          if ("certs" in config) {
-            if ("override" in config.certs) {
-              for (var i=0; i < config.certs.override.length; i++) {
-                var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
-                try {
-                  xhr.open("GET", "https://" + config.certs.override[i]);
-                  xhr.channel.notificationCallbacks = SSLExceptions;
-                  xhr.send(null);
-                } catch (ex) {}
-              }
-            }
-            var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-            var certdb2 = certdb;
-            try {
-              certdb2 = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB2);
-            } catch (e) {
-            }
-            if (config.certs.ca) {
-              for (var i=0; i < config.certs.ca.length; i++) {
-                var certTrust;
-                if (config.certs.ca[i].trust){
-                  certTrust = config.certs.ca[i].trust
-                } else {
-                  certTrust = ",,";
-                }
-                if (config.certs.ca[i].url) {
-                  try {
-                    download(config.certs.ca[i].url, function(file, extraParams) {
-                      var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
-                      istream.init(file, -1, -1, false);
-                      var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
-                      bstream.setInputStream(istream);
-                      var cert = bstream.readBytes(bstream.available());
-                      bstream.close();
-                      istream.close();
-                      if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                        certdb2.addCertFromBase64(fixupCert(cert), extraParams.trust, "");
-                      } else {
-                        certdb.addCert(cert, extraParams.trust, "");
-                      }
-                    }, errorCritical, {trust: certTrust});
-                  } catch (e) {
-                    errorCritical("Unable to install " + config.certs.ca[i].url + " - " + e);
-                  }
-                } else if (config.certs.ca[i].cert) {
-                  certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), certTrust, "");
-                }
-              }
-            }
-            if (config.certs.server) {
-              for (var i=0; i < config.certs.server.length; i++) {
-                try {
-                  download(config.certs.server[i], function(file) {
-                    certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
-                  }, errorCritical);
-                } catch (e) {
-                  errorCritical("Unable to install " + config.certs.server[i] + " - " + e);
-                }
-              }
-            }
-          }
           if (config.removeSmartBookmarks) {
             var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
             for (var i = 0; i < smartBookmarks.length; i++) {
@@ -784,6 +723,66 @@ var CCK2 = {
           loadModules(config);
           if (!config.firstrun && config.installedVersion == config.version) {
             return;
+          }
+          if ("certs" in config) {
+            if ("override" in config.certs) {
+              for (var i=0; i < config.certs.override.length; i++) {
+                var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+                try {
+                  xhr.open("GET", "https://" + config.certs.override[i]);
+                  xhr.channel.notificationCallbacks = SSLExceptions;
+                  xhr.send(null);
+                } catch (ex) {}
+              }
+            }
+            var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
+            var certdb2 = certdb;
+            try {
+              certdb2 = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB2);
+            } catch (e) {}
+            if (config.certs.ca) {
+              for (var i=0; i < config.certs.ca.length; i++) {
+                var certTrust;
+                if (config.certs.ca[i].trust){
+                  certTrust = config.certs.ca[i].trust
+                } else {
+                  certTrust = ",,";
+                }
+                if (config.certs.ca[i].url) {
+                  try {
+                    download(config.certs.ca[i].url, function(file, extraParams) {
+                      var istream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
+                      istream.init(file, -1, -1, false);
+                      var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+                      bstream.setInputStream(istream);
+                      var cert = bstream.readBytes(bstream.available());
+                      bstream.close();
+                      istream.close();
+                      if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
+                        certdb2.addCertFromBase64(fixupCert(cert), extraParams.trust, "");
+                      } else {
+                        certdb.addCert(cert, extraParams.trust, "");
+                      }
+                    }, errorCritical, {trust: certTrust});
+                  } catch (e) {
+                    errorCritical("Unable to install " + config.certs.ca[i].url + " - " + e);
+                  }
+                } else if (config.certs.ca[i].cert) {
+                  certdb2.addCertFromBase64(fixupCert(config.certs.ca[i].cert), certTrust, "");
+                }
+              }
+            }
+            if (config.certs.server) {
+              for (var i=0; i < config.certs.server.length; i++) {
+                try {
+                  download(config.certs.server[i], function(file) {
+                    certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+                  }, errorCritical);
+                } catch (e) {
+                  errorCritical("Unable to install " + config.certs.server[i] + " - " + e);
+                }
+              }
+            }
           }
           if (config.persona) {
             var temp = {};
