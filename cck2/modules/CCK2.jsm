@@ -353,7 +353,7 @@ var CCK2 = {
       }
       if (config.disableTelemetry) {
         Preferences.lock("toolkit.telemetry.enabled", false);
-        Preferences.lock("toolkit.telemetry.prompted", 2);
+        Preferences.lock("toolkit.telemetry.prompted", 999);
         var aboutTelemetry = {};
         aboutTelemetry.classID = Components.ID(uuid.generateUUID().toString());
         aboutTelemetry.factory = disableAbout(aboutTelemetry.classID,
