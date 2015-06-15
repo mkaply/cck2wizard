@@ -1038,6 +1038,33 @@ var SSLExceptions = {
   }
 };
 
+var gAboutXHTML = '' +
+'<html xmlns="http://www.w3.org/1999/xhtml">' +
+'  <head>' +
+'    <title></title>' +
+'    <link rel="stylesheet" href="chrome://global/skin/netError.css" type="text/css" media="all" />' +
+'    <link rel="icon" type="image/png" id="favicon" href="chrome://global/skin/icons/warning-16.png" />' +
+'  </head>' +
+'  <body dir="ltr">' +
+'    <div id="errorPageContainer">' +
+'      <div id="errorTitle">' +
+'        <h1 id="errorTitleText">%s</h1>' +
+'      </div>' +
+'      <div id="errorLongContent">' +
+'        <div id="errorShortDesc">' +
+'          <p id="errorShortDescText">Access to %s has been disabled by your administrator.</p>' +
+'        </div>' +
+'      </div>' +
+'    </div>' +
+'  </body>' +
+'  <script>' +
+'    document.title = document.location.href;' +
+'    document.getElementById("errorTitleText").textContent = document.title;' +
+'    document.getElementById("errorShortDescText").textContent = document.getElementById("errorShortDescText").textContent.replace("%s", document.title);' +
+'  </script>' +
+'</html>' +
+'';
+
 /**
  * Register a component that replaces an about page
  *
@@ -1049,7 +1076,7 @@ var SSLExceptions = {
 function disableAbout(aClass, aClassName, aboutType) {
   var gAbout = {
     newChannel : function (aURI) {
-      var url = "chrome://cck2/content/about.xhtml";
+      var url = "data:text/html," + gAboutXHTML;
       var channel = Services.io.newChannel(url, null, null);
       channel.originalURI = aURI;
       return channel;
