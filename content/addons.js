@@ -11,7 +11,6 @@ function setAddons(config) {
       var listitem;
       if (/^https?:/.test(config.addons[i])) {
         listitem = gAddonsListbox.appendItem(config.addons[i], config.addons[i]);
-        listitem.setAttribute("tooltiptext", config.addons[i]);
       } else {
         var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
         try {
@@ -20,8 +19,9 @@ function setAddons(config) {
           file.initWithPath(config.outputDirectory + config.addons[i]);
         }
         listitem = gAddonsListbox.appendItem(file.leafName, file.path);
-        listitem.setAttribute("tooltiptext", file.path);
+        listitem.setAttribute("tooltiptext", config.addons[i]);
       }
+      listitem.setAttribute("tooltiptext", config.addons[i]);
       listitem.setAttribute("context", "addons-contextmenu");
     }
   }
