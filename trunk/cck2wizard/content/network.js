@@ -13,11 +13,15 @@ function setNetwork(config) {
   }
   var proxyConfigFile = document.querySelector("textbox[config='network.proxyAutoConfig']");
   if (proxyConfigFile.value) {
-    var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-    try {
-      file.initWithPath(proxyConfigFile.value);
-    } catch (e) {
-      proxyConfigFile.value = config.outputDirectory + proxyConfigFile.value;
+    if (/^https?:/.test(proxyConfigFile.value)) {
+      proxyConfigFile.value = proxyConfigFile.value;
+    } else {
+      var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+      try {
+        file.initWithPath(proxyConfigFile.value);
+      } catch (e) {
+        proxyConfigFile.value = config.outputDirectory + proxyConfigFile.value;
+      }
     }
   }
 }
