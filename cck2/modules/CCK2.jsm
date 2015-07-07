@@ -187,9 +187,23 @@ var CCK2 = {
           } else {
             if (Preferences.defaults.has(i) && Preferences.defaults.get(i)) {
               try {
-                // If it's a complex preference, we need to set it differently
-                Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
+                // Doesn't work due to bug 1181357
+                // Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
+                if (
+                    i == "browser.startup.homepage" ||
+                    i == "gecko.handlerService.defaultHandlersVersion" ||
+                    i == "browser.menu.showCharacterEncoding" ||
+                    i.indexOf("browser.search.defaultenginename" == 0) ||
+                    i.indexOf("browser.search.order" == 0) ||
+                    i.indexOf("browser.contentHandlers.types" == 0) ||
+                    i.indexOf("gecko.handlerService.schemes" == 0)
+                   )
+                {
+                  // If it's a complex preference, we need to set it differently
+                  Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
+                } else {
+                  throw("Not a complex pref");                 
+                }
               } catch (ex) {
                 Preferences.defaults.set(i, config.preferences[i].value);
               }
