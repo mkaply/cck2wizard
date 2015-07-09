@@ -193,10 +193,10 @@ var CCK2 = {
                     i == "browser.startup.homepage" ||
                     i == "gecko.handlerService.defaultHandlersVersion" ||
                     i == "browser.menu.showCharacterEncoding" ||
-                    i.indexOf("browser.search.defaultenginename" == 0) ||
-                    i.indexOf("browser.search.order" == 0) ||
-                    i.indexOf("browser.contentHandlers.types" == 0) ||
-                    i.indexOf("gecko.handlerService.schemes" == 0)
+                    i.indexOf("browser.search.defaultenginename") == 0 ||
+                    i.indexOf("browser.search.order") == 0 ||
+                    i.indexOf("browser.contentHandlers.types") == 0 ||
+                    i.indexOf("gecko.handlerService.schemes") == 0
                    )
                 {
                   // If it's a complex preference, we need to set it differently
