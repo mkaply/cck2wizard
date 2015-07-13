@@ -119,6 +119,9 @@ var observer = {
                       E("context-sharepage", doc).setAttribute("style", "display: none;");
                     }
                   }
+                  if (config.disableSocialAPI) {
+                    win.SocialActivationListener = {};
+                  }
                   if (config.disableForget) {
                     CustomizableUI.destroyWidget("panic-button");
                   }
