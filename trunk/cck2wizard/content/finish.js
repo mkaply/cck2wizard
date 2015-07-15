@@ -40,6 +40,7 @@ const installRDFTemplate = [
 '                <em:maxVersion>24.*</em:maxVersion>',
 '            </Description>',
 '        </em:targetApplication>',
+'        <em:unpack>true</em:unpack>',
 '    </Description>',
 '</RDF>',
 ''].join("\n");
