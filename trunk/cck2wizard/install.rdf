@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>cck2wizard@kaply.com</em:id>
     <em:name>CCK2 Wizard</em:name>
-    <em:version>2.1.1.5</em:version>
+    <em:version>2.1.1.6</em:version>
     <em:description>Create custom Firefox configurations as standalone XPIs or that work with AutoConfig</em:description>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>

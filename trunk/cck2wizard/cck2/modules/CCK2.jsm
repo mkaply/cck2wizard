@@ -28,7 +28,7 @@ XPCOMUtils.defineLazyServiceGetter(this, "uuid",
 /* Hack to work around bug that AutoConfig is loaded in the wrong charset */
 var fixupUTF8 = null;
 
-if ('ä'[0] != 'ä') {
+if ('Ã¤'[0] != 'Ã¤') {
   fixupUTF8 = function(str) {
     if (!str) {
       return null;
@@ -193,6 +193,7 @@ var CCK2 = {
                     i == "browser.startup.homepage" ||
                     i == "gecko.handlerService.defaultHandlersVersion" ||
                     i == "browser.menu.showCharacterEncoding" ||
+                    i == "intl.accept_languages" ||
                     i.indexOf("browser.search.defaultenginename") == 0 ||
                     i.indexOf("browser.search.order") == 0 ||
                     i.indexOf("browser.contentHandlers.types") == 0 ||
