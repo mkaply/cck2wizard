@@ -199,6 +199,18 @@ var observer = {
                 }
               }
               break;
+            case "chrome://browser/content/places/places.xul":
+            case "chrome://browser/content/bookmarks/bookmarksPanel.xul":
+              configs = CCK2.getConfigs();
+              for (id in configs) {
+                var config = configs[id];       
+                if (config.disablePrivateBrowsing) {
+                  if (E("placesContext_open:newprivatewindow", doc)) {
+                    E("placesContext_open:newprivatewindow", doc).setAttribute("style", "display: none;");
+                  }
+                }
+              }
+              break;
           }
         }, false);
         break;
@@ -247,6 +259,8 @@ function disablePrivateBrowsing(doc) {
   // Because this is on a context menu, we can't use "hidden"
   if (E("context-openlinkprivate", doc))
     E("context-openlinkprivate", doc).setAttribute("style", "display: none;");
+  if (E("placesContext_open:newprivatewindow", doc))
+    E("placesContext_open:newprivatewindow", doc).setAttribute("style", "display: none;");
   CustomizableUI.destroyWidget("privatebrowsing-button")
 }
 
