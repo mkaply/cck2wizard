@@ -136,18 +136,23 @@ function onAutosave() {
 }
 
 function validConfigID(config) {
-    var check = {value: false};
-    var input = {value: config.id};  
-    var result = Services.prompt.prompt(window, "CCK2", "Please enter a unique ID for this configuration.", input, null, check);
-    if (!result) {
-      return false;
-    }
-    config.id = input.value;
+  var alphaExp = /[//\\\s]/;
+  var check = {value: false};
+  var input = {value: config.id};  
+  var result = Services.prompt.prompt(window, "CCK2", "Please enter a unique ID for this configuration.", input, null, check);
+  if (!result) {
+    return false;
+  }
+  config.id = input.value;
 
-  while (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + config.id)) {
+  while (Services.prefs.prefHasUserValue(prefsPrefix + "configs." + config.id) || alphaExp.test(config.id)) {
     var check = {value: false};
-    var input = {value: config.id};  
-    var result = Services.prompt.prompt(window, "CCK2", "A config with that ID already exists. Please enter a new ID.", input, null, check);
+    var input = {value: config.id};
+    var errorString = "A config with that ID already exists. Please enter a new ID.";
+    if (alphaExp.test(config.id)) {
+      errorString = gStringBundle.getString("invalidid");
+    }
+    var result = Services.prompt.prompt(window, "CCK2", errorString, input, null, check);
     if (!result) {
       return false;
     }
