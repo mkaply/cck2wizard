@@ -167,11 +167,14 @@ var CCK2 = {
           // Because of this, setting the default value doesn't work.
           // So if a user is trying to set the default value, we set
           // the user value as well.
+          // But we only do that if it's set to application/pdf
           if (i == "plugin.disable_full_page_plugin_for_types") {
             if (!config.preferences[i].userset &&
                 !config.preferences[i].locked &&
                 !config.preferences[i].clear) {
-              Preferences.set(i, config.preferences[i].value);
+              if (Preferences.get(i) == "application/pdf") {
+                Preferences.set(i, config.preferences[i].value);
+              }
             }
           }
           // Workaround bug where this pref is coming is as a string from import
