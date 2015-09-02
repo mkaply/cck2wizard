@@ -420,6 +420,8 @@ var CCK2 = {
       }
       if (config.dontShowRights) {
         Preferences.lock("browser.rights.override", true);
+        var rightsVersion = Preferences.get("browser.rights.version");
+        Preferences.lock("browser.rights." + rightsVersion + ".shown", true);
       }
       if (config.dontRememberPasswords) {
         Preferences.lock("signon.rememberSignons", false);
