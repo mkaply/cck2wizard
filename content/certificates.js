@@ -142,6 +142,9 @@ function resetCertificates() {
   while (gCertOverridesListbox.itemCount > 0) {
     gCertOverridesListbox.removeItemAt(0);
   }
+  while (gDevicesListbox.itemCount > 0) {
+    gDevicesListbox.removeItemAt(0);
+  }
 }
 
 function addCertificateFromURL() {
