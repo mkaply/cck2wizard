@@ -1179,12 +1179,14 @@ function loadBundleDirs() {
     }
     // In order to load prefs, we have to use a chrome URL.
     // Create a resource that maps to the prefs directory.
-    var prefAlias = io.newFileURI(file);
+    var prefAlias = Services.io.newFileURI(file);
+    var resource = Services.io.getProtocolHandler("resource")
+                           .QueryInterface(Ci.nsIResProtocolHandler);
     resource.setSubstitution(dirName + "_prefs", prefAlias);
     var prefEnumerator = file.directoryEntries;
     while (prefEnumerator.hasMoreElements()) {
       var prefFile = prefEnumerator.getNext().QueryInterface(Ci.nsIFile);
-      gPrefBundleFiles.push("resource://" + dirName + "_prefs/" + prefFile.leafName);
+      gBundlePrefFiles.push("resource://" + dirName + "_prefs/" + prefFile.leafName);
     }
   }
 }
