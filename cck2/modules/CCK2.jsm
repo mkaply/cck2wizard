@@ -166,15 +166,19 @@ var CCK2 = {
           // a default user value (application/pdf).
           // Because of this, setting the default value doesn't work.
           // So if a user is trying to set the default value, we set
-          // the user value as well.
+          // the user value instead.
           // But we only do that if it's set to application/pdf
-          // or not set (startup)
+          // or not set (startup), or it's a CCK2 upgrade or first install
+          // As a side note, at Firefox install, application/pdf is added
+          // to the pref no matter what
           if (i == "plugin.disable_full_page_plugin_for_types") {
             if (!config.preferences[i].userset &&
                 !config.preferences[i].locked &&
                 !config.preferences[i].clear) {
               if (Preferences.get(i) == "application/pdf" ||
-                  !Preferences.get(i)) { // firstrun
+                  !Preferences.get(i) || // firstrun
+                  config.upgrade ||
+                  config.firstrun) {
                 Preferences.set(i, config.preferences[i].value);
                 continue;
               }
