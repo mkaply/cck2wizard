@@ -168,12 +168,15 @@ var CCK2 = {
           // So if a user is trying to set the default value, we set
           // the user value as well.
           // But we only do that if it's set to application/pdf
+          // or not set (startup)
           if (i == "plugin.disable_full_page_plugin_for_types") {
             if (!config.preferences[i].userset &&
                 !config.preferences[i].locked &&
                 !config.preferences[i].clear) {
-              if (Preferences.get(i) == "application/pdf") {
+              if (Preferences.get(i) == "application/pdf" ||
+                  !Preferences.get(i)) { // firstrun
                 Preferences.set(i, config.preferences[i].value);
+                continue;
               }
             }
           }
