@@ -237,11 +237,14 @@ var CCK2 = {
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
             Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
+            Services.perms.add(NetUtil.newURI("https://" + i), j, config.permissions[i][j]);
             if (j == "plugins") {
               var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
               for (var k=0; k < plugins.length; k++) {
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
                 Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                Services.perms.add(NetUtil.newURI("https://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                Services.perms.add(NetUtil.newURI("https://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
               }
             }
             // This is a crazy hack to work around bug 1083637
@@ -257,7 +260,12 @@ var CCK2 = {
             while (perms.hasMoreElements()) {
               let perm = perms.getNext();
               if (perm.host == i) {
-                Services.perms.remove(perm.host, perm.type);
+                try {
+                  Services.perms.remove(perm.host, perm.type);
+                } catch (e) {
+                  Services.perms.remove(NetUtil.newURI("http://" + perm.host), perm.type);
+                  Services.perms.remove(NetUtil.newURI("https://" + perm.host), perm.type);
+                }
               }
             }
           }
