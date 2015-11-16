@@ -236,15 +236,23 @@ var CCK2 = {
       if (config.permissions) {
         for (var i in config.permissions) {
           for (var j in config.permissions[i]) {
-            Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
-            Services.perms.add(NetUtil.newURI("https://" + i), j, config.permissions[i][j]);
+            if (i.indexOf("http") == 0) {
+              Services.perms.add(NetUtil.newURI(i), j, config.permissions[i][j]);
+            } else {
+              Services.perms.add(NetUtil.newURI("http://" + i), j, config.permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("https://" + i), j, config.permissions[i][j]);
+            }
             if (j == "plugins") {
               var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
               for (var k=0; k < plugins.length; k++) {
-                Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                Services.perms.add(NetUtil.newURI("https://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                Services.perms.add(NetUtil.newURI("https://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                if (i.indexOf("http") == 0) {
+                  Services.perms.add(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                  Services.perms.add(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                } else {
+                  Services.perms.add(NetUtil.newURI("http://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                  Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                  Services.perms.add(NetUtil.newURI("https://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                  Services.perms.add(NetUtil.newURI("https://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
               }
             }
             // This is a crazy hack to work around bug 1083637
