@@ -253,6 +253,7 @@ var CCK2 = {
                   Services.perms.add(NetUtil.newURI("http://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
                   Services.perms.add(NetUtil.newURI("https://" + i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
                   Services.perms.add(NetUtil.newURI("https://" + i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
+                }
               }
             }
           }
@@ -260,12 +261,23 @@ var CCK2 = {
             let perms = Services.perms.enumerator;
             while (perms.hasMoreElements()) {
               let perm = perms.getNext();
-              if (perm.host == i) {
-                try {
+              try {
+                // Firefox 41 and below
+                if (perm.host == i) {
                   Services.perms.remove(perm.host, perm.type);
-                } catch (e) {
-                  Services.perms.remove(NetUtil.newURI("http://" + perm.host), perm.type);
-                  Services.perms.remove(NetUtil.newURI("https://" + perm.host), perm.type);
+                }
+              } catch(e) {
+                if (i.indexOf("http") == 0) {
+                  if (perm.matchesURI(NetUtil.newURI(i), false)) {
+                    perm.remove(NetUtil.newURI(i), perm.type);
+                  }
+                } else {
+                  if (perm.matchesURI(NetUtil.newURI("http://" + i), false)) {
+                    perm.remove(NetUtil.newURI("http://" + i), perm.type);
+                  }
+                  if (perm.matchesURI(NetUtil.newURI("https://" + i), false)) {
+                    perm.remove(NetUtil.newURI("https://" + i), perm.type);
+                  }
                 }
               }
             }
