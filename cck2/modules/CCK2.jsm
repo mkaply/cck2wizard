@@ -71,7 +71,7 @@ if ('Ã¤'[0] != 'Ã¤') {
 /* Basically if the distribution can't be parsed,  make it null */
 let dirSvc = Cc["@mozilla.org/file/directory_service;1"].
              getService(Ci.nsIProperties);
-let iniFile = dirSvc.get("XREExeF", Ci.nsIFile);
+let iniFile = dirSvc.get("XREAppDist", Ci.nsIFile);
 iniFile.leafName = "distribution";
 iniFile.append("distribution.ini");
 if (iniFile.exists()) {
@@ -514,7 +514,7 @@ var CCK2 = {
           var config = this.configs[id];
           // Due to bug 947838, we have to reinitialize default preferences
           {
-            var iniFile = Services.dirsvc.get("XREExeF", Ci.nsIFile);
+            var iniFile = Services.dirsvc.get("XREAppDist", Ci.nsIFile);
             iniFile.leafName = "distribution";
             iniFile.append("distribution.ini");
             if (iniFile.exists()) {
