@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="chrome://global/skin/"?>
-<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        id="safeModeDialog"
-        buttons="accept"
-        ondialogcancel="closeFirefox();"
-        ondialogaccept="closeFirefox();">
-  <script type="application/x-javascript;version=1.7">
-  <![CDATA[
-  function closeFirefox() {
-    Components.utils.import("resource://gre/modules/Services.jsm");
-    Services.startup.quit(Services.startup.eForceQuit);
-  }
-  ]]>
-  </script>
-  <description>
-  Safe Mode has been disabled.
-  </description>
-</dialog>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<dialog id="safeModeDialog"
+        buttons="cancel"
+        buttonlabelcancel="Exit"
+        onload="document.querySelectorAll('description')[0].value = 'Safe Mode has been disabled';document.getElementById('autoSafeMode').hidden = false;document.getElementById('safeMode').hidden = true;"
+        />
+        <vbox id="tasks"
+              hidden="true"/>
+</overlay>
