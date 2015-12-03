@@ -1,7 +1,7 @@
 <!ENTITY autoconfig.label "AutoConfig Only">
 
-<!ENTITY disableProfileMigrator.label "Don't Migrate Profiles">
-<!ENTITY disableSafeMode.label "Disable Safe Mode">
+<!ENTITY disableProfileMigrator.label "Don't Show the Profile Import Wizard">
+<!ENTITY disableSafeMode.label "Disable Safe Mode (Only works with Firefox 40 and below)">
 
 <!ENTITY add.label "Add...">
 <!ENTITY delete.label "Delete">
