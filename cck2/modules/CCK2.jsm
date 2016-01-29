@@ -438,6 +438,9 @@ var CCK2 = {
       }
       if (config.noWelcomePage) {
         Preferences.lock("startup.homepage_welcome_url", "");
+        Preferences.lock("startup.homepage_welcome_url.additional", "");
+        Preferences.lock("browser.usedOnWindows10", true);
+
       } else if (config.welcomePage) {
         Preferences.lock("startup.homepage_welcome_url", config.welcomePage);
       }
