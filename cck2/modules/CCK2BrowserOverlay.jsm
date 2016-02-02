@@ -100,6 +100,9 @@ var observer = {
                   if (config.disableHello) {
                     CustomizableUI.destroyWidget("loop-button");
                   }
+                  if (config.disablePocket) {
+                    CustomizableUI.destroyWidget("pocket-button");
+                  }
                   if (config.disableSharePage) {
                     CustomizableUI.destroyWidget("social-share-button");
                     // Because these are on a context menu, we can't use "hidden"
