@@ -320,6 +320,7 @@ function onPanelShowing(event) {
     var config = configs[id];       
     if (config.disableSync) {
       hide(E("PanelUI-fxa-status", event.target.ownerDocument));
+      hide(E("PanelUI-footer-fxa", event.target.ownerDocument)); // Firefox 42+
     }
   }
 }
