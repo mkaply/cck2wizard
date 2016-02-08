@@ -306,11 +306,10 @@ function packageCCK2(type) {
   }
 
   if (type == "distribution") {
-    // I HAVE NO SOLUTION FOR DISABLING SAFE MODE IF DISTRIBUTION/BUNDLES is gone
     if ("autoconfig" in config && config.autoconfig.disableSafeMode) {
       var disablesafemodeDir = dir.clone();
       if (type == "distribution") {
-        disablesafemodeDir.append("distribution");
+        disablesafemodeDir.append("cck2");
         disablesafemodeDir.append("bundles");
       }
       disablesafemodeDir.append("disablesafemode");
