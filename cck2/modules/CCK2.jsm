@@ -26,46 +26,41 @@ XPCOMUtils.defineLazyServiceGetter(this, "uuid",
     "@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
 
 /* Hack to work around bug that AutoConfig is loaded in the wrong charset */
-var fixupUTF8 = null;
+/* Not used for Firefox 44 and above (see CCK2.init) */
+fixupUTF8 = function(str) {
+  if (!str) {
+    return null;
+  }
+  var out, i, len, c;
+  var char2, char3;
 
-if ('Ã¤'[0] != 'Ã¤') {
-  fixupUTF8 = function(str) {
-    if (!str) {
-      return null;
+  out = "";
+  len = str.length;
+  i = 0;
+  while(i < len) {
+    c = str.charCodeAt(i++);
+    switch(c >> 4)
+    {
+      case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+        // 0xxxxxxx
+        out += str.charAt(i-1);
+        break;
+      case 12: case 13:
+        // 110x xxxx   10xx xxxx
+        char2 = str.charCodeAt(i++);
+        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+        break;
+      case 14:
+        // 1110 xxxx  10xx xxxx  10xx xxxx
+        char2 = str.charCodeAt(i++);
+        char3 = str.charCodeAt(i++);
+        out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
+        break;
     }
-    var out, i, len, c;
-    var char2, char3;
-  
-    out = "";
-    len = str.length;
-    i = 0;
-    while(i < len) {
-      c = str.charCodeAt(i++);
-      switch(c >> 4)
-      { 
-        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-          // 0xxxxxxx
-          out += str.charAt(i-1);
-          break;
-        case 12: case 13:
-          // 110x xxxx   10xx xxxx
-          char2 = str.charCodeAt(i++);
-          out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-          break;
-        case 14:
-          // 1110 xxxx  10xx xxxx  10xx xxxx
-          char2 = str.charCodeAt(i++);
-          char3 = str.charCodeAt(i++);
-          out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));  
-          break;
-      }
-    }
-  
-    return out;
-  };
-} else {
-  fixupUTF8 = function(str) { return str };
-}
+  }
+
+  return out;
+};
 
 /* Crazy hack to work around distribution.ini bug */
 /* Basically if the distribution can't be parsed,  make it null */
@@ -116,7 +111,11 @@ var CCK2 = {
   installedVersion: null,
   initialized: false,
   aboutFactories: [],
-  init: function(config) {
+  init: function(config, a, b) {
+    if (a == b) {
+      /* See bugzilla 1193625/1137799 */
+      fixupUTF8 = function(str) { return str };
+    }
     try {
       for (var id in this.configs) {
         if (id == config.id) {

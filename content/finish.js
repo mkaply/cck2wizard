@@ -69,7 +69,7 @@ const CCK2ServiceTemplate = [
 '    switch(aTopic) {',
 '      case "profile-after-change":',
 '        Components.utils.import("resource://cck2/CCK2.jsm");',
-'        CCK2.init(config);',
+'        CCK2.init(config, "ä"[0], "ä");',
 '        break;',
 '    }',
 '  },',
@@ -121,7 +121,7 @@ const autoconfigTemplate = [
 'resource.setSubstitution("%packagename%", configAlias);',
 '',
 'Components.utils.import("resource://cck2/CCK2.jsm");',
-'CCK2.init(config);',
+'CCK2.init(config, "ä"[0], "ä");',
 '',
 ''].join("\n");
 
