@@ -27,10 +27,13 @@ var observer = {
               for (id in configs) {
                 var config = configs[id];
                 if (config && "extension" in config && config.extension.hide) {
-                  win.addEventListener("ViewChanged", function() {
-                    hide(doc.querySelector("richlistitem[value='" + config.extension.id + "']"));
-                  } , false)
-                  hide(doc.querySelector("richlistitem[value='" + config.extension.id + "']"));
+                  for (var i = 0; i < doc.styleSheets.length; i++) {
+                    if (doc.styleSheets[i].href == "chrome://mozapps/skin/extensions/extensions.css") {
+                      var ss = doc.styleSheets[i];
+                      ss.insertRule("richlistitem[value='" + config.extension.id + "'] { display: none;}", ss.cssRules.length);
+                      break;
+                    }
+                  }
                 }
               }
               var showDiscoverPane = true;
