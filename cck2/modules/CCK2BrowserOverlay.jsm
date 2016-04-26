@@ -99,6 +99,7 @@ var observer = {
                   }
                   if (config.disableHello) {
                     CustomizableUI.destroyWidget("loop-button");
+                    hide(E("menu_openLoop", doc));
                   }
                   if (config.disablePocket) {
                     CustomizableUI.destroyWidget("pocket-button");
