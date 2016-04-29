@@ -130,43 +130,7 @@ var observer = {
                     CustomizableUI.destroyWidget("panic-button");
                   }
                   if (config.hiddenUI) {
-                    for (var i=0; i < config.hiddenUI.length; i++) {
-                      var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
-                      // Don't use .hidden since it doesn't work sometimes
-                      var style = doc.getElementById("cck2-hidden-style");
-                      if (!style) {
-                        style = doc.createElementNS("http://www.w3.org/1999/xhtml", "style");
-                        style.setAttribute("id", "cck2-hidden-style");
-                        style.setAttribute("type", "text/css");
-                        doc.getElementById("main-window").appendChild(style);
-                      }
-                      style.textContent = style.textContent + config.hiddenUI[i] + "{display: none !important;}";
-                      if (!uiElements || uiElements.length == 0) {
-                        continue;
-                      }
-                      for (var j=0; j < uiElements.length; j++) {
-                        var uiElement = uiElements[j];
-                        if (uiElement.nodeName == "menuitem") {
-                          uiElement.removeAttribute("key");
-                          uiElement.removeAttribute("oncommand");
-                          if (uiElement.hasAttribute("command")) {
-                            var commandId = uiElement.getAttribute("command");
-                            uiElement.removeAttribute("command");
-                            var command = doc.getElementById(commandId);
-                            command.removeAttribute("oncommand");
-                            var keys = doc.querySelectorAll("key[command='" + commandId + "']")
-                            for (var k=0; k < keys.length; k++) {
-                              keys[k].removeAttribute("command");
-                            }
-                          }
-                        }
-                        // Horrible hack to work around the crappy Australis help menu
-                        // Items on the menu always show up in the Australis menu, so we have to remove them.
-                        if (uiElements[j].parentNode.id == "menu_HelpPopup") {
-                          uiElements[j].parentNode.removeChild(uiElements[j]);
-                        }
-                      }
-                    }
+                    hideUIElements(doc, config.hiddenUI);
                   }
                   if (config.helpMenu) {
                     // We need to run this function on a delay, because we won't know
@@ -205,6 +169,7 @@ var observer = {
               break;
             case "chrome://browser/content/places/places.xul":
             case "chrome://browser/content/bookmarks/bookmarksPanel.xul":
+            case "chrome://browser/content/history/history-panel.xul":
               configs = CCK2.getConfigs();
               for (id in configs) {
                 var config = configs[id];       
@@ -212,6 +177,9 @@ var observer = {
                   if (E("placesContext_open:newprivatewindow", doc)) {
                     E("placesContext_open:newprivatewindow", doc).setAttribute("style", "display: none;");
                   }
+                }
+                if (config.hiddenUI) {
+                  hideUIElements(doc, config.hiddenUI);
                 }
               }
               break;
@@ -344,5 +312,45 @@ function disable(element) {
   if (element) {
     element.disabled = true;
     element.setAttribute("disabled", "true");
+  }
+}
+
+function hideUIElements(doc, hiddenUI) {
+  for (var i=0; i < hiddenUI.length; i++) {
+    var uiElements = doc.querySelectorAll(hiddenUI[i]);
+    // Don't use .hidden since it doesn't work sometimes
+    var style = doc.getElementById("cck2-hidden-style");
+    if (!style) {
+      style = doc.createElementNS("http://www.w3.org/1999/xhtml", "style");
+      style.setAttribute("id", "cck2-hidden-style");
+      style.setAttribute("type", "text/css");
+      doc.documentElement.appendChild(style);
+    }
+    style.textContent = style.textContent + hiddenUI[i] + "{display: none !important;}";
+    if (!uiElements || uiElements.length == 0) {
+      continue;
+    }
+    for (var j=0; j < uiElements.length; j++) {
+      var uiElement = uiElements[j];
+      if (uiElement.nodeName == "menuitem") {
+        uiElement.removeAttribute("key");
+        uiElement.removeAttribute("oncommand");
+        if (uiElement.hasAttribute("command")) {
+          var commandId = uiElement.getAttribute("command");
+          uiElement.removeAttribute("command");
+          var command = doc.getElementById(commandId);
+          command.removeAttribute("oncommand");
+          var keys = doc.querySelectorAll("key[command='" + commandId + "']")
+          for (var k=0; k < keys.length; k++) {
+            keys[k].removeAttribute("command");
+          }
+        }
+      }
+      // Horrible hack to work around the crappy Australis help menu
+      // Items on the menu always show up in the Australis menu, so we have to remove them.
+      if (uiElements[j].parentNode.id == "menu_HelpPopup") {
+        uiElements[j].parentNode.removeChild(uiElements[j]);
+      }
+    }
   }
 }
