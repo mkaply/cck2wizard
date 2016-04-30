@@ -75,7 +75,7 @@ if (iniFile.exists()) {
                  getService(Ci.nsIINIParserFactory).
                  createINIParser(iniFile);
   } catch (e) {
-    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() null);
+    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() { return null;});
   }
 }
 

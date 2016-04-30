@@ -76,7 +76,7 @@ Preferences.prototype = {
    */
   get: function(prefName, defaultValue) {
     if (isArray(prefName))
-      return prefName.map(function(v) this.get(v, defaultValue), this);
+      return prefName.map(v => this.get(v, defaultValue));
 
     return this._get(prefName, defaultValue);
   },
@@ -283,7 +283,7 @@ Preferences.prototype = {
 
   reset: function(prefName) {
     if (isArray(prefName)) {
-      prefName.map(function(v) this.reset(v), this);
+      prefName.map(v => this.reset(v));
       return;
     }
 
