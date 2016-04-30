@@ -895,10 +895,14 @@ var CCK2 = {
 }
 
 function loadModules(config) {
+  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+  globalMM.addMessageListener("cck2:get-configs", function(message) {
+    return CCK2.configs;
+  });
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
-  Cu.import("resource://cck2/CCK2AboutHomeOverlay.jsm");
+  globalMM.loadFrameScript("resource://cck2/CCK2AboutHomeFramescript.js", true);
   Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
   Cu.import("resource://cck2/CCK2BrowserOverlay.jsm");
   Cu.import("resource://cck2/CCK2FileBlock.jsm");
