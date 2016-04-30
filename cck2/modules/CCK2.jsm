@@ -13,7 +13,6 @@ try {
 Cu.import("resource://cck2/Preferences.jsm");
 Cu.import("resource://cck2/CTPPermissions.jsm");
 Cu.import("resource://cck2/CAPSClipboard.jsm");
-Cu.import("resource://cck2/CAPSCheckLoadURI.jsm");
 Cu.import("resource:///modules/distribution.js");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
@@ -899,10 +898,17 @@ function loadModules(config) {
   globalMM.addMessageListener("cck2:get-configs", function(message) {
     return CCK2.configs;
   });
+  globalMM.addMessageListener("cck2:open-url", function(message) {
+    var win = Services.wm.getMostRecentWindow("navigator:browser");
+    if (win) {
+      win.openUILinkIn(message.data.url, message.data.where);
+    }
+  });
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
   globalMM.loadFrameScript("resource://cck2/CCK2AboutHomeFramescript.js", true);
+  globalMM.loadFrameScript("resource://cck2/CAPSCheckLoadURIFramescript.js", true);
   Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
   Cu.import("resource://cck2/CCK2BrowserOverlay.jsm");
   Cu.import("resource://cck2/CCK2FileBlock.jsm");
