@@ -110,52 +110,6 @@ var CAPSClipboard = {
       if (Services.vc.compare(Services.appinfo.version, "29") <= 0) {
         return;
       }
-        try {
-          if (Services.prefs.getCharPref("capability.policy.default.Clipboard.cutcopy") == "allAccess") {
-            gDefaultCutCopyPolicy = true;
-          }
-        } catch (e) {}
-        try {
-          if (Services.prefs.getCharPref("capability.policy.default.Clipboard.paste") == "allAccess") {
-            gDefaultPastePolicy = true;
-          }
-        } catch (e) {}
-        var policies = [];
-        policies = Services.prefs.getCharPref("capability.policy.policynames").split(', ');
-        for (var i=0; i < policies.length; i++ ) {
-          try {
-            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.cutcopy") == "allAccess") {
-              var allowedCutCopySites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
-              for (var j=0; j < allowedCutCopySites.length; j++) {
-                gAllowedCutCopySites.push(allowedCutCopySites[j]);
-              }
-            }
-          } catch(e) {}
-          try {
-            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.cutcopy") == "noAccess") {
-              var deniedCutCopySites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
-              for (var j=0; j < deniedCutCopySites.length; j++) {
-                gDeniedCutCopySites.push(deniedCutCopySites[j]);
-              }
-            }
-          } catch(e) {}
-          try {
-            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "allAccess") {
-              var allowedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
-              for (var j=0; j < allowedPasteSites.length; j++) {
-                gAllowedPasteSites.push(allowedPasteSites[j]);
-              }
-            }
-          } catch(e) {}
-          try {
-            if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "noAccess") {
-              var deniedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
-              for (var j=0; j < deniedPasteSites.length; j++) {
-                gDeniedPasteSites.push(deniedPasteSites[j]);
-              }
-            }
-          } catch(e) {}
-        }
       } catch (ex) {};
       Services.obs.addObserver(documentObserver, "content-document-global-created", false);
       break;
@@ -167,5 +121,52 @@ var CAPSClipboard = {
   }
 }
 
-Services.obs.addObserver(CAPSClipboard, "final-ui-startup", false);
-Services.obs.addObserver(CAPSClipboard, "quit-application", false);
+// Don't do this check before Firefox 29
+if (Services.vc.compare(Services.appinfo.version, "29") > 0) {
+  try {
+    if (Services.prefs.getCharPref("capability.policy.default.Clipboard.cutcopy") == "allAccess") {
+      gDefaultCutCopyPolicy = true;
+    }
+  } catch (e) {}
+  try {
+    if (Services.prefs.getCharPref("capability.policy.default.Clipboard.paste") == "allAccess") {
+      gDefaultPastePolicy = true;
+    }
+  } catch (e) {}
+  var policies = [];
+  policies = Services.prefs.getCharPref("capability.policy.policynames").split(', ');
+  for (var i=0; i < policies.length; i++ ) {
+    try {
+      if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.cutcopy") == "allAccess") {
+        var allowedCutCopySites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+        for (var j=0; j < allowedCutCopySites.length; j++) {
+          gAllowedCutCopySites.push(allowedCutCopySites[j]);
+        }
+      }
+    } catch(e) {}
+    try {
+      if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.cutcopy") == "noAccess") {
+        var deniedCutCopySites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+        for (var j=0; j < deniedCutCopySites.length; j++) {
+          gDeniedCutCopySites.push(deniedCutCopySites[j]);
+        }
+      }
+    } catch(e) {}
+    try {
+      if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "allAccess") {
+        var allowedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+        for (var j=0; j < allowedPasteSites.length; j++) {
+          gAllowedPasteSites.push(allowedPasteSites[j]);
+        }
+      }
+    } catch(e) {}
+    try {
+      if (Services.prefs.getCharPref("capability.policy." + policies[i] + ".Clipboard.paste") == "noAccess") {
+        var deniedPasteSites = Services.prefs.getCharPref("capability.policy." + policies[i] + ".sites").split(" ");
+        for (var j=0; j < deniedPasteSites.length; j++) {
+          gDeniedPasteSites.push(deniedPasteSites[j]);
+        }
+      }
+    } catch(e) {}
+  }
+}

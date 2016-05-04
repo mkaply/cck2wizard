@@ -764,8 +764,6 @@ var CCK2 = {
         };
         break;
       case "final-ui-startup":
-//        let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
-//        globalMM.loadFrameScript("resource://cck2/CAPSClipboard-fs.js", true);
         for (var id in this.configs) {
           var config = this.configs[id];
           // Delay loading unnecessary modules
@@ -909,6 +907,7 @@ function loadModules(config) {
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
   globalMM.loadFrameScript("resource://cck2/CCK2AboutHomeFramescript.js", true);
   globalMM.loadFrameScript("resource://cck2/CAPSCheckLoadURIFramescript.js", true);
+  globalMM.loadFrameScript("resource://cck2/CAPSClipboardFramescript.js", true);
   Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
   Cu.import("resource://cck2/CCK2BrowserOverlay.jsm");
   Cu.import("resource://cck2/CCK2FileBlock.jsm");
