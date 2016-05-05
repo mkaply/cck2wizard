@@ -85,6 +85,25 @@ function myExecCommand(doc, originalExecCommand) {
   }
 }
 
+function myQueryCommandSupported(doc, originalQueryCommandSupported) {
+  return function(aCommandName) {
+    switch (aCommandName.toLowerCase()) {
+    case "cut":
+    case "copy":
+      if (allowCutCopy(doc)) {
+        return true;
+      }
+      break;
+    case "paste":
+      if (allowPaste(doc)) {
+        return true;
+      }
+      break;
+    }
+    return originalQueryCommandSupported.call(doc, aCommandName, aShowDefaultUI, aValueArgument);
+  }
+}
+
 var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
@@ -96,6 +115,10 @@ var documentObserver = {
       }
       var originalExecCommand = Cu.waiveXrays(doc).execCommand;
       Cu.exportFunction(myExecCommand(doc, originalExecCommand), doc, {defineAs: "execCommand"});
+      var originalQueryCommandSupported = Cu.waiveXrays(doc).queryCommandSupported;
+      Cu.exportFunction(myQueryCommandSupported(doc, originalQueryCommandSupported), doc, {defineAs: "queryCommandSupported"});
+      var originalQueryCommandEnabled = Cu.waiveXrays(doc).queryCommandEnabled;
+      Cu.exportFunction(myQueryCommandSupported(doc, originalQueryCommandEnabled), doc, {defineAs: "queryCommandEnabled"});
     }
   }
 }
