@@ -26,7 +26,7 @@ var observer = {
             case "chrome://browser/content/abouthome/aboutHome.xhtml":
               if (!configs) {
                 // TODO - Make this Async
-                configs = sendSyncMessage("cck2:get-configs");
+                configs = sendSyncMessage("cck2:get-configs")[0];
               }
               for (id in configs) {
                 var config = configs[id];
