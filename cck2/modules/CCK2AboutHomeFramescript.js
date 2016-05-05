@@ -45,6 +45,15 @@ var observer = {
                     snippets.style.display = "none";
                   }
                 }
+                if (config.hiddenUI) {
+                  for (var i=0; i < config.hiddenUI.length; i++) {
+                    var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
+                    for (var j=0; j < uiElements.length; j++) {
+                      var uiElement = uiElements[j];
+                      uiElement.setAttribute("hidden", "true");
+                    }
+                  }
+                }
               }
               break;
           }
