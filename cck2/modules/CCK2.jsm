@@ -75,7 +75,7 @@ if (iniFile.exists()) {
                  getService(Ci.nsIINIParserFactory).
                  createINIParser(iniFile);
   } catch (e) {
-    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() null);
+    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() { return null;});
   }
 }
 
@@ -751,18 +751,22 @@ var CCK2 = {
             Cu.import("resource:///modules/WebappManager.jsm");
           } catch (e) {}
         }
-        WebappManager.doInstall = function() {
-          var win = Services.wm.getMostRecentWindow("navigator:browser");
-          var gBrowser = win.gBrowser;
-          var gNavigatorBundle = win.gNavigatorBundle
-          messageString = gNavigatorBundle.getString("xpinstallDisabledMessageLocked");;
-          var options = {
-            timeout: Date.now() + 30000
+        try {
+          WebappManager.doInstall = function() {
+            var win = Services.wm.getMostRecentWindow("navigator:browser");
+            var gBrowser = win.gBrowser;
+            var gNavigatorBundle = win.gNavigatorBundle
+            messageString = gNavigatorBundle.getString("xpinstallDisabledMessageLocked");;
+            var options = {
+              timeout: Date.now() + 30000
+            };
+            win.PopupNotifications.show(gBrowser.selectedBrowser, "xpinstall-disabled",
+                                        messageString, "addons-notification-icon",
+                                        null, null, options);
           };
-          win.PopupNotifications.show(gBrowser.selectedBrowser, "xpinstall-disabled",
-                                      messageString, "addons-notification-icon",
-                                      null, null, options);
-        };
+        } catch(e) {
+          // Web Apps was removed
+        }
         break;
       case "final-ui-startup":
 //        let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
