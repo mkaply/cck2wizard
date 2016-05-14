@@ -904,6 +904,7 @@ function loadModules(config) {
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
+  globalMM.loadFrameScript("resource://cck2/CCK2Framescript.js", true);
   globalMM.loadFrameScript("resource://cck2/CCK2AboutHomeFramescript.js", true);
   globalMM.loadFrameScript("resource://cck2/CAPSCheckLoadURIFramescript.js", true);
   globalMM.loadFrameScript("resource://cck2/CAPSClipboardFramescript.js", true);
@@ -1179,18 +1180,6 @@ var documentObserver = {
             }
           }
         }, false);
-      }
-      if (topic == "content-document-global-created") {
-        var configs = CCK2.getConfigs();
-        for (var id in configs) {
-          var config = configs[id];
-          if (config.disableSearchEngineInstall) {
-            subject.wrappedJSObject.external.AddSearchProvider = function() {};
-          }
-          if (config.disableWebApps) {
-//            subject.wrappedJSObject.navigator.mozApps = {};
-          }
-        }
       }
     }
   }

@@ -10,6 +10,7 @@ const cck2Files = [
   "modules/CCK2AboutDialogOverlay.jsm",
   "modules/CCK2AboutAddonsOverlay.jsm",
   "modules/CCK2PreferencesOverlay.jsm",
+  "modules/CCK2Framescript.js",
   "modules/CCK2AboutHomeFramescript.js",
   "modules/CCK2AboutSupportOverlay.jsm",
   "modules/CCK2BrowserOverlay.jsm",
