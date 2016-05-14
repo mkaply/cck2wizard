@@ -156,6 +156,10 @@ var CCK2 = {
       Preferences.lock("distribution.version", config.version + " (CCK2)");
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
+      if (config.removeDefaultSearchEngines) {
+        Services.io.getProtocolHandler("resource").QueryInterface(Components.interfaces.nsIResProtocolHandler)
+                                                  .setSubstitution("search-plugins", null);
+      }
       if (config.noAddonCompatibilityCheck) {
         Preferences.reset("extensions.lastAppVersion");
       }

@@ -37,6 +37,7 @@
          </menulist>
       </hbox>
       <checkbox config="disableSearchEngineInstall" label="&disableSearchEngineInstall.label;"/>
+      <checkbox config="removeDefaultSearchEngines" label="&removeDefaultSearchEngines.label;"/>
     </vbox>
   </deck>
       <popupset>
