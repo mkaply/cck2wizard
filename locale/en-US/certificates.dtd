@@ -19,6 +19,7 @@
 
 <!ENTITY certificateAuthorties.description "Certificates that identify certificate authorities">
 <!ENTITY serverCertificates.description "Certificates that identify servers">
+<!ENTITY serverCertificates.description2 "Server certificates are being removed. Click for more information.">
 <!ENTITY certificateOverrides.description "Domains for which self-signed certificates are allowed">
 <!ENTITY devices.description "Security Devices">
 

@@ -30,6 +30,7 @@
             </hbox>
           </tabpanel>
           <tabpanel orient="vertical">
+            <label href="https://bugzilla.mozilla.org/show_bug.cgi?id=1064402" style="font-weight: bold" class="text-link cck2wizard-description">&serverCertificates.description2;</label>
             <description class="cck2wizard-description">&serverCertificates.description;</description>
             <listbox id="servercerts-listbox" context="servercerts-listbox-contextmenu" onkeypress="onKeyPressCertificate(event);" flex="1" />
             <hbox>
