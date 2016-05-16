@@ -835,7 +835,11 @@ var CCK2 = {
               for (var i=0; i < config.certs.server.length; i++) {
                 try {
                   download(config.certs.server[i], function(file) {
-                    certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+                    try {
+                      certdb.importCertsFromFile(null, file, Ci.nsIX509Cert.SERVER_CERT);
+                    } catch(e) {
+                      // API removed in bugzilla #1064402 (FF47)
+                    }
                   }, errorCritical);
                 } catch (e) {
                   errorCritical("Unable to install " + config.certs.server[i] + " - " + e);
