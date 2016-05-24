@@ -4,6 +4,7 @@ var EXPORTED_SYMBOLS = ["CCK2"];
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/NetUtil.jsm");
+Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 try {
   Cu.import("resource://gre/modules/Timer.jsm");  
@@ -115,6 +116,23 @@ var CCK2 = {
     if (a == b) {
       /* See bugzilla 1193625/1137799 */
       fixupUTF8 = function(str) { return str };
+    }
+    // Bring back default profiles for >= FF46
+    if (Services.vc.compare(Services.appinfo.version, "46") >= 0) {
+      // If it is a new profile
+      if (!Preferences.isSet("browser.startup.homepage_override.mstone")) {
+        var defaultProfileDir = Services.dirsvc.get("GreD", Ci.nsIFile);
+        defaultProfileDir.append("defaults");
+        defaultProfileDir.append("profile");
+        if (defaultProfileDir.exists()) {
+          var profileDir = Services.dirsvc.get("ProfD", Ci.nsIFile);
+          try {
+            copyDir(defaultProfileDir, profileDir);
+          } catch(e) {
+            Components.utils.reportError("Error copying default profile directory: "  + e);
+          }
+        }
+      }
     }
     try {
       for (var id in this.configs) {
@@ -1200,6 +1218,20 @@ var documentObserver = {
   }
 }
 
+function copyDir(aOriginal, aDestination) {
+  var enumerator = aOriginal.directoryEntries;
+  while (enumerator.hasMoreElements()) {
+    var file = enumerator.getNext().QueryInterface(Components.interfaces.nsIFile);
+    if (file.isDirectory()) {
+      var subdir = aDestination.clone();
+      subdir.append(file.leafName);
+      subdir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      copyDir(file, subdir);
+    } else {
+      file.copyTo(aDestination, null);
+    }
+  }
+}
 
 function loadBundleDirs() {
   var cck2BundleDir = Services.dirsvc.get("GreD", Ci.nsIFile);
