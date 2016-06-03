@@ -15,7 +15,9 @@ CCK2FileBlock = {
           aRequestOrigin.scheme == "moz-nullprincipal")) {
         for (var i=0; i < this.chromeBlacklist.length; i++) {
           if (aContentLocation.host == this.chromeBlacklist[i]) {
-            return Ci.nsIContentPolicy.REJECT_REQUEST;
+            if (aContentLocation.spec.includes(".xul")) {
+              return Ci.nsIContentPolicy.REJECT_REQUEST;
+            }
           }
         }
       }
