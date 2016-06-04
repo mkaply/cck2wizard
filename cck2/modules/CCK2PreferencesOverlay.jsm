@@ -87,8 +87,15 @@ function updatePrefUI(doc) {
     }
     if (config.hiddenUI) {
       for (var i=0; i < config.hiddenUI.length; i++) {
-        var uiElement = doc.querySelector(config.hiddenUI[i]);
-        hide(uiElement, doc);
+        // Don't use .hidden since it doesn't work sometimes
+        var style = doc.getElementById("cck2-hidden-style");
+        if (!style) {
+          style = doc.createElementNS("http://www.w3.org/1999/xhtml", "style");
+          style.setAttribute("id", "cck2-hidden-style");
+          style.setAttribute("type", "text/css");
+          doc.documentElement.appendChild(style);
+        }
+        style.textContent = style.textContent + config.hiddenUI[i] + "{display: none !important;}";
       }
     }
   }
