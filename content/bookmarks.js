@@ -338,6 +338,7 @@ function onAddSeparator(target) {
 
 function onAddBookmark(target) {
   var retVals = { name: null, location: null};
+  retVals.stringbundle = gStringBundle;
   window.openDialog("chrome://cck2wizard/content/bookmarks-dialog.xul", "cck2wizard-bookmark", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
@@ -366,6 +367,7 @@ function onAddBookmark(target) {
 
 function onAddFolder(target) {
   var retVals = { name: null, location: null, folder: true};
+  retVals.stringbundle = gStringBundle;
   window.openDialog("chrome://cck2wizard/content/bookmarks-dialog.xul", "cck2wizard-bookmark", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;
@@ -401,6 +403,7 @@ function onAddFolder(target) {
 
 function onEditBookmark(listitem) {
   var retVals = convertListItemToBookmark(listitem);
+  retVals.stringbundle = gStringBundle;
   window.openDialog("chrome://cck2wizard/content/bookmarks-dialog.xul", "cck2wizard-bookmark", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return;

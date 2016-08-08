@@ -9,6 +9,7 @@
         onload="onLoad();"
         width="480">
   <script src="chrome://cck2wizard/content/bookmarks-dialog.js"/>
+  <script src="util.js" />
   <vbox>
     <hbox align="center">
     <label value="&bookmarks-name.label;:"/>
