@@ -503,6 +503,7 @@ var CCK2 = {
             }
             UITour.origOnPageEvent(a, b);
           }
+          Preferences.lock("browser.disableResetPrompt ", true);
         } catch (e) {}
       }
       if (config.disableFirefoxUpdates) {
