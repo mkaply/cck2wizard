@@ -9,7 +9,6 @@ const EXPORTED_SYMBOLS = [];
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource://cck2/CCK2.jsm");
 
 var configs = null;
 
@@ -26,7 +25,8 @@ var observer = {
             case "about:home":
             case "chrome://browser/content/abouthome/aboutHome.xhtml":
               if (!configs) {
-                configs = CCK2.getConfigs();
+                // TODO - Make this Async
+                configs = sendSyncMessage("cck2:get-configs")[0];
               }
               for (id in configs) {
                 var config = configs[id];
@@ -45,6 +45,15 @@ var observer = {
                     snippets.style.display = "none";
                   }
                 }
+                if (config.hiddenUI) {
+                  for (var i=0; i < config.hiddenUI.length; i++) {
+                    var uiElements = doc.querySelectorAll(config.hiddenUI[i]);
+                    for (var j=0; j < uiElements.length; j++) {
+                      var uiElement = uiElements[j];
+                      uiElement.setAttribute("hidden", "true");
+                    }
+                  }
+                }
               }
               break;
           }
@@ -54,6 +63,10 @@ var observer = {
   }
 }
 Services.obs.addObserver(observer, "content-document-global-created", false);
+
+addEventListener("unload", function() {
+  Services.obs.removeObserver(observer, "content-document-global-created", false);
+})
 
 function E(id, context) {
   var element = context.getElementById(id);

@@ -13,8 +13,6 @@ try {
 }
 Cu.import("resource://cck2/Preferences.jsm");
 Cu.import("resource://cck2/CTPPermissions.jsm");
-Cu.import("resource://cck2/CAPSClipboard.jsm");
-Cu.import("resource://cck2/CAPSCheckLoadURI.jsm");
 Cu.import("resource:///modules/distribution.js");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
@@ -791,8 +789,6 @@ var CCK2 = {
         }
         break;
       case "final-ui-startup":
-//        let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
-//        globalMM.loadFrameScript("resource://cck2/CAPSClipboard-fs.js", true);
         for (var id in this.configs) {
           var config = this.configs[id];
           // Delay loading unnecessary modules
@@ -925,10 +921,23 @@ var CCK2 = {
 }
 
 function loadModules(config) {
+  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+  globalMM.addMessageListener("cck2:get-configs", function(message) {
+    return CCK2.configs;
+  });
+  globalMM.addMessageListener("cck2:open-url", function(message) {
+    var win = Services.wm.getMostRecentWindow("navigator:browser");
+    if (win) {
+      win.openUILinkIn(message.data.url, message.data.where);
+    }
+  });
   Cu.import("resource://cck2/CCK2AboutDialogOverlay.jsm");
   Cu.import("resource://cck2/CCK2AboutAddonsOverlay.jsm");
   Cu.import("resource://cck2/CCK2PreferencesOverlay.jsm");
-  Cu.import("resource://cck2/CCK2AboutHomeOverlay.jsm");
+  globalMM.loadFrameScript("resource://cck2/CCK2Framescript.js", true);
+  globalMM.loadFrameScript("resource://cck2/CCK2AboutHomeFramescript.js", true);
+  globalMM.loadFrameScript("resource://cck2/CAPSCheckLoadURIFramescript.js", true);
+  globalMM.loadFrameScript("resource://cck2/CAPSClipboardFramescript.js", true);
   Cu.import("resource://cck2/CCK2AboutSupportOverlay.jsm");
   Cu.import("resource://cck2/CCK2BrowserOverlay.jsm");
   Cu.import("resource://cck2/CCK2FileBlock.jsm");
@@ -1201,18 +1210,6 @@ var documentObserver = {
             }
           }
         }, false);
-      }
-      if (topic == "content-document-global-created") {
-        var configs = CCK2.getConfigs();
-        for (var id in configs) {
-          var config = configs[id];
-          if (config.disableSearchEngineInstall) {
-            subject.wrappedJSObject.external.AddSearchProvider = function() {};
-          }
-          if (config.disableWebApps) {
-//            subject.wrappedJSObject.navigator.mozApps = {};
-          }
-        }
       }
     }
   }
