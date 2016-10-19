@@ -659,7 +659,7 @@ var CCK2 = {
             }
           }
 
-          // If we detect an old CCK Wizard, remote it's bookmarks
+          // If we detect an old CCK Wizard, remove it's bookmarks
           var bmFolders = [];
           var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
           if (oldCCKVersion) {
@@ -688,6 +688,18 @@ var CCK2 = {
                 }
               } catch (ex) {}
             }
+          }
+          // Just in case, remove bookmarks for this version too
+          var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.version, {});
+          for (var i = 0; i < oldBookmarks.length; i++) {
+            try {
+              var itemType = bmsvc.getItemType(oldBookmarks[i]);
+              if (itemType == bmsvc.TYPE_FOLDER) {
+                bmFolders.push(oldBookmarks[i]);
+              } else {
+                bmsvc.removeItem(oldBookmarks[i]);
+              }
+            } catch (ex) {}
           }
           if (bmFolders.length > 0) {
             // Only remove folders if they are empty
