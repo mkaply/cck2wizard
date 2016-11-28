@@ -12,6 +12,25 @@ var documentObserver = {
         if (disableSearchEngineInstall) {
           subject.wrappedJSObject.external.AddSearchProvider = function() {};
         }
+        if (!doc.documentURI.startsWith("about:")) {
+          return;
+        }
+        for (id in configs) {
+          var config = configs[id];
+          if (config.hiddenUI) {
+            for (var i=0; i < config.hiddenUI.length; i++) {
+              // Don't use .hidden since it doesn't work sometimes
+              var style = doc.getElementById("cck2-hidden-style");
+              if (!style) {
+                style = doc.createElementNS("http://www.w3.org/1999/xhtml", "style");
+                style.setAttribute("id", "cck2-hidden-style");
+                style.setAttribute("type", "text/css");
+                doc.documentElement.appendChild(style);
+              }
+              style.textContent = style.textContent + config.hiddenUI[i] + "{display: none !important;}";
+            }
+          }
+        }
       }, false);
     }
   }
@@ -26,9 +45,7 @@ for (var id in configs) {
   }
 }
 
-if (disableSearchEngineInstall) {
-  Services.obs.addObserver(documentObserver, "content-document-global-created", false);
-  addEventListener("unload", function() {
-    Services.obs.removeObserver(documentObserver, "content-document-global-created", false);
-  })
-}
+Services.obs.addObserver(documentObserver, "content-document-global-created", false);
+addEventListener("unload", function() {
+  Services.obs.removeObserver(documentObserver, "content-document-global-created", false);
+})
