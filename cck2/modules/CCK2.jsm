@@ -370,6 +370,22 @@ var CCK2 = {
                                                 "config");
         CCK2.aboutFactories.push(aboutConfig);
       }
+      if (config.disableAboutProfiles) {
+        var aboutProfiles = {};
+        aboutProfiles.classID = Components.ID(uuid.generateUUID().toString());
+        aboutProfiles.factory = disableAbout(aboutProfiles.classID,
+                                                "Disable about:profiles - CCK",
+                                                "profiles");
+        CCK2.aboutFactories.push(aboutProfiles);
+      }
+      if (config.disableAboutSupport) {
+        var aboutSupport = {};
+        aboutSupport.classID = Components.ID(uuid.generateUUID().toString());
+        aboutSupport.factory = disableAbout(aboutSupport.classID,
+                                                "Disable about:support - CCK",
+                                                "support");
+        CCK2.aboutFactories.push(aboutSupport);
+      }
       if (config.disableAddonsManager) {
         var aboutAddons = {};
         aboutAddons.classID = Components.ID(uuid.generateUUID().toString());
