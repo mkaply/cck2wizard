@@ -23,6 +23,8 @@
       <checkbox config="disableForget" label="&disableForget.label;" />
       <checkbox config="disableHeartbeat" label="&disableHeartbeat.label;" />
       <checkbox config="disablePocket" label="&disablePocket.label;" />
+      <checkbox config="disableAboutSupport" label="&disableAboutSupport.label;" />
+      <checkbox config="disableAboutProfiles" label="&disableAboutProfiles.label;" />
       </groupbox>
     </vbox>
   </deck>

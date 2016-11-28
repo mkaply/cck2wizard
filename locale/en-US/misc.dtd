@@ -11,3 +11,5 @@
 <!ENTITY disableForget.label "Disable the Forget button">
 <!ENTITY disableHeartbeat.label "Disable Heartbeat">
 <!ENTITY disablePocket.label "Disable Pocket">
+<!ENTITY disableAboutSupport.label "Prevent access to about:support">
+<!ENTITY disableAboutProfiles.label "Prevent access to about:profiles">
