@@ -1028,7 +1028,16 @@ function addBookmarks(bookmarks, destination, annotation) {
       bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
     } else {
       try {
-        var newBookmarkId = bmsvc.insertBookmark(destination, NetUtil.newURI(bookmarks[i].location), bmsvc.DEFAULT_INDEX, fixupUTF8(bookmarks[i].name));
+        var uri = NetUtil.newURI(bookmarks[i].location);
+        var title = fixupUTF8(bookmarks[i].name);
+        var bookmarkIds = bmsvc.getBookmarkIdsForURI(uri, {}, {});
+        if (bookmarkIds.length > 0) {
+          if (bmsvc.getItemTitle(bookmarkIds[0]) == title &&
+              (bmsvc.getFolderIdForItem(bookmarkIds[0]) == destination)) {
+            continue;
+          }
+        }
+        var newBookmarkId = bmsvc.insertBookmark(destination, uri, bmsvc.DEFAULT_INDEX, title);
         annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
       } catch(e) {}
     }
