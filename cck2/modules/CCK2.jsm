@@ -1034,6 +1034,8 @@ function addBookmarks(bookmarks, destination, annotation) {
         if (bookmarkIds.length > 0) {
           if (bmsvc.getItemTitle(bookmarkIds[0]) == title &&
               (bmsvc.getFolderIdForItem(bookmarkIds[0]) == destination)) {
+            // Update annotation
+            annos.setItemAnnotation(bookmarkIds[0], annotation, "true", 0, annos.EXPIRE_NEVER);
             continue;
           }
         }
