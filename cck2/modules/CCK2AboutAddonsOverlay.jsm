@@ -60,6 +60,11 @@ var observer = {
                 hide(E("utils-installFromFile-separator", doc));
                 // Hide the "Install Add-on From File" menuitem
                 hide(E("utils-installFromFile", doc));
+                win.gDragDrop.onDragOver = function(event) {
+                  event.dataTransfer.dropEffect = "none";
+                  event.stopPropagation();
+                  event.preventDefault();
+                };
               }
               break;
           }
