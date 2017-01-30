@@ -209,8 +209,8 @@ function packageCCK2(type) {
   zipwriter.open(zipfile, 0x04 | 0x08 | 0x20);
 
   // These characters are not allowed in the packagename for chrome.manifest
-  var packageName = config.id.replace("@", "").replace("#", "").replace(";", "")
-                             .replace(":", "").replace("?", "").replace("/", "");
+  var packageName = config.id.replace(/@/g, "").replace(/#/g, "").replace(/;/g, "")
+                             .replace(/:/g, "").replace(/\?/g, "").replace(/\//g, "");
   // resource.setSubstitution doesn't handle case nicely.
   packageName = packageName.toLowerCase();
 
