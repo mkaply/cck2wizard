@@ -1067,22 +1067,6 @@ function searchInitRun(func)
 }
 
 /**
- * Check to see if a given cert exists so we don't readd.
- * I'm not convinced this is actually needed, since we don't get errors
- * adding the same cert twice...
- */
-function certExists(cert) {
-  return false;
-  var actualCert = certdb.constructX509FromBase64(fixupCert(cert));
-  try {
-    var installedCert = certdb.findCertByNickname(null, actualCert.commonName + " - " + actualCert.organization);
-    if (installedCert)
-      return true;
-  } catch(ex) {}
-  return false;
-}
-
-/**
  * Remove all extraneous info from a certificates. addCertFromBase64 requires
  * just the cert with no whitespace or anything.
  *
