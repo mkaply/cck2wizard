@@ -34,6 +34,7 @@ const installRDFTemplate = [
 '        <em:homepageURL>%homepageURL%</em:homepageURL>',
 '        <em:updateURL>%updateURL%</em:updateURL>',
 '        <em:updateKey>%updateKey%</em:updateKey>',
+'        <em:multiprocessCompatible>true</em:multiprocessCompatible>',
 '        <em:targetApplication>',
 '            <Description>',
 '                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>',
