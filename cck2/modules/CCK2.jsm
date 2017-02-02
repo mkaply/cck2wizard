@@ -831,7 +831,7 @@ var CCK2 = {
               for (var i=0; i < config.certs.override.length; i++) {
                 var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
                 try {
-                  xhr.open("GET", "https://" + config.certs.override[i], false);
+                  xhr.open("GET", "https://" + config.certs.override[i]);
                   xhr.channel.notificationCallbacks = SSLExceptions;
                   xhr.send(null);
                 } catch (ex) {}
