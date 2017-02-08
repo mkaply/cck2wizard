@@ -27,6 +27,9 @@
         <checkbox config="disableAddonsManager" label="&disableAddonsManager.label;"/>
         <checkbox config="noAddons" label="&noAddons.label;"/>
         <checkbox config="noAddonCompatibilityCheck" label="&noAddonCompatibilityCheck.label;"/>
+        <label value="&requiredAddons.label;" style="margin-top: 10px"/>
+        <label value="&requiredAddons.description;"/>
+        <textbox config="requiredAddons"/>
       </groupbox>
     </vbox>
   </deck>
