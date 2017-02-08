@@ -735,10 +735,10 @@ var CCK2 = {
           }
           if (config.bookmarks) {
             if (config.bookmarks.toolbar) {
-              addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version);
+              addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
             }
             if (config.bookmarks.menu) {
-              addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version);
+              addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
             }
           }
           if (config.searchplugins || config.defaultSearchEngine) {
@@ -1018,12 +1018,12 @@ function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
   }
 }
 
-function addBookmarks(bookmarks, destination, annotation) {
+function addBookmarks(bookmarks, destination, annotation, removeDuplicateBookmarkNames) {
   for (var i =0; i < bookmarks.length; i++) {
     if (bookmarks[i].folder) {
       var newFolderId = bmsvc.createFolder(destination, fixupUTF8(bookmarks[i].name), bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
-      addBookmarks(bookmarks[i].folder, newFolderId, annotation);
+      addBookmarks(bookmarks[i].folder, newFolderId, annotation, removeDuplicateBookmarkNames);
     } else if (bookmarks[i].type == "separator") {
       bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
     } else {
@@ -1041,6 +1041,28 @@ function addBookmarks(bookmarks, destination, annotation) {
             if (bmsvc.getItemTitle(bookmarkIds[j]) == title &&
                 destination == folderID) {
               bmsvc.removeItem(bookmarkIds[j]);
+            }
+          }
+        }
+        if (removeDuplicateBookmarkNames) {
+          // This is hideous. There's no way to get the number of children
+          // in a folder, so we do a loop to get a quick count so we can
+          // work backwards.
+          let numItems = 0;
+          do {
+            let bmId = bmsvc.getIdForItemAt(destination, numItems);
+            if (bmId == -1) {
+              break;
+            }
+            numItems++;
+          } while (numItems < 50) // Failsafe just in case we somehow end up in a loop
+          for (var k=numItems; k > 0; k--) {
+            let bmId = bmsvc.getIdForItemAt(destination, k-1);
+            if (bmId == -1) { // Shouldn't happen
+              break;
+            }
+            if (bmsvc.getItemTitle(bmId) == title) {
+              bmsvc.removeItem(bmId);
             }
           }
         }
