@@ -1032,16 +1032,23 @@ function addBookmarks(bookmarks, destination, annotation) {
         var title = fixupUTF8(bookmarks[i].name);
         var bookmarkIds = bmsvc.getBookmarkIdsForURI(uri, {}, {});
         if (bookmarkIds.length > 0) {
-          if (bmsvc.getItemTitle(bookmarkIds[0]) == title &&
-              (bmsvc.getFolderIdForItem(bookmarkIds[0]) == destination)) {
-            // Update annotation
-            annos.setItemAnnotation(bookmarkIds[0], annotation, "true", 0, annos.EXPIRE_NEVER);
-            continue;
+          // Remove duplicate bookmarks
+          for (var j=0; j < bookmarkIds.length; j++) {
+            // Unfortunately there's no way to generically
+            // check for any annotation, so we assume it is ours.
+            // We at least check if the destination is the same
+            let folderID = bmsvc.getFolderIdForItem(bookmarkIds[j]);
+            if (bmsvc.getItemTitle(bookmarkIds[j]) == title &&
+                destination == folderID) {
+              bmsvc.removeItem(bookmarkIds[j]);
+            }
           }
         }
         var newBookmarkId = bmsvc.insertBookmark(destination, uri, bmsvc.DEFAULT_INDEX, title);
         annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
-      } catch(e) {}
+      } catch(e) {
+        Components.utils.reportError(e);
+      }
     }
   }
 }
