@@ -327,6 +327,7 @@ var CCK2 = {
       }
       if (config.disablePocket) {
         Preferences.lock("browser.pocket.enabled", false);
+        Preferences.lock("extensions.pocket.enabled", false);
       }
       if (config.disableHeartbeat) {
         Preferences.lock("browser.selfsupport.url", "");
