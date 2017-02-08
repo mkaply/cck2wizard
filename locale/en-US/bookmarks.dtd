@@ -1,6 +1,7 @@
 <!ENTITY displayBookmarksToolbar.label "Display the Bookmarks toolbar by default">
 <!ENTITY removeSmartBookmarks.label "Remove Smart Bookmarks (Most Visited, Recently Bookmarked, Recently Tagged)">
 <!ENTITY removeDefaultBookmarks.label "Remove Default Bookmarks (Getting Started, Mozilla Firefox folder)">
+<!ENTITY removeDuplicateBookmarkNames.label "Remove duplicates if only the name matches">
 
 <!ENTITY bookmarks.label "Bookmarks">
 <!ENTITY bookmarks-toolbar.label "Toolbar">

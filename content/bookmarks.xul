@@ -29,6 +29,7 @@
       <checkbox config="displayBookmarksToolbar" label="&displayBookmarksToolbar.label;" />
       <checkbox config="removeSmartBookmarks" label="&removeSmartBookmarks.label;" />
       <checkbox config="removeDefaultBookmarks" label="&removeDefaultBookmarks.label;" />
+      <checkbox config="removeDuplicateBookmarkNames" label="&removeDuplicateBookmarkNames.label;" />
     </vbox>
     <vbox id="bookmarks-toolbar">
       <label class="cck2wizard-heading" value="&bookmarks-toolbar.label;"/>
