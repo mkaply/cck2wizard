@@ -11,6 +11,8 @@ const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://cck2/CCK2.jsm");
 
+var addonId = "cck2wizard@kaply.com";
+
 var observer = {
   observe: function observe(subject, topic, data) {
     switch (topic) {
@@ -24,16 +26,37 @@ var observer = {
             case "about:addons":
             case "chrome://mozapps/content/extensions/extensions.xul":
               var configs = CCK2.getConfigs();
+              var hiddenAddons = [];
+              var requiredAddons = [];
               for (id in configs) {
                 var config = configs[id];
                 if (config && "extension" in config && config.extension.hide) {
-                  for (var i = 0; i < doc.styleSheets.length; i++) {
-                    if (doc.styleSheets[i].href == "chrome://mozapps/skin/extensions/extensions.css") {
-                      var ss = doc.styleSheets[i];
-                      ss.insertRule("richlistitem[value='" + config.extension.id + "'] { display: none;}", ss.cssRules.length);
-                      break;
-                    }
+                  hiddenAddons.push(config.extension.id);
+                }
+                if (config.requiredAddons) {
+                  requiredAddons.push.apply(requiredAddons, config.requiredAddons.split(","));
+                }
+              }
+              if (hiddenAddons.length > 0 || requiredAddons.length > 0) {
+                var ss;
+                for (var i = 0; i < doc.styleSheets.length; i++) {
+                  if (doc.styleSheets[i].href == "chrome://mozapps/skin/extensions/extensions.css") {
+                    ss = doc.styleSheets[i];
+                    break;
                   }
+                }
+                for (var i=0; i < hiddenAddons.length; i++) {
+                  ss.insertRule("richlistitem[value='" + hiddenAddons[i] + "'] { display: none;}", ss.cssRules.length);
+                }
+                for (var i=0; i < requiredAddons.length; i++) {
+                  ss.insertRule("richlistitem[value='" + requiredAddons[i] + "'] button[anonid='disable-btn'] { display: none;}", ss.cssRules.length);
+                  ss.insertRule("richlistitem[value='" + requiredAddons[i] + "'] button[anonid='remove-btn'] { display: none;}", ss.cssRules.length);
+                }
+                if (requiredAddons.length > 0) {
+                  win.gViewController.commands.cmd_disableItem.origIsEnabled = win.gViewController.commands.cmd_disableItem.isEnabled;
+                  win.gViewController.commands.cmd_disableItem.isEnabled = function(aAddon) { if (aAddon && requiredAddons.indexOf(aAddon.id) != -1) return false; return this.origIsEnabled;}
+                  win.gViewController.commands.cmd_uninstallItem.origIsEnabled = win.gViewController.commands.cmd_disableItem.isEnabled;
+                  win.gViewController.commands.cmd_uninstallItem.isEnabled = function(aAddon) { if (aAddon && requiredAddons.indexOf(aAddon.id) != -1) return false; return this.origIsEnabled;}
                 }
               }
               var showDiscoverPane = true;
