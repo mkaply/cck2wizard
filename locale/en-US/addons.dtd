@@ -13,3 +13,6 @@
 <!ENTITY disableAddonsManager.label "Disable the Add-ons Manager">
 <!ENTITY noAddons.label "Don't allow add-ons to be installed">
 <!ENTITY noAddonCompatibilityCheck.label "Don't check add-on compatibility at startup">
+
+<!ENTITY requiredAddons.label "Required add-on IDs, separated by a comma:">
+<!ENTITY requiredAddons.description "(These add-ons will be unable to be disabled or removed)">
