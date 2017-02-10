@@ -213,6 +213,8 @@ function packageCCK2(type) {
                              .replace(/:/g, "").replace(/\?/g, "").replace(/\//g, "");
   // resource.setSubstitution doesn't handle case nicely.
   packageName = packageName.toLowerCase();
+  // Work around Bugzilla 1338154 - make sure we start with a letter
+  packageName = "cck2_" + packageName.toLowerCase();
 
   // These characters are not allowed in Windows paths (NTFS and FAT)
   var packagePath = config.id.replace("/", "").replace("?", "").replace("<", "")
