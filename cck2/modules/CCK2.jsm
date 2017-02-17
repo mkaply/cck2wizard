@@ -424,8 +424,12 @@ var CCK2 = {
       }
       if (config.disableCrashReporter) {
         Preferences.lock("toolkit.crashreporter.enabled", false);
-        Cc["@mozilla.org/toolkit/crash-reporter;1"].
-          getService(Ci.nsICrashReporter).submitReports = false;
+        try {
+          Cc["@mozilla.org/toolkit/crash-reporter;1"].
+            getService(Ci.nsICrashReporter).submitReports = false;
+        } catch (e) {
+          // There seem to be cases where the crash reporter isn't defined
+        }
         var aboutCrashes = {};
         aboutCrashes.classID = Components.ID(uuid.generateUUID().toString());
         aboutCrashes.factory = disableAbout(aboutCrashes.classID,
