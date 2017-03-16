@@ -244,13 +244,14 @@ function disableAddonsManager(doc) {
 
 function removeDeveloperTools(doc) {
   var win = doc.defaultView;
-  hide(E("developer-button", doc));
-  hide(E("webDeveloperMenu", doc));
   // Need to delay this because devtools is created dynamically
   win.setTimeout(function() {
+    CustomizableUI.destroyWidget("developer-button")
+    hide(E("webDeveloperMenu", doc));
     var devtoolsKeyset = doc.getElementById("devtoolsKeyset");
     if (devtoolsKeyset) {
       for (var i = 0; i < devtoolsKeyset.childNodes.length; i++) {
+        devtoolsKeyset.childNodes[i].removeAttribute("oncommand");
         devtoolsKeyset.childNodes[i].removeAttribute("command");
       }
     }
