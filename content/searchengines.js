@@ -7,50 +7,13 @@ window.addEventListener("load", onSearchEnginesLoad, false);
 
 function setSearchEngines(config) {
   if ("searchplugins" in config) {
-    for (var i=0; i < config.searchplugins.length; i++) {
-      if (/^https?:/.test(config.searchplugins[i])) {
-        var url = config.searchplugins[i];
-        var listitem = gSearchEnginesListbox.appendItem(url, url);
-        listitem.setAttribute("tooltiptext",  url);
-        listitem.setAttribute("context", "searchengines-contextmenu");
-        getSearchEngineInfoFromURL(url, listitem, function(response) {
-          if (response) {
-            listitem.setAttribute("label", response.name);
-            listitem.setAttribute("context", "searchengines-contextmenu");
-            listitem.setAttribute("class", "listitem-iconic");
-            if (response.image) {
-              listitem.setAttribute("class", "listitem-iconic");
-              listitem.setAttribute("image", response.image);
-            }
-          }
-        }, function(listitem) {
-          gSearchEnginesListbox.removeChild(listitem);
-        });        
-      } else {
-        // Filename
-        var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-        try {
-          file.initWithPath(config.searchplugins[i]);
-        } catch (e) {
-          file.initWithPath(config.outputDirectory + config.searchplugins[i]);
-        }
-        // Always append the item. If we get data from the engine, replace it
-        var listitem = gSearchEnginesListbox.appendItem(file.leafName, file.path);
-        listitem.setAttribute("tooltiptext",  config.searchplugins[i]);
-        listitem.setAttribute("context", "searchengines-contextmenu");
-        if (file && file.exists()) {
-          getSearchEngineInfoFromFile(file, listitem, function(response, listitem) {
-            if (response) {
-              listitem.setAttribute("label", response.name);
-              if (response.image) {
-                listitem.setAttribute("class", "listitem-iconic");
-                listitem.setAttribute("image", response.image);
-              }
-            }
-          }, function(listitem) {
-            gSearchEnginesListbox.removeChild(listitem);
-          });
-        }
+    if (Array.isArray(config.searchplugins)) {
+      for (var i=0; i < config.searchplugins.length; i++) {
+        addSearchEngine(config.searchplugins[i])
+      }
+    } else {
+      for (enginename in config.searchplugins) {
+        addSearchEngine(config.searchplugins[enginename])
       }
     }
   }
@@ -61,15 +24,64 @@ function setSearchEngines(config) {
     menulist.value = config.defaultSearchEngine;
   }
 }
+
+function addSearchEngine(engineloc) {
+  if (/^https?:/.test(engineloc)) {
+    var url = engineloc;
+    var listitem = gSearchEnginesListbox.appendItem(url, url);
+    listitem.setAttribute("tooltiptext",  url);
+    listitem.setAttribute("context", "searchengines-contextmenu");
+    getSearchEngineInfoFromURL(url, listitem, function(response) {
+      if (response) {
+        listitem.setAttribute("label", response.name);
+        listitem.setAttribute("context", "searchengines-contextmenu");
+        listitem.setAttribute("class", "listitem-iconic");
+        if (response.image) {
+          listitem.setAttribute("class", "listitem-iconic");
+          listitem.setAttribute("image", response.image);
+        }
+      }
+    }, function(listitem) {
+      gSearchEnginesListbox.removeChild(listitem);
+    });
+  } else {
+    // Filename
+    var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+    try {
+      file.initWithPath(engineloc);
+    } catch (e) {
+      file.initWithPath(config.outputDirectory + engineloc);
+    }
+    // Always append the item. If we get data from the engine, replace it
+    var listitem = gSearchEnginesListbox.appendItem(file.leafName, file.path);
+    listitem.setAttribute("tooltiptext",  engineloc);
+    listitem.setAttribute("context", "searchengines-contextmenu");
+    if (file && file.exists()) {
+      getSearchEngineInfoFromFile(file, listitem, function(response, listitem) {
+        if (response) {
+          listitem.setAttribute("label", response.name);
+          if (response.image) {
+            listitem.setAttribute("class", "listitem-iconic");
+            listitem.setAttribute("image", response.image);
+          }
+        }
+      }, function(listitem) {
+        gSearchEnginesListbox.removeChild(listitem);
+      });
+    }
+  }
+}
+
 function getSearchEngines(config, relativePaths) {
   if (gSearchEnginesListbox.itemCount > 0) {
-    config.searchplugins = [];
+    config.searchplugins = {};
     for (var i=0; i < gSearchEnginesListbox.itemCount; i++) {
-      var searchplugin = gSearchEnginesListbox.getItemAtIndex(i).getAttribute("value")
+      var searchpluginName = gSearchEnginesListbox.getItemAtIndex(i).getAttribute("label")
+      var searchpluginURL = gSearchEnginesListbox.getItemAtIndex(i).getAttribute("value")
       if (relativePaths) {
-        searchplugin = searchplugin.replace(config.outputDirectory, "");
+        searchpluginURL = searchpluginURL.replace(config.outputDirectory, "");
       }
-      config.searchplugins.push(searchplugin);
+      config.searchplugins[searchpluginName] = searchpluginURL;
     }
   }
   if (document.getElementById("defaultSearchEngine").selectedIndex > 0) {
