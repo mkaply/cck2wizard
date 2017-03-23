@@ -751,10 +751,8 @@ var CCK2 = {
           }
           if (config.searchplugins || config.defaultSearchEngine) {
             searchInitRun(function() {
-              for (var i in config.searchplugins) {
-                var engine = Services.search.getEngineByName(i);
-                // Should we remove engines and readd?
-                if (!engine) {
+              if (Array.isArray(config.searchplugins)) {
+                for (var i=0; i < config.searchplugins.length; i++) {
                   Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
                     onSuccess: function (engine) {
                       if (engine.name == config.defaultSearchEngine) {
@@ -766,7 +764,25 @@ var CCK2 = {
                     }
                   });
                 }
+              } else {
+                for (enginename in config.searchplugins) {
+                  var engine = Services.search.getEngineByName(enginename);
+                  if (engine) {
+                    Services.search.removeEngine(engine);
+                  }
+                  Services.search.addEngine(config.searchplugins[enginename], Ci.nsISearchEngine.DATA_XML, null, false, {
+                    onSuccess: function (engine) {
+                      if (engine.name == config.defaultSearchEngine) {
+                        Services.search.currentEngine = engine;
+                      }
+                    },
+                    onError: function (errorCode) {
+                      // Ignore errors
+                    }
+                  });
+                }
               }
+
               var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
               if (defaultSearchEngine) {
                 Services.search.currentEngine = defaultSearchEngine;

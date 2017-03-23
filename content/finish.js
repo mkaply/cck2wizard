@@ -388,19 +388,19 @@ function packageCCK2(type) {
     var searchpluginsDir = resourceDir.clone();
     searchpluginsDir.append("searchplugins");
     searchpluginsDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
-    for (var i=0; i < config.searchplugins.length; i++) {
-      if (!/^https?:/.test(config.searchplugins[i])) {
+    for (enginename in config.searchplugins) {
+      if (!/^https?:/.test(config.searchplugins[enginename])) {
         // Only create resource dir if we need to
         try {
           resourceDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
         } catch (e) {}
         var searchpluginFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
         try {
-          searchpluginFile.initWithPath(config.searchplugins[i]);
+          searchpluginFile.initWithPath(config.searchplugins[enginename]);
           copyAndAddFileToZip(zipwriter, searchpluginFile, searchpluginsDir, null);
-          config.searchplugins[i] = "resource://" + packageName + "/searchplugins/" + searchpluginFile.leafName;
+          config.searchplugins[enginename] = "resource://" + packageName + "/searchplugins/" + searchpluginFile.leafName;
         } catch (e) {
-          copyFileError(config.searchplugins[i])
+          copyFileError(config.searchplugins[enginename])
         }
       }
     }
