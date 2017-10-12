@@ -21,8 +21,8 @@ var observer = {
     switch (topic) {
       case "chrome-document-global-created":
         var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
-        win.addEventListener("load", function(event) {
-          win.removeEventListener("load", arguments.callee, false);
+        win.addEventListener("load", function onLoad(event) {
+          win.removeEventListener("load", onLoad, false);
           var doc = event.target;
           var url = doc.location.href.split("?")[0].split("#")[0];
           switch (url) {
@@ -32,7 +32,7 @@ var observer = {
                 updatePrefUI(event.target.ownerDocument);
               }, false);
               updatePrefUI(doc);
-              for (id in configs) {
+              for (let id in configs) {
                 var config = configs[id];
                 if (!config.disableSync) {
                   continue;
@@ -53,7 +53,7 @@ var observer = {
             case "about:preferences":
             case "chrome://browser/content/preferences/in-content/preferences.xul":
               configs = CCK2.getConfigs();
-              for (id in configs) {
+              for (let id in configs) {
                 var config = configs[id];
                 if (config.disableSync) {
                   hide(E("category-sync", doc));

@@ -18,8 +18,8 @@ var observer = {
     switch (topic) {
       case "chrome-document-global-created":
         var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
-        win.addEventListener("load", function(event) {
-          win.removeEventListener("load", arguments.callee, false);
+        win.addEventListener("load", function onLoad(event) {
+          win.removeEventListener("load", onLoad, false);
           var doc = event.target;
           var url = doc.location.href.split("?")[0].split("#")[0];
           switch (url) {
@@ -28,7 +28,7 @@ var observer = {
               if (!configs) {
                 configs = CCK2.getConfigs();
               }
-              for (id in configs) {
+              for (let id in configs) {
                 var config = configs[id];
                 if (config.disableResetFirefox) {
                   remove(E("reset-box", doc));

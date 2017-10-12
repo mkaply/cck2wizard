@@ -26,7 +26,7 @@ XPCOMUtils.defineLazyServiceGetter(this, "uuid",
 
 /* Hack to work around bug that AutoConfig is loaded in the wrong charset */
 /* Not used for Firefox 44 and above (see CCK2.init) */
-fixupUTF8 = function(str) {
+let fixupUTF8 = function(str) {
   if (!str) {
     return null;
   }
@@ -1270,8 +1270,8 @@ var documentObserver = {
       var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
       if (topic == "chrome-document-global-created" ||
           (topic == "content-document-global-created" && win.document.documentURIObject.scheme == "about")) {
-        win.addEventListener("load", function(event) {
-          win.removeEventListener("load", arguments.callee, false);
+        win.addEventListener("load", function onLoad(event) {
+          win.removeEventListener("load", onLoad, false);
           var doc = event.target;
           var configs = CCK2.getConfigs();
           for (var id in configs) {
