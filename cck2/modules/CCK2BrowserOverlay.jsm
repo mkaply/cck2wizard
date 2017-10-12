@@ -19,8 +19,8 @@ var observer = {
     switch (topic) {
       case "chrome-document-global-created":
         var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
-        win.addEventListener("load", function(event) {
-          win.removeEventListener("load", arguments.callee, false);
+        win.addEventListener("load", function onLoad(event) {
+          win.removeEventListener("load", onLoad, false);
           var doc = event.target;
           var url = doc.location.href.split("?")[0].split("#")[0];
           switch (url) {
@@ -33,8 +33,8 @@ var observer = {
                 } catch (e) {}
               }
 
-              win.addEventListener("unload", function(event) {
-                win.removeEventListener("unload", arguments.callee, false);
+              win.addEventListener("unload", function onUnload(event) {
+                win.removeEventListener("unload", onUnload, false);
                 var panelUIPopup = doc.getElementById("PanelUI-popup");
                 if (panelUIPopup) {
                   E("PanelUI-popup", doc).removeEventListener("popupshowing", onPanelShowing, false);
@@ -45,125 +45,120 @@ var observer = {
                 E("PanelUI-popup", doc).addEventListener("popupshowing", onPanelShowing, false);
               }
               configs = CCK2.getConfigs();
-              for (id in configs) {
-                var config = configs[id];       
-                var configs = CCK2.getConfigs();
-                for (var id in configs) {
-                  config = configs[id];
-                  if (config.disablePrivateBrowsing &&
-                      PrivateBrowsingUtils.isWindowPrivate(win)) {
-                    win.setTimeout(function() {
-                      Services.prompt.alert(win, "Private Browsing", "Private Browsing has been disabled by your administrator");
-                      win.close();
-                    }, 0, false);
+              for (let id in configs) {
+                config = configs[id];
+                if (config.disablePrivateBrowsing &&
+                    PrivateBrowsingUtils.isWindowPrivate(win)) {
+                  win.setTimeout(function() {
+                    Services.prompt.alert(win, "Private Browsing", "Private Browsing has been disabled by your administrator");
+                    win.close();
+                  }, 0, false);
+                }
+                if (config.disablePrivateBrowsing) {
+                  disablePrivateBrowsing(doc);
+                }
+                if (config.disableSync) {
+                  disableSync(doc);
+                }
+                if (config.disableAddonsManager) {
+                  disableAddonsManager(doc);
+                }
+                if (config.removeDeveloperTools) {
+                  Services.tm.mainThread.dispatch(function() {
+                    removeDeveloperTools(doc);
+                  }, Ci.nsIThread.DISPATCH_NORMAL);
+                }
+                if (config.disableErrorConsole) {
+                  disableErrorConsole(doc);
+                }
+                if (config.disableFirefoxHealthReport) {
+                  var healthReportMenu = doc.getElementById("healthReport");
+                  if (healthReportMenu) {
+                    healthReportMenu.parentNode.removeChild(healthReportMenu);
                   }
-                  if (config.disablePrivateBrowsing) {
-                    disablePrivateBrowsing(doc);
+                }
+                if (config.removeSafeModeMenu) {
+                  hide(E("helpSafeMode", doc));
+                }
+                if (config.titlemodifier) {
+                  doc.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
+                }
+                if (config.removeSetDesktopBackground) {
+                  // Because this is on a context menu, we can't use "hidden"
+                  if (E("context-setDesktopBackground", doc)) {
+                    E("context-setDesktopBackground", doc).setAttribute("style", "display: none;");
                   }
-                  if (config.disableSync) {
-                    disableSync(doc);
+                }
+                if (config.disableWebApps) {
+                  CustomizableUI.destroyWidget("web-apps-button");
+                  hide(E("menu_openApps", doc));
+                }
+                if (config.disableHello) {
+                  CustomizableUI.destroyWidget("loop-button");
+                  hide(E("menu_openLoop", doc));
+                }
+                if (config.disablePocket) {
+                  CustomizableUI.destroyWidget("pocket-button");
+                }
+                if (config.disableSharePage) {
+                  CustomizableUI.destroyWidget("social-share-button");
+                  // Because these are on a context menu, we can't use "hidden"
+                  if (E("context-sharelink", doc)) {
+                    E("context-sharelink", doc).setAttribute("style", "display: none;");
                   }
-              
-                  if (config.disableAddonsManager) {
-                    disableAddonsManager(doc);
+                  if (E("context-shareselect", doc)) {
+                    E("context-shareselect", doc).setAttribute("style", "display: none;");
                   }
-                  if (config.removeDeveloperTools) {
-                    Services.tm.mainThread.dispatch(function() {
-                      removeDeveloperTools(doc);
-                    }, Ci.nsIThread.DISPATCH_NORMAL);
+                  if (E("context-shareimage", doc)) {
+                    E("context-shareimage", doc).setAttribute("style", "display: none;");
                   }
-                  if (config.disableErrorConsole) {
-                    disableErrorConsole(doc);
+                  if (E("context-sharevideo", doc)) {
+                    E("context-sharevideo", doc).setAttribute("style", "display: none;");
                   }
-                  if (config.disableFirefoxHealthReport) {
-                    var healthReportMenu = doc.getElementById("healthReport");
-                    if (healthReportMenu) {
-                      healthReportMenu.parentNode.removeChild(healthReportMenu);
+                  if (E("context-sharepage", doc)) {
+                    E("context-sharepage", doc).setAttribute("style", "display: none;");
+                  }
+                }
+                if (config.disableSocialAPI) {
+                  win.SocialActivationListener = {};
+                }
+                if (config.disableForget) {
+                  CustomizableUI.destroyWidget("panic-button");
+                }
+                if (config.hiddenUI) {
+                  hideUIElements(doc, config.hiddenUI);
+                }
+                if (config.helpMenu) {
+                  // We need to run this function on a delay, because we won't know
+                  // if the about menu is hidden for mac until after it is run.
+                  Services.tm.mainThread.dispatch(function() {
+                    var helpMenuPopup = doc.getElementById("menu_HelpPopup");
+                    var menuitem = doc.createElement("menuitem");
+                    menuitem.setAttribute("label", config.helpMenu.label);
+                    if ("accesskey" in config.helpMenu) {
+                      menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
                     }
-                  }
-                  if (config.removeSafeModeMenu) {
-                    hide(E("helpSafeMode", doc));
-                  }
-                  if (config.titlemodifier) {
-                    doc.getElementById("main-window").setAttribute("titlemodifier", config.titlemodifier);
-                  }
-                  if (config.removeSetDesktopBackground) {
-                    // Because this is on a context menu, we can't use "hidden"
-                    if (E("context-setDesktopBackground", doc)) {
-                      E("context-setDesktopBackground", doc).setAttribute("style", "display: none;");
+                    menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
+                    menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
+                    if (!E("aboutName", doc) || E("aboutName", doc).hidden) {
+                      // Mac
+                      helpMenuPopup.appendChild(menuitem);
+                    } else {
+                      helpMenuPopup.insertBefore(menuitem, E("aboutName", doc));
+                      helpMenuPopup.insertBefore(doc.createElement("menuseparator"),
+                                                        E("aboutName", doc));
                     }
+                  }, Ci.nsIThread.DISPATCH_NORMAL);
+                }
+                if (config.firstrun || config.upgrade) {
+                  if (config.displayBookmarksToolbar || (config.bookmarks && config.bookmarks.toolbar)) {
+                    CustomizableUI.setToolbarVisibility("PersonalToolbar", "true");
                   }
-                  if (config.disableWebApps) {
-                    CustomizableUI.destroyWidget("web-apps-button");
-                    hide(E("menu_openApps", doc));
+                  if (config.displayMenuBar) {
+                    CustomizableUI.setToolbarVisibility("toolbar-menubar", "true");
                   }
-                  if (config.disableHello) {
-                    CustomizableUI.destroyWidget("loop-button");
-                    hide(E("menu_openLoop", doc));
-                  }
-                  if (config.disablePocket) {
-                    CustomizableUI.destroyWidget("pocket-button");
-                  }
-                  if (config.disableSharePage) {
-                    CustomizableUI.destroyWidget("social-share-button");
-                    // Because these are on a context menu, we can't use "hidden"
-                    if (E("context-sharelink", doc)) {
-                      E("context-sharelink", doc).setAttribute("style", "display: none;");
-                    }
-                    if (E("context-shareselect", doc)) {
-                      E("context-shareselect", doc).setAttribute("style", "display: none;");
-                    }
-                    if (E("context-shareimage", doc)) {
-                      E("context-shareimage", doc).setAttribute("style", "display: none;");
-                    }
-                    if (E("context-sharevideo", doc)) {
-                      E("context-sharevideo", doc).setAttribute("style", "display: none;");
-                    }
-                    if (E("context-sharepage", doc)) {
-                      E("context-sharepage", doc).setAttribute("style", "display: none;");
-                    }
-                  }
-                  if (config.disableSocialAPI) {
-                    win.SocialActivationListener = {};
-                  }
-                  if (config.disableForget) {
-                    CustomizableUI.destroyWidget("panic-button");
-                  }
-                  if (config.hiddenUI) {
-                    hideUIElements(doc, config.hiddenUI);
-                  }
-                  if (config.helpMenu) {
-                    // We need to run this function on a delay, because we won't know
-                    // if the about menu is hidden for mac until after it is run.
-                    Services.tm.mainThread.dispatch(function() {
-                      var helpMenuPopup = doc.getElementById("menu_HelpPopup");
-                      var menuitem = doc.createElement("menuitem");
-                      menuitem.setAttribute("label", config.helpMenu.label);
-                      if ("accesskey" in config.helpMenu) {
-                        menuitem.setAttribute("accesskey", config.helpMenu.accesskey);
-                      }
-                      menuitem.setAttribute("oncommand", "openUILink('" + config.helpMenu.url + "');");
-                      menuitem.setAttribute("onclick", "checkForMiddleClick(this, event);");
-                      if (!E("aboutName", doc) || E("aboutName", doc).hidden) {
-                        // Mac
-                        helpMenuPopup.appendChild(menuitem);
-                      } else {
-                        helpMenuPopup.insertBefore(menuitem, E("aboutName", doc));
-                        helpMenuPopup.insertBefore(doc.createElement("menuseparator"),
-                                                          E("aboutName", doc));
-                      }
-                    }, Ci.nsIThread.DISPATCH_NORMAL);
-                  }
-                  if (config.firstrun || config.upgrade) {
-                    if (config.displayBookmarksToolbar || (config.bookmarks && config.bookmarks.toolbar)) {
-                      CustomizableUI.setToolbarVisibility("PersonalToolbar", "true");         
-                    }
-                    if (config.displayMenuBar) {
-                      CustomizableUI.setToolbarVisibility("toolbar-menubar", "true");         
-                    }
-                    config.firstrun = false;
-                    config.upgrade = false;
-                  }
+                  config.firstrun = false;
+                  config.upgrade = false;
                 }
               }
               break;
@@ -171,7 +166,7 @@ var observer = {
             case "chrome://browser/content/bookmarks/bookmarksPanel.xul":
             case "chrome://browser/content/history/history-panel.xul":
               configs = CCK2.getConfigs();
-              for (id in configs) {
+              for (let id in configs) {
                 var config = configs[id];       
                 if (config.disablePrivateBrowsing) {
                   if (E("placesContext_open:newprivatewindow", doc)) {
@@ -214,7 +209,7 @@ function disableSync(doc) {
   CustomizableUI.removeWidgetFromArea("sync-button");
   var toolbox = doc.getElementById("navigator-toolbox");
   if (toolbox && toolbox.palette) {
-    element = toolbox.palette.querySelector("#sync-button");
+    let element = toolbox.palette.querySelector("#sync-button");
     if (element) {
       element.parentNode.removeChild(element);
     }
@@ -289,7 +284,7 @@ function disableErrorConsole(doc) {
 
 function onPanelShowing(event) {
   var configs = CCK2.getConfigs();
-  for (id in configs) {
+  for (let id in configs) {
     var config = configs[id];       
     if (config.disableSync) {
       hide(E("PanelUI-fxa-status", event.target.ownerDocument));

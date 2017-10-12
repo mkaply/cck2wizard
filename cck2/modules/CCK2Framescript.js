@@ -7,15 +7,15 @@ var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
       var doc = subject.document;
-      doc.addEventListener("DOMContentLoaded", function(event) {
-        event.target.removeEventListener("DOMContentLoaded", arguments.callee, false);
+      doc.addEventListener("DOMContentLoaded", function onLoad(event) {
+        event.target.removeEventListener("DOMContentLoaded", onLoad, false);
         if (disableSearchEngineInstall) {
           subject.wrappedJSObject.external.AddSearchProvider = function() {};
         }
         if (!doc.documentURI.startsWith("about:")) {
           return;
         }
-        for (id in configs) {
+        for (let id in configs) {
           var config = configs[id];
           if (config.hiddenUI) {
             for (var i=0; i < config.hiddenUI.length; i++) {

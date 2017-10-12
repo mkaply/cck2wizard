@@ -13,8 +13,8 @@ var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow && topic == 'content-document-global-created') {
       var doc = subject.document;
-      doc.addEventListener("DOMContentLoaded", function(event) {
-        event.target.removeEventListener("DOMContentLoaded", arguments.callee, false);
+      doc.addEventListener("DOMContentLoaded", function onLoad(event) {
+        event.target.removeEventListener("DOMContentLoaded", onLoad, false);
         // If the parent document is a local file, don't do anything
         // Links will just work
         if (doc.location.href.indexOf("file://") == 0) {
