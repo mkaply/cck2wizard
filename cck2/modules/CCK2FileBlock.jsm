@@ -4,7 +4,7 @@ var EXPORTED_SYMBOLS = [];
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
-CCK2FileBlock = {
+let CCK2FileBlock = {
   chromeBlacklist: ["browser", "mozapps", "marionette", "specialpowers",
                     "branding", "alerts"],
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aExtra) {
