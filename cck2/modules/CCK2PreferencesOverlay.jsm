@@ -81,6 +81,10 @@ function updatePrefUI(doc) {
     if (config.disableCrashReporter) {
       disable(E("submitCrashesBox", doc));
     }
+    if (config.disableSync) {
+      hide(E("noFxaAccount", doc));
+      hide(E("hasFxaAccount", doc));
+    }
     if (config.noMasterPassword == true) {
       hide(E("useMasterPassword", doc));
       hide(E("changeMasterPassword", doc));
