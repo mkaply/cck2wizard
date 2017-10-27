@@ -44,6 +44,10 @@ var observer = {
               if (panelUIPopup) {
                 E("PanelUI-popup", doc).addEventListener("popupshowing", onPanelShowing, false);
               }
+              var appMenuPopup = doc.getElementById("appMenu-popup");
+              if (appMenuPopup) {
+                E("appMenu-popup", doc).addEventListener("popupshowing", onAppMenuShowing, false);
+              }
               configs = CCK2.getConfigs();
               for (let id in configs) {
                 config = configs[id];
@@ -289,6 +293,19 @@ function onPanelShowing(event) {
     if (config.disableSync) {
       hide(E("PanelUI-fxa-status", event.target.ownerDocument));
       hide(E("PanelUI-footer-fxa", event.target.ownerDocument)); // Firefox 42+
+    }
+  }
+}
+
+function onAppMenuShowing(event) {
+  var configs = CCK2.getConfigs();
+  for (let id in configs) {
+    var config = configs[id];
+    if (config.disableSync) {
+      hide(E("appMenu-fxa-container", event.target.ownerDocument));
+    }
+    if (config.removeDeveloperTools) {
+      hide(E("appMenu-developer-button", event.target.ownerDocument));
     }
   }
 }
