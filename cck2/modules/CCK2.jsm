@@ -331,6 +331,7 @@ var CCK2 = {
       if (config.disablePocket) {
         Preferences.lock("browser.pocket.enabled", false);
         Preferences.lock("extensions.pocket.enabled", false);
+        Preferences.lock("browser.newtabpage.activity-stream.feeds.section.topstories", false);
       }
       if (config.disableHeartbeat) {
         Preferences.lock("browser.selfsupport.url", "");
@@ -364,6 +365,7 @@ var CCK2 = {
                                                 "sync-tabs");
         CCK2.aboutFactories.push(aboutSyncTabs);
         Preferences.lock("browser.syncPromoViewsLeftMap", JSON.stringify({bookmarks:0, passwords:0, addons:0}));
+        Preferences.lock("browser.newtabpage.activity-stream.migrationExpired", true);
       }
       var disableAboutConfigFactory = null;
       if (config.disableAboutConfig) {
@@ -427,6 +429,7 @@ var CCK2 = {
       }
       if (config.disableCrashReporter) {
         Preferences.lock("toolkit.crashreporter.enabled", false);
+        Preferences.lock("browser.crashReports.unsubmittedCheck.autoSubmit", false);
         try {
           Cc["@mozilla.org/toolkit/crash-reporter;1"].
             getService(Ci.nsICrashReporter).submitReports = false;
@@ -543,6 +546,9 @@ var CCK2 = {
             Preferences.lock(networkPrefMapping[i]);
           }
         }
+      }
+      if (config.removeSnippets) {
+        Preferences.lock("browser.newtabpage.activity-stream.disableSnippets", true);
       }
       // Fixup bad strings
       if ("helpMenu" in config) {
