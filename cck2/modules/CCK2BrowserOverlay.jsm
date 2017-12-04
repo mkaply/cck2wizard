@@ -161,6 +161,10 @@ var observer = {
                   if (config.displayMenuBar) {
                     CustomizableUI.setToolbarVisibility("toolbar-menubar", "true");
                   }
+                  if (config.showSearchBar) {
+                    CustomizableUI.addWidgetToArea("search-container", CustomizableUI.AREA_NAVBAR,
+                    CustomizableUI.getPlacementOfWidget("urlbar-container").position + 1);
+                  }
                   config.firstrun = false;
                   config.upgrade = false;
                 }

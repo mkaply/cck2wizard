@@ -25,6 +25,7 @@
       <checkbox config="disablePocket" label="&disablePocket.label;" />
       <checkbox config="disableAboutSupport" label="&disableAboutSupport.label;" />
       <checkbox config="disableAboutProfiles" label="&disableAboutProfiles.label;" />
+      <checkbox config="showSearchBar" label="&showSearchBar.label;" />
       </groupbox>
     </vbox>
   </deck>
