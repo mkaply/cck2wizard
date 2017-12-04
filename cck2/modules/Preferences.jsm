@@ -188,10 +188,14 @@ Preferences.prototype = {
     switch (prefType) {
       case "String":
         {
-          let string = Cc["@mozilla.org/supports-string;1"].
-                       createInstance(Ci.nsISupportsString);
-          string.data = prefValue;
-          this._prefSvc.setComplexValue(prefName, Ci.nsISupportsString, string);
+          try {
+             this._prefSvc.setStringPref(prefName, prefValue);
+          } catch (e) {
+            let string = Cc["@mozilla.org/supports-string;1"].
+                         createInstance(Ci.nsISupportsString);
+            string.data = prefValue;
+            this._prefSvc.setComplexValue(prefName, Ci.nsISupportsString, string);
+          }
         }
         break;
 
@@ -322,7 +326,11 @@ Preferences.prototype = {
                   QueryInterface(Ci.nsIPrefBranch);
     let prefs = new Preferences(this._prefBranch);
     // override. nasty, but this is internal, so OK.
-    prefs.__defineGetter__("_prefSvc", function() defaultBranch);
+    Object.defineProperty(prefs, "_prefSvc", {
+      get: function() {
+        return defaultBranch;
+      }
+    });
     prefs.isDefaultBranch = true;
     return prefs;
   },
@@ -440,9 +448,9 @@ Preferences.prototype = {
     // make it.  We could index by fullBranch, but we can't index by callback
     // or thisObject, as far as I know, since the keys to JavaScript hashes
     // (a.k.a. objects) can apparently only be primitive values.
-    let [observer] = observers.filter(function(v) v.prefName   == fullPrefName &&
-                                                  v.callback   == callback &&
-                                                  v.thisObject == thisObject);
+    let [observer] = observers.filter(v => v.prefName == fullPrefName &&
+                                           v.callback == callback &&
+                                           v.thisObject == thisObject);
 
     if (observer) {
       Preferences._prefSvc.removeObserver(fullPrefName, observer);
@@ -544,7 +552,11 @@ Preferences.prototype = {
     let prefSvc = Services.prefs.
                   getBranch(this._prefBranch).
                   QueryInterface(Ci.nsIPrefBranch);
-    this.__defineGetter__("_prefSvc", function() prefSvc);
+    Object.defineProperty(this, "_prefSvc", {
+      get: function() {
+        return prefSvc;
+      }
+    });
     return this._prefSvc;
   }
 
