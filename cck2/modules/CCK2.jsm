@@ -771,7 +771,7 @@ var CCK2 = {
                   });
                 }
               } else {
-                for (enginename in config.searchplugins) {
+                for (let enginename in config.searchplugins) {
                   var engine = Services.search.getEngineByName(enginename);
                   if (engine) {
                     Services.search.removeEngine(engine);
