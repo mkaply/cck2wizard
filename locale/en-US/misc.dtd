@@ -13,3 +13,4 @@
 <!ENTITY disablePocket.label "Disable Pocket">
 <!ENTITY disableAboutSupport.label "Prevent access to about:support">
 <!ENTITY disableAboutProfiles.label "Prevent access to about:profiles">
+<!ENTITY showSearchBar.label "Show the search bar (Firefox 57+)">
