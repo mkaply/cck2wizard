@@ -71,7 +71,7 @@ function startup(aData, aReason) {
       url = "http://mike.kaply.com/addons/cck2/install/";
       break;
     case 7: // ADDON_UPGRADE
-//      url = "http://mike.kaply.com/addons/cck2/upgrade/";
+      url = "http://mike.kaply.com/addons/cck2/upgrade/";
       break;
   }
   if (url) {
