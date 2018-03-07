@@ -661,6 +661,11 @@ var CCK2 = {
               }
             }
             var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
+            if (!userAgentLocale) {
+              var activeWindow = Services.wm.getMostRecentWindow("navigator:browser");
+              userAgentLocale = activeWindow.getLocale();
+            }
+
             var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
             var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
             if (bookmarks.length == 0) {
