@@ -191,10 +191,13 @@ Preferences.prototype = {
           try {
              this._prefSvc.setStringPref(prefName, prefValue);
           } catch (e) {
-            let string = Cc["@mozilla.org/supports-string;1"].
-                         createInstance(Ci.nsISupportsString);
-            string.data = prefValue;
-            this._prefSvc.setComplexValue(prefName, Ci.nsISupportsString, string);
+            try {
+              let string = Cc["@mozilla.org/supports-string;1"].createInstance(Ci.nsISupportsString);
+              string.data = prefValue;
+              this._prefSvc.setComplexValue(prefName, Ci.nsISupportsString, string);
+            } catch (e2) {
+                Components.utils.reportError(e2);
+            }
           }
         }
         break;
