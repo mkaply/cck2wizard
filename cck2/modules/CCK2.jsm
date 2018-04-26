@@ -626,7 +626,12 @@ var CCK2 = {
           }
           // Try to install devices every time just in case get added after install
           if ("certs" in config && "devices" in config.certs) {
-            var pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+            let pkcs11;
+            try {
+              pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+            } catch (e) {
+              pkcs11 = Components.classes["@mozilla.org/security/pkcs11moduledb;1"].getService(Ci.nsIPKCS11ModuleDB);
+            }
             for (var i=0; i < config.certs.devices.length; i++) {
               var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
               try {
