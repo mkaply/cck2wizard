@@ -366,6 +366,7 @@ var CCK2 = {
         CCK2.aboutFactories.push(aboutSyncTabs);
         Preferences.lock("browser.syncPromoViewsLeftMap", JSON.stringify({bookmarks:0, passwords:0, addons:0}));
         Preferences.lock("browser.newtabpage.activity-stream.migrationExpired", true);
+        Preferences.lock("identity.fxaccounts.enabled", false);
       }
       var disableAboutConfigFactory = null;
       if (config.disableAboutConfig) {
