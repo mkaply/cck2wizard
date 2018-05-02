@@ -1,4 +1,9 @@
 function onLoad() {
+  var retVals = window.arguments[0];
+  if (retVals.certString) {
+    parseTrustString(retVals.certString);
+  }
+  document.getElementById("trustString").value = retVals.certString;
 }
 
 function updateTrustString() {
@@ -37,14 +42,32 @@ function updateTrustString() {
 
 function parseTrustString(trustString) {
   var trust = trustString.split(",");
-  if (trustString[0].indexOf('C') != -1) {
+  if (trust[0].indexOf('C') != -1) {
     document.getElementById("trustSSLServer").checked = true;
   }
-  if (trustString[1].indexOf('C') != -1) {
+  if (trust[0].indexOf('T') != -1) {
+    document.getElementById("trustSSLClient").checked = true;
+  }
+  if (trust[0].indexOf('c') != -1) {
+    document.getElementById("trustSSLForce").checked = true;
+  }
+  if (trust[1].indexOf('C') != -1) {
     document.getElementById("trustEmailServer").checked = true;
   }
-  if (trustString[2].indexOf('C') != -1) {
+  if (trust[1].indexOf('T') != -1) {
+    document.getElementById("trustEmailClient").checked = true;
+  }
+  if (trust[1].indexOf('c') != -1) {
+    document.getElementById("trustEmailForce").checked = true;
+  }
+  if (trust[2].indexOf('C') != -1) {
     document.getElementById("trustObjSignServer").checked = true;
+  }
+  if (trust[2].indexOf('T') != -1) {
+    document.getElementById("trustObjSignClient").checked = true;
+  }
+  if (trust[2].indexOf('c') != -1) {
+    document.getElementById("trustObjSignForce").checked = true;
   }
 }
 

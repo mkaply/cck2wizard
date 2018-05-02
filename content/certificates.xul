@@ -58,6 +58,7 @@
   </deck>
   <popupset>
     <menupopup id="certificate-contextmenu">
+      <menuitem label="&edit.label;" oncommand="onEditCertificate()"/>
       <menuitem label="&delete.label;" oncommand="onDeleteCertificate()" />
     </menupopup>
     <menupopup id="certificates-listbox-contextmenu">
