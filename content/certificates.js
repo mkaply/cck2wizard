@@ -204,8 +204,8 @@ function addCertificateOverride() {
   listitem.setAttribute("context", "certoverride-contextmenu");
 }
 
-function getCertString() {
-  var retVals = { certString: null};
+function getCertString(certString) {
+  var retVals = { certString: certString};
   window.openDialog("chrome://cck2wizard/content/cert-dialog.xul", "cck2wizard-certificate", "modal,centerscreen", retVals);
   if (retVals.cancel) {
     return null;
@@ -254,6 +254,16 @@ function onEditDevice() {
   if (!retVals.cancel) {
     gDevicesListbox.selectedItem.label = retVals.deviceName;
     gDevicesListbox.selectedItem.value = retVals.devicePath;
+  }
+}
+
+function onEditCertificate() {
+  if (gCertificatesListbox.selectedIndex == -1) {
+    return;
+  }
+  var certString = getCertString(gCertificatesListbox.selectedItem.getAttribute("value"));
+  if (certString) {
+    gCertificatesListbox.selectedItem.setAttribute("value", certString);
   }
 }
 
