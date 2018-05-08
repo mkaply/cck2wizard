@@ -775,6 +775,7 @@ var CCK2 = {
                       }
                     },
                     onError: function (errorCode) {
+                      Components.utils.reportError("Engine install error: " + errorCode);
                       // Ignore errors
                     }
                   });
@@ -792,7 +793,7 @@ var CCK2 = {
                       }
                     },
                     onError: function (errorCode) {
-                      // Ignore errors
+                      Components.utils.reportError("Engine install error: " + errorCode);
                     }
                   });
                 }
