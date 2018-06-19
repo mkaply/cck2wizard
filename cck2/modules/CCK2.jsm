@@ -707,10 +707,12 @@ var CCK2 = {
 
           // If we detect an old CCK Wizard, remove it's bookmarks
           var bookmarksToRemove = [];
-          var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
-          if (oldCCKVersion) {
-            Preferences.reset("extensions." + config.extension.id + ".version");
-            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
+          if ("extension" in config) {
+            var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
+            if (oldCCKVersion) {
+              Preferences.reset("extensions." + config.extension.id + ".version");
+              bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
+            }
           }
           if (config.installedVersion != config.version) {
             bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
