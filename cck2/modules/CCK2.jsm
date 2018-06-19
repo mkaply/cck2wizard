@@ -215,29 +215,16 @@ var CCK2 = {
           } else if (config.preferences[i].clear) {
             Preferences.reset(i);
           } else {
-            if (Preferences.defaults.has(i) && Preferences.defaults.get(i)) {
-              try {
-                // Doesn't work due to bug 1181357
-                // Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                if (
-                    i == "browser.startup.homepage" ||
-                    i == "gecko.handlerService.defaultHandlersVersion" ||
-                    i == "browser.menu.showCharacterEncoding" ||
-                    i == "intl.accept_languages" ||
-                    i.indexOf("browser.search.defaultenginename") == 0 ||
-                    i.indexOf("browser.search.order") == 0 ||
-                    i.indexOf("browser.contentHandlers.types") == 0 ||
-                    i.indexOf("gecko.handlerService.schemes") == 0
-                   )
-                {
-                  // If it's a complex preference, we need to set it differently
-                  Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                } else {
-                  throw("Not a complex pref");                 
-                }
-              } catch (ex) {
-                Preferences.defaults.set(i, config.preferences[i].value);
-              }
+            if (i == "browser.startup.homepage" ||
+                i == "gecko.handlerService.defaultHandlersVersion" ||
+                i == "browser.menu.showCharacterEncoding" ||
+                i == "intl.accept_languages" ||
+                i.indexOf("browser.search.defaultenginename") == 0 ||
+                i.indexOf("browser.search.order") == 0 ||
+                i.indexOf("browser.contentHandlers.types") == 0 ||
+                i.indexOf("gecko.handlerService.schemes") == 0) {
+              // If it's a complex preference, we need to set it differently
+              Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
             } else {
               Preferences.defaults.set(i, config.preferences[i].value);
             }
