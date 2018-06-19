@@ -1113,7 +1113,7 @@ function addBookmarksSync(bookmarks, destination, annotation, removeDuplicateBoo
     if (bookmarks[i].folder) {
       var newFolderId = bmsvc.createFolder(destination, fixupUTF8(bookmarks[i].name), bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
-      addBookmarks(bookmarks[i].folder, newFolderId, annotation, removeDuplicateBookmarkNames);
+      addBookmarksSync(bookmarks[i].folder, newFolderId, annotation, removeDuplicateBookmarkNames);
     } else if (bookmarks[i].type == "separator") {
       var separatorId = bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(separatorId, annotation, "true", 0, annos.EXPIRE_NEVER);
