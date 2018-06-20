@@ -710,13 +710,15 @@ var CCK2 = {
             let bmFolders = [];
             for (var i = 0; i < bookmarksToRemove.length; i++) {
               try {
-                var itemType = bmsvc.getItemType(oldBookmarks[i]);
+                var itemType = bmsvc.getItemType(bookmarksToRemove[i]);
                 if (itemType == bmsvc.TYPE_FOLDER) {
-                  bmFolders.push(oldBookmarks[i]);
+                  bmFolders.push(bookmarksToRemove[i]);
                 } else {
-                  bmsvc.removeItem(oldBookmarks[i]);
+                  bmsvc.removeItem(bookmarksToRemove[i]);
                 }
-              } catch (ex) {}
+              } catch (e) {
+                Components.utils.reportError(e);
+              }
             }
             if (bmFolders.length > 0) {
               // Only remove folders if they are empty
