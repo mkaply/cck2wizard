@@ -1205,11 +1205,15 @@ async function addBookmarks(bookmarks, parentGuid, annotation, removeDuplicateBo
           await PlacesUtils.bookmarks.remove(bookmark);
         }
         if (removeDuplicateBookmarkNames) {
-          await PlacesUtils.bookmarks.fetch({parentGuid}, b => bookmarksArray.push(b));
-          for (var k=bookmarksArray.length; k > 0; k--) {
-            if (bookmarks[i].title == title) {
-              await PlacesUtils.bookmarks.remove(bookmarksArray[i]);
+          try {
+            await PlacesUtils.bookmarks.fetch({parentGuid}, b => bookmarksArray.push(b));
+            for (var k=bookmarksArray.length; k > 0; k--) {
+              if (bookmarks[i].title == title) {
+                await PlacesUtils.bookmarks.remove(bookmarksArray[i]);
+              }
             }
+          } catch(e) {
+            // Bad index errors in some cases
           }
         }
         let guid = generateGuidWithPrefix(BOOKMARK_GUID_PREFIX);
