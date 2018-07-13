@@ -1031,7 +1031,7 @@ async function removeOldBookmarks(oldBookmarks, oldVersion) {
 }
 
 function loadModules(config) {
-  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService();
   globalMM.addMessageListener("cck2:get-configs", function(message) {
     return CCK2.configs;
   });
