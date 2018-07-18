@@ -703,6 +703,7 @@ var CCK2 = {
           }
           if (config.installedVersion != config.version) {
             bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
           }
           // Just in case, remove bookmarks for this version too
           bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.version, {}));
