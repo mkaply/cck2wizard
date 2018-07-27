@@ -1238,7 +1238,7 @@ function errorCritical(e) {
   if (!stack) {
     stack = Error().stack;
   }
-  Components.utils.reportError("CCK2", e + "\n\n" + stack);
+  Components.utils.reportError("CCK2: " + e + "\n\n" + stack);
 }
 
 /**
