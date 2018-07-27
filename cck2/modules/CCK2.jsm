@@ -932,8 +932,7 @@ var CCK2 = {
             var numAddonsInstalled = 0;
             var numAddons = config.addons.length;
             for (var i=0; i < config.addons.length; i++) {
-              try {
-              AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
+              AddonManager.getInstallForURL(config.addons[i], "application/x-xpinstall").then(addonInstall => {
                 let listener = {
                   onInstallEnded: function(install, addon) {
                     if (addon.isActive) {
@@ -947,13 +946,10 @@ var CCK2 = {
                       Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
                     }
                   }
-                }
+                };
                 addonInstall.addListener(listener);
                 addonInstall.install();
-              }, "application/x-xpinstall");
-              } catch (e) {
-                errorCritical(e);
-              }
+              });
             }
           }
         }
