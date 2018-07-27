@@ -6,6 +6,7 @@ Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/NetUtil.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+Cu.import("resource://gre/modules/PlacesUtils.jsm");
 try {
   Cu.import("resource://gre/modules/Timer.jsm");  
 } catch (ex) {
@@ -214,29 +215,16 @@ var CCK2 = {
           } else if (config.preferences[i].clear) {
             Preferences.reset(i);
           } else {
-            if (Preferences.defaults.has(i) && Preferences.defaults.get(i)) {
-              try {
-                // Doesn't work due to bug 1181357
-                // Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                if (
-                    i == "browser.startup.homepage" ||
-                    i == "gecko.handlerService.defaultHandlersVersion" ||
-                    i == "browser.menu.showCharacterEncoding" ||
-                    i == "intl.accept_languages" ||
-                    i.indexOf("browser.search.defaultenginename") == 0 ||
-                    i.indexOf("browser.search.order") == 0 ||
-                    i.indexOf("browser.contentHandlers.types") == 0 ||
-                    i.indexOf("gecko.handlerService.schemes") == 0
-                   )
-                {
-                  // If it's a complex preference, we need to set it differently
-                  Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                } else {
-                  throw("Not a complex pref");                 
-                }
-              } catch (ex) {
-                Preferences.defaults.set(i, config.preferences[i].value);
-              }
+            if (i == "browser.startup.homepage" ||
+                i == "gecko.handlerService.defaultHandlersVersion" ||
+                i == "browser.menu.showCharacterEncoding" ||
+                i == "intl.accept_languages" ||
+                i.indexOf("browser.search.defaultenginename") == 0 ||
+                i.indexOf("browser.search.order") == 0 ||
+                i.indexOf("browser.contentHandlers.types") == 0 ||
+                i.indexOf("gecko.handlerService.schemes") == 0) {
+              // If it's a complex preference, we need to set it differently
+              Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
             } else {
               Preferences.defaults.set(i, config.preferences[i].value);
             }
@@ -366,6 +354,7 @@ var CCK2 = {
         CCK2.aboutFactories.push(aboutSyncTabs);
         Preferences.lock("browser.syncPromoViewsLeftMap", JSON.stringify({bookmarks:0, passwords:0, addons:0}));
         Preferences.lock("browser.newtabpage.activity-stream.migrationExpired", true);
+        Preferences.lock("identity.fxaccounts.enabled", false);
       }
       var disableAboutConfigFactory = null;
       if (config.disableAboutConfig) {
@@ -626,7 +615,12 @@ var CCK2 = {
           }
           // Try to install devices every time just in case get added after install
           if ("certs" in config && "devices" in config.certs) {
-            var pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+            let pkcs11;
+            try {
+              pkcs11 = Components.classes["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+            } catch (e) {
+              pkcs11 = Components.classes["@mozilla.org/security/pkcs11moduledb;1"].getService(Ci.nsIPKCS11ModuleDB);
+            }
             for (var i=0; i < config.certs.devices.length; i++) {
               var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
               try {
@@ -650,109 +644,116 @@ var CCK2 = {
               } catch (ex) {}
             }
           }
+          let syncBookmarks = false;
+          if ("getIdForItemAt" in bmsvc) {
+            syncBookmarks = true;
+          }
           if (config.removeDefaultBookmarks) {
-            var firefoxFolder = bmsvc.getIdForItemAt(bmsvc.bookmarksMenuFolder, 3);
-            if ((firefoxFolder != -1) && (bmsvc.getItemType(firefoxFolder) == bmsvc.TYPE_FOLDER)) {
-              var aboutMozilla = bmsvc.getIdForItemAt(firefoxFolder, 3);
-              if (aboutMozilla != -1 &&
-                  bmsvc.getItemType(aboutMozilla) == bmsvc.TYPE_BOOKMARK &&
-                  /https?:\/\/www.mozilla.(com|org)\/.*\/about/.test(bmsvc.getBookmarkURI(aboutMozilla).spec)) {
-                bmsvc.removeItem(firefoxFolder);
+            if (syncBookmarks) {
+              var firefoxFolder = bmsvc.getIdForItemAt(bmsvc.bookmarksMenuFolder, 3);
+              if ((firefoxFolder != -1) && (bmsvc.getItemType(firefoxFolder) == bmsvc.TYPE_FOLDER)) {
+                var aboutMozilla = bmsvc.getIdForItemAt(firefoxFolder, 3);
+                if (aboutMozilla != -1 &&
+                    bmsvc.getItemType(aboutMozilla) == bmsvc.TYPE_BOOKMARK &&
+                    /https?:\/\/www.mozilla.(com|org)\/.*\/about/.test(bmsvc.getBookmarkURI(aboutMozilla).spec)) {
+                  bmsvc.removeItem(firefoxFolder);
+                }
               }
-            }
-            var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
-            var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
-            var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
-            if (bookmarks.length == 0) {
-              bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/firefox/central/"));
-            }
-            if (bookmarks.length > 0) {
-              bmsvc.removeItem(bookmarks[0])
-            }
-            var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/about/"));
-            if (bookmarks.length == 0) {
-              bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/about/"));
-            }
-            if (bookmarks.length > 0) {
-              var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
-              if (mozillaFolder != -1) {
-                var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
-                var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
-                bmsvc.removeItem(mozillaFolder);
-                if (config.removeSmartBookmarks) {
-                  var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
-                  if (separator != -1) {
-                    bmsvc.removeItem(separator);
+              var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
+              var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
+              var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/firefox/central/"));
+              if (bookmarks.length == 0) {
+                bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/firefox/central/"));
+              }
+              if (bookmarks.length > 0) {
+                bmsvc.removeItem(bookmarks[0])
+              }
+              var bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("https://www.mozilla.org/" + userAgentLocale + "/about/"));
+              if (bookmarks.length == 0) {
+                bookmarks = bmsvc.getBookmarkIdsForURI(NetUtil.newURI("http://www.mozilla.com/" + userAgentLocale + "/about/"));
+              }
+              if (bookmarks.length > 0) {
+                var mozillaFolder = bmsvc.getFolderIdForItem(bookmarks[0]);
+                if (mozillaFolder != -1) {
+                  var mozillaFolderIndex = bmsvc.getItemIndex(mozillaFolder);
+                  var mozillaFolderParent = bmsvc.getFolderIdForItem(mozillaFolder);
+                  bmsvc.removeItem(mozillaFolder);
+                  if (config.removeSmartBookmarks) {
+                    var separator = bmsvc.getIdForItemAt(mozillaFolderParent, mozillaFolderIndex-1);
+                    if (separator != -1) {
+                      bmsvc.removeItem(separator);
+                    }
                   }
                 }
               }
+
+            } else {
+              removeDefaultBookmarks();
             }
           }
 
           // If we detect an old CCK Wizard, remove it's bookmarks
-          var bmFolders = [];
-          var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
-          if (oldCCKVersion) {
-            Preferences.reset("extensions." + config.extension.id + ".version");
-            var oldBookmarks = annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {});
-            for (var i = 0; i < oldBookmarks.length; i++) {
-              try {
-                var itemType = bmsvc.getItemType(oldBookmarks[i]);
-                if (itemType == bmsvc.TYPE_FOLDER) {
-                  bmFolders.push(oldBookmarks[i]);
-                } else {
-                  bmsvc.removeItem(oldBookmarks[i]);
-                }
-              } catch (ex) {}
+          var bookmarksToRemove = [];
+          if ("extension" in config) {
+            var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
+            if (oldCCKVersion) {
+              Preferences.reset("extensions." + config.extension.id + ".version");
+              bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
             }
           }
           if (config.installedVersion != config.version) {
-            var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {});
-            for (var i = 0; i < oldBookmarks.length; i++) {
-              try {
-                var itemType = bmsvc.getItemType(oldBookmarks[i]);
-                if (itemType == bmsvc.TYPE_FOLDER) {
-                  bmFolders.push(oldBookmarks[i]);
-                } else {
-                  bmsvc.removeItem(oldBookmarks[i]);
-                }
-              } catch (ex) {}
-            }
+            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
           }
           // Just in case, remove bookmarks for this version too
-          var oldBookmarks = annos.getItemsWithAnnotation(config.id + "/" + config.version, {});
-          for (var i = 0; i < oldBookmarks.length; i++) {
-            try {
-              var itemType = bmsvc.getItemType(oldBookmarks[i]);
-              if (itemType == bmsvc.TYPE_FOLDER) {
-                bmFolders.push(oldBookmarks[i]);
-              } else {
-                bmsvc.removeItem(oldBookmarks[i]);
-              }
-            } catch (ex) {}
-          }
-          if (bmFolders.length > 0) {
-            // Only remove folders if they are empty
-            for (var i = 0; i < bmFolders.length; i++) {
+          bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.version, {}));
+          if (syncBookmarks) {
+            let bmFolders = [];
+            for (var i = 0; i < bookmarksToRemove.length; i++) {
               try {
-                var bmID = bmsvc.getIdForItemAt(bmFolders[i], 0);
-                if (bmID == -1) {
-                  bmsvc.removeItem(bmFolders[i]);
+                var itemType = bmsvc.getItemType(bookmarksToRemove[i]);
+                if (itemType == bmsvc.TYPE_FOLDER) {
+                  bmFolders.push(bookmarksToRemove[i]);
                 } else {
-                  var newTitle = bmsvc.getItemTitle(bmFolders[i]) + " (" + (oldCCKVersion || config.installedVersion) + ")";
-                  bmsvc.setItemTitle(bmFolders[i], newTitle);
+                  bmsvc.removeItem(bookmarksToRemove[i]);
                 }
               } catch (e) {
-                bmsvc.removeItem(bmFolders[i]);
+                Components.utils.reportError(e);
               }
             }
+            if (bmFolders.length > 0) {
+              // Only remove folders if they are empty
+              for (var i = 0; i < bmFolders.length; i++) {
+                try {
+                  var bmID = bmsvc.getIdForItemAt(bmFolders[i], 0);
+                  if (bmID == -1) {
+                    bmsvc.removeItem(bmFolders[i]);
+                  } else {
+                    var newTitle = bmsvc.getItemTitle(bmFolders[i]) + " (" + (oldCCKVersion || config.installedVersion) + ")";
+                    bmsvc.setItemTitle(bmFolders[i], newTitle);
+                  }
+                } catch (e) {
+                  bmsvc.removeItem(bmFolders[i]);
+                }
+              }
+            }
+          } else {
+            removeOldBookmarks(bookmarksToRemove, oldCCKVersion || config.installedVersion);
           }
           if (config.bookmarks) {
             if (config.bookmarks.toolbar) {
-              addBookmarks(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              if (syncBookmarks) {
+                addBookmarksSync(config.bookmarks.toolbar, bmsvc.toolbarFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              } else {
+                addBookmarks(config.bookmarks.toolbar, PlacesUtils.bookmarks.toolbarGuid, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              }
             }
             if (config.bookmarks.menu) {
-              addBookmarks(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              if (syncBookmarks) {
+                addBookmarksSync(config.bookmarks.menu, bmsvc.bookmarksMenuFolder, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              } else {
+                addBookmarks(config.bookmarks.menu, PlacesUtils.bookmarks.menuGuid, config.id + "/" + config.version, config.removeDuplicateBookmarkNames);
+              }
             }
           }
           if (config.searchplugins || config.defaultSearchEngine) {
@@ -766,6 +767,7 @@ var CCK2 = {
                       }
                     },
                     onError: function (errorCode) {
+                      Components.utils.reportError("Engine install error: " + errorCode);
                       // Ignore errors
                     }
                   });
@@ -783,7 +785,7 @@ var CCK2 = {
                       }
                     },
                     onError: function (errorCode) {
-                      // Ignore errors
+                      Components.utils.reportError("Engine install error: " + errorCode);
                     }
                   });
                 }
@@ -979,8 +981,58 @@ var CCK2 = {
   }
 }
 
+async function removeDefaultBookmarks() {
+  var firefoxFolder = await PlacesUtils.bookmarks.fetch({
+    parentGuid: PlacesUtils.bookmarks.menuGuid,
+    index: 0});
+  if (firefoxFolder && firefoxFolder.type == PlacesUtils.bookmarks.TYPE_FOLDER) {
+    await PlacesUtils.bookmarks.remove(firefoxFolder);
+  }
+  var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
+  if (!userAgentLocale) {
+    userAgentLocale = Services.locale.getRequestedLocales()[0];
+  }
+  var userAgentLocale = "en-US";
+  var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
+  let bookmarks = [];
+  await PlacesUtils.bookmarks.fetch({url: gettingStartedURL}, b => bookmarks.push(b));
+  for (let bookmark of bookmarks) {
+    await PlacesUtils.bookmarks.remove(bookmark);
+  }
+}
+
+async function removeOldBookmarks(oldBookmarks, oldVersion) {
+  let bmFolders = [];
+  for (var i = 0; i < oldBookmarks.length; i++) {
+    try {
+      let guid = await PlacesUtils.promiseItemGuid(oldBookmarks[i]);
+      let bookmark = await PlacesUtils.bookmarks.fetch(guid);
+      if (bookmark.type == PlacesUtils.bookmarks.TYPE_FOLDER) {
+        bmFolders.push(bookmark);
+      } else {
+        await PlacesUtils.bookmarks.remove(bookmark);
+      }
+    } catch (ex) {
+      Components.utils.reportError(ex);
+    }
+  }
+  if (bmFolders.length > 0) {
+    // Only remove folders if they are empty
+    for (var i = 0; i < bmFolders.length; i++) {
+      let bookmarks = [];
+      await PlacesUtils.bookmarks.fetch({parentGuid: bmFolders[i].guid, index: 0}, b => bookmarks.push(b));
+      if (bookmarks.length == 0) {
+        await PlacesUtils.bookmarks.remove(bmFolders[i]);
+      } else {
+        PlacesUtils.bookmarks.update({guid: bmFolders[i].guid,
+                                     title: `${bmFolders[i].title} (${oldVersion})`});
+      }
+    }
+  }
+}
+
 function loadModules(config) {
-  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+  let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService();
   globalMM.addMessageListener("cck2:get-configs", function(message) {
     return CCK2.configs;
   });
@@ -1048,14 +1100,15 @@ function addRegistryKey(RootKey, Key, Name, NameValue, Type) {
   }
 }
 
-function addBookmarks(bookmarks, destination, annotation, removeDuplicateBookmarkNames) {
+function addBookmarksSync(bookmarks, destination, annotation, removeDuplicateBookmarkNames) {
   for (var i =0; i < bookmarks.length; i++) {
     if (bookmarks[i].folder) {
       var newFolderId = bmsvc.createFolder(destination, fixupUTF8(bookmarks[i].name), bmsvc.DEFAULT_INDEX);
       annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
-      addBookmarks(bookmarks[i].folder, newFolderId, annotation, removeDuplicateBookmarkNames);
+      addBookmarksSync(bookmarks[i].folder, newFolderId, annotation, removeDuplicateBookmarkNames);
     } else if (bookmarks[i].type == "separator") {
-      bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
+      var separatorId = bmsvc.insertSeparator(destination, bmsvc.DEFAULT_INDEX);
+      annos.setItemAnnotation(separatorId, annotation, "true", 0, annos.EXPIRE_NEVER);
     } else {
       try {
         var uri = NetUtil.newURI(bookmarks[i].location);
@@ -1097,6 +1150,81 @@ function addBookmarks(bookmarks, destination, annotation, removeDuplicateBookmar
           }
         }
         var newBookmarkId = bmsvc.insertBookmark(destination, uri, bmsvc.DEFAULT_INDEX, title);
+        annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
+      } catch(e) {
+        Components.utils.reportError(e);
+      }
+    }
+  }
+}
+
+let BOOKMARK_GUID_PREFIX = "CCKB-";
+let FOLDER_GUID_PREFIX = "CCKF-";
+let SEPARATOR_GUID_PREFIX = "CCKS-";
+
+function generateGuidWithPrefix(prefix) {
+  // Generates a random GUID and replace its beginning with the given
+  // prefix. We do this instead of just prepending the prefix to keep
+  // the correct character length.
+  return prefix + PlacesUtils.history.makeGuid().substring(prefix.length);
+}
+
+async function addBookmarks(bookmarks, parentGuid, annotation, removeDuplicateBookmarkNames) {
+  for (var i =0; i < bookmarks.length; i++) {
+    if (bookmarks[i].folder) {
+      let guid = generateGuidWithPrefix(FOLDER_GUID_PREFIX);
+      await PlacesUtils.bookmarks.insert({
+        type: PlacesUtils.bookmarks.TYPE_FOLDER,
+        title: fixupUTF8(bookmarks[i].name),
+        guid,
+        parentGuid
+      });
+      let newFolderId = await PlacesUtils.promiseItemId(guid);
+      annos.setItemAnnotation(newFolderId, annotation, "true", 0, annos.EXPIRE_NEVER);
+      addBookmarks(bookmarks[i].folder, guid, annotation, removeDuplicateBookmarkNames);
+    } else if (bookmarks[i].type == "separator") {
+      let guid = generateGuidWithPrefix(SEPARATOR_GUID_PREFIX);
+      await PlacesUtils.bookmarks.insert({
+        type: PlacesUtils.bookmarks.TYPE_SEPARATOR,
+        guid,
+        parentGuid
+      });
+      let newSeparatorId = await PlacesUtils.promiseItemId(guid);
+      annos.setItemAnnotation(newSeparatorId, annotation, "true", 0, annos.EXPIRE_NEVER);
+    } else {
+      try {
+        var title = fixupUTF8(bookmarks[i].name);
+        let bookmarksArray = [];
+        await PlacesUtils.bookmarks.fetch({url: bookmarks[i].location}, b => bookmarksArray.push(b));
+        for (let bookmark of bookmarksArray) {
+          // Unfortunately there's no way to generically
+          // check for any annotation, so we assume it is ours.
+          // We at least check if the destination is the same
+          if (bookmark.title == title &&
+            bookmark.parentGuid == parentGuid) {
+          }
+          await PlacesUtils.bookmarks.remove(bookmark);
+        }
+        if (removeDuplicateBookmarkNames) {
+          try {
+            await PlacesUtils.bookmarks.fetch({parentGuid}, b => bookmarksArray.push(b));
+            for (var k=bookmarksArray.length; k > 0; k--) {
+              if (bookmarks[i].title == title) {
+                await PlacesUtils.bookmarks.remove(bookmarksArray[i]);
+              }
+            }
+          } catch(e) {
+            // Bad index errors in some cases
+          }
+        }
+        let guid = generateGuidWithPrefix(BOOKMARK_GUID_PREFIX);
+        await PlacesUtils.bookmarks.insert({
+          url: bookmarks[i].location,
+          title: fixupUTF8(bookmarks[i].name),
+          guid,
+          parentGuid
+        });
+        let newBookmarkId = await PlacesUtils.promiseItemId(guid);
         annos.setItemAnnotation(newBookmarkId, annotation, "true", 0, annos.EXPIRE_NEVER);
       } catch(e) {
         Components.utils.reportError(e);
