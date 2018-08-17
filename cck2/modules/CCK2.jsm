@@ -931,28 +931,35 @@ var CCK2 = {
             Cu.import("resource://gre/modules/AddonManager.jsm");
             var numAddonsInstalled = 0;
             var numAddons = config.addons.length;
+            let listener = {
+              onInstallEnded: function(install, addon) {
+                if (addon.isActive) {
+                  // restartless add-on, so we don't need to restart
+                  numAddons--;
+                } else {
+                  numAddonsInstalled++;
+                }
+                if (numAddonsInstalled > 0 &&
+                    numAddonsInstalled == numAddons) {
+                  Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
+                }
+              }
+            }
             for (var i=0; i < config.addons.length; i++) {
               try {
-              AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
-                let listener = {
-                  onInstallEnded: function(install, addon) {
-                    if (addon.isActive) {
-                      // restartless add-on, so we don't need to restart
-                      numAddons--;
-                    } else {
-                      numAddonsInstalled++;
-                    }
-                    if (numAddonsInstalled > 0 &&
-                        numAddonsInstalled == numAddons) {
-                      Services.startup.quit(Services.startup.eRestart | Services.startup.eAttemptQuit);
-                    }
-                  }
-                }
-                addonInstall.addListener(listener);
-                addonInstall.install();
-              }, "application/x-xpinstall");
+                AddonManager.getInstallForURL(config.addons[i], function(addonInstall) {
+                  addonInstall.addListener(listener);
+                  addonInstall.install();
+                }, "application/x-xpinstall");
               } catch (e) {
-                errorCritical(e);
+                try {
+                  AddonManager.getInstallForURL(config.addons[i], "application/x-xpinstall").then(addonInstall => {
+                    addonInstall.addListener(listener);
+                    addonInstall.install();
+                  });
+                } catch (e) {
+                  errorCriticial(e);
+                }
               }
             }
           }
