@@ -25,6 +25,8 @@ XPCOMUtils.defineLazyServiceGetter(this, "override",
 XPCOMUtils.defineLazyServiceGetter(this, "uuid",
     "@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
 
+Cu.importGlobalProperties(["XMLHttpRequest"]);
+
 /* Hack to work around bug that AutoConfig is loaded in the wrong charset */
 /* Not used for Firefox 44 and above (see CCK2.init) */
 let fixupUTF8 = function(str) {
@@ -861,7 +863,7 @@ var CCK2 = {
           if ("certs" in config) {
             if ("override" in config.certs) {
               for (var i=0; i < config.certs.override.length; i++) {
-                var xhr = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+                var xhr = new XMLHttpRequest();
                 try {
                   xhr.open("GET", "https://" + config.certs.override[i]);
                   xhr.channel.notificationCallbacks = SSLExceptions;
