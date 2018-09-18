@@ -1385,9 +1385,9 @@ var gAboutXHTML = '' +
  */
 function disableAbout(aClass, aClassName, aboutType) {
   var gAbout = {
-    newChannel : function (aURI) {
+    newChannel : function (aURI, aLoadInfo) {
       var url = "data:text/html," + gAboutXHTML;
-      var channel = Services.io.newChannel(url, null, null);
+      var channel = Services.io.newChannelFromURIWithLoadInfo(NetUtil.newURI(url), aLoadInfo);
       channel.originalURI = aURI;
       return channel;
     },
