@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE overlay SYSTEM "chrome://cck2wizard/locale/finish.dtd">
-<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         xmlns:html="http://www.w3.org/1999/xhtml">
   <script type="application/x-javascript" src="finish.js" />
   <treechildren id="cck2wizard-treechildren">
     <treeitem>
@@ -16,6 +17,21 @@
       <hbox pack="center"><button id="finish-extension" label="&extension.label;" oncommand="onFinishExtension()"/></hbox>
       <description>&autoconfig.description;</description>
       <hbox pack="center"><button id="finish-autoconfig" label="&autoconfig.label;" oncommand="onFinishAutoconfig()"/></hbox>
+      <html:div style="margin: 15px"><html:span style="font-weight: bold">IMPORTANT! PLEASE READ:</html:span><html:br/><html:br/>
+Starting with Firefox 62, AutoConfig is sandboxed to its original API by default.
+<html:br/>
+<html:br/>
+There is a preference (general.config.sandbox_enabled) that can be set to false to allow the CCK2 to work. (I set that pref in this version of the CCK2.)
+<html:br/>
+<html:br/>
+This preference will be removed on rapid release once a sufficient amount of CCK2 functionality has been moved into Firefox via the GPO and the policy engine. That could happen as soon as Firefox 64.
+<html:br/>
+<html:br/>
+AutoConfig will NOT be sandboxed on the ESR.
+<html:br/>
+<html:br/>
+If you have any questions about this, feel free to reach out to me at <html:a class="text-link" href="mailto:mozilla@kaply.com">mozilla@kaply.com</html:a>
+</html:div>
     </vbox>
   </deck>
 </overlay>

@@ -95,6 +95,7 @@ const overrideINI = [
 ''].join("\n");
 
 const autoconfigPrefs = [
+'pref("general.config.sandbox_enabled", false);',
 'pref("general.config.filename", "cck2.cfg");',
 'pref("general.config.obscure_value", 0);',
 ''].join("\n");
