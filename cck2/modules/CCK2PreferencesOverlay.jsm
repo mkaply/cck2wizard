@@ -89,6 +89,10 @@ function updatePrefUI(doc) {
       hide(E("useMasterPassword", doc));
       hide(E("changeMasterPassword", doc));
     }
+    if (config.removeDefaultSearchEngines) {
+      // Can't disable because it gets enabled
+      hide(E("restoreDefaultSearchEngines", doc));
+    }
     if (config.hiddenUI) {
       for (var i=0; i < config.hiddenUI.length; i++) {
         // Don't use .hidden since it doesn't work sometimes
