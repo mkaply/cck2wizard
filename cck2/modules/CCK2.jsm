@@ -1417,7 +1417,7 @@ function disableAbout(aClass, aClassName, aboutType) {
       return Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
 
-    QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
+    QueryInterface: ("generateQI" in XPCOMUtils) ? XPCOMUtils.generateQI([Ci.nsIAboutModule]) : ChromeUtils.generateQI([Ci.nsIAboutModule]),
 
     createInstance: function(outer, iid) {
        return this.QueryInterface(iid);

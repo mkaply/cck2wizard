@@ -30,7 +30,7 @@ let CCK2FileBlock = {
   classDescription: "CCK2 FileBlock Service",
   contractID: "@kaply.com/cck2-fileblock-service;1",
   classID: Components.ID('{26e7afc9-e22d-4d12-bb57-c184fe24b828}'),
-  QueryInterface: XPCOMUtils.generateQI([Ci.nsIContentPolicy]),
+  QueryInterface: ("generateQI" in XPCOMUtils) ? XPCOMUtils.generateQI([Ci.nsIContentPolicy]) : ChromeUtils.generateQI([Ci.nsIContentPolicy]),
   createInstance: function(outer, iid) {
      return this.QueryInterface(iid);
   },
