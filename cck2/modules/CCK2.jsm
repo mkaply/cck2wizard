@@ -1036,7 +1036,7 @@ var CCK2 = {
 
 function getItemsWithAnnotation(name) {
   if ("getItemsWithAnnotation" in annos) {
-    return annos.getItemsWithAnnotation(text);
+    return annos.getItemsWithAnnotation(name);
   } else {
     return PlacesUtils.promiseDBConnection().then(async db => {
       let rows = await db.execute(`
