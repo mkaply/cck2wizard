@@ -588,7 +588,7 @@ var CCK2 = {
   getConfigs: function() {
     return this.configs;
   },
-  observe: function observe(subject, topic, data) {
+  observe: async function observe(subject, topic, data) {
     switch (topic) {
       case "distribution-customization-complete":
         for (var id in this.configs) {
@@ -664,7 +664,7 @@ var CCK2 = {
           }
           if (config.removeSmartBookmarks) {
             try  {
-              var smartBookmarks = getItemsWithAnnotation("Places/SmartBookmark", {});
+              var smartBookmarks = await getItemsWithAnnotation("Places/SmartBookmark", {});
               for (var i = 0; i < smartBookmarks.length; i++) {
                 try {
                   bmsvc.removeItem(smartBookmarks[i]);
@@ -728,15 +728,15 @@ var CCK2 = {
             var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
             if (oldCCKVersion) {
               Preferences.reset("extensions." + config.extension.id + ".version");
-              bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
+              bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
             }
           }
           if (config.installedVersion != config.version) {
-            bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
-            bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
           }
           // Just in case, remove bookmarks for this version too
-          bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.id + "/" + config.version, {}));
+          bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.id + "/" + config.version, {}));
           if (syncBookmarks) {
             let bmFolders = [];
             for (var i = 0; i < bookmarksToRemove.length; i++) {
@@ -1034,19 +1034,19 @@ var CCK2 = {
   }
 }
 
-function getItemsWithAnnotation(name) {
+async function getItemsWithAnnotation(name) {
   if ("getItemsWithAnnotation" in annos) {
     return annos.getItemsWithAnnotation(name);
   } else {
     return PlacesUtils.promiseDBConnection().then(async db => {
       let rows = await db.execute(`
-        SELECT b.guid FROM moz_anno_attributes n
+        SELECT b.id FROM moz_anno_attributes n
         JOIN moz_items_annos a ON n.id = a.anno_attribute_id
         JOIN moz_bookmarks b ON b.id = a.item_id
         WHERE n.name = :name
       `, {name});
 
-      return rows.map(row => row.getResultByName("guid"));
+      return rows.map(row => row.getResultByName("id"));
     });
   }
 }
