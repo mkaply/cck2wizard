@@ -292,6 +292,34 @@ var CCK2 = {
           }
         }
       }
+      if (config.remove_permissions) {
+        for (var i in config.remove_permissions) {
+          for (var j in config.remove_permissions[i]) {
+            if (i.indexOf("http") == 0) {
+              Services.perms.remove(NetUtil.newURI(i), j);
+            } else {
+              var domain = i.replace(/^\*\./g, '');
+              Services.perms.remove(NetUtil.newURI("http://" + domain), j);
+              Services.perms.remove(NetUtil.newURI("https://" + domain), j);
+            }
+            if (j == "plugins") {
+              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+              for (var k=0; k < plugins.length; k++) {
+                if (i.indexOf("http") == 0) {
+                  Services.perms.remove(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                  Services.perms.remove(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                } else {
+                  var domain = i.replace(/^\*\./g, '');
+                  Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                  Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                  Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                  Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+                }
+              }
+            }
+          }
+        }
+      }
       if (config.disablePrivateBrowsing) {
         Preferences.lock("browser.taskbar.lists.tasks.enabled", false);
         Preferences.lock("browser.privatebrowsing.autostart", false);
