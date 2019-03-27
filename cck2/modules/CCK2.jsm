@@ -635,11 +635,15 @@ var CCK2 = {
             continue;
           }
           if (config.removeSmartBookmarks) {
-            var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
-            for (var i = 0; i < smartBookmarks.length; i++) {
-              try {
-                bmsvc.removeItem(smartBookmarks[i]);
-              } catch (ex) {}
+            try  {
+              var smartBookmarks = getItemsWithAnnotation("Places/SmartBookmark", {});
+              for (var i = 0; i < smartBookmarks.length; i++) {
+                try {
+                  bmsvc.removeItem(smartBookmarks[i]);
+                } catch (ex) {}
+              }
+            } catch (e) {
+              // getItemsWithAnnotation was removed, but so were smart bookmarks
             }
           }
           let syncBookmarks = false;
@@ -696,15 +700,15 @@ var CCK2 = {
             var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
             if (oldCCKVersion) {
               Preferences.reset("extensions." + config.extension.id + ".version");
-              bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
+              bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
             }
           }
           if (config.installedVersion != config.version) {
-            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
-            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
           }
           // Just in case, remove bookmarks for this version too
-          bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.version, {}));
+          bookmarksToRemove = bookmarksToRemove.concat(getItemsWithAnnotation(config.id + "/" + config.version, {}));
           if (syncBookmarks) {
             let bmFolders = [];
             for (var i = 0; i < bookmarksToRemove.length; i++) {
@@ -999,6 +1003,23 @@ var CCK2 = {
           registrar.unregisterFactory(CCK2.aboutFactories[i].classID, CCK2.aboutFactories[i].factory);
         break;
     }
+  }
+}
+
+function getItemsWithAnnotation(name) {
+  if ("getItemsWithAnnotation" in annos) {
+    return annos.getItemsWithAnnotation(text);
+  } else {
+    return PlacesUtils.promiseDBConnection().then(async db => {
+      let rows = await db.execute(`
+        SELECT b.guid FROM moz_anno_attributes n
+        JOIN moz_items_annos a ON n.id = a.anno_attribute_id
+        JOIN moz_bookmarks b ON b.id = a.item_id
+        WHERE n.name = :name
+      `, {name});
+
+      return rows.map(row => row.getResultByName("guid"));
+    });
   }
 }
 
