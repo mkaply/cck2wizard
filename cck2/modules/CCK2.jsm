@@ -786,6 +786,58 @@ var CCK2 = {
               }
             }
           }
+          if (config.searchplugins || config.defaultSearchEngine) {
+            let enginesToAdd;
+            searchInitRun(function() {
+              if (Array.isArray(config.searchplugins)) {
+                enginesToAdd = config.searchplugins.length;
+                for (var i=0; i < config.searchplugins.length; i++) {
+                  Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
+                    onSuccess: function (engine) {
+                      if (engine.name == config.defaultSearchEngine) {
+                        Services.search.currentEngine = engine;
+                      }
+                      enginesToAdd--;
+                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
+                        removeDefaultSearchEngines();
+                      }
+                    },
+                    onError: function (errorCode) {
+                      Components.utils.reportError("Engine install error: " + errorCode);
+                      // Ignore errors
+                    }
+                  });
+                }
+              } else {
+                enginesToAdd = Object.keys(config.searchplugins).length;
+                for (let enginename in config.searchplugins) {
+                  var engine = Services.search.getEngineByName(enginename);
+                  if (engine) {
+                    Services.search.removeEngine(engine);
+                  }
+                  Services.search.addEngine(config.searchplugins[enginename], Ci.nsISearchEngine.DATA_XML, null, false, {
+                    onSuccess: function (engine) {
+                      if (engine.name == config.defaultSearchEngine) {
+                        Services.search.currentEngine = engine;
+                      }
+                      enginesToAdd--;
+                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
+                        removeDefaultSearchEngines();
+                      }
+                    },
+                    onError: function (errorCode) {
+                      Components.utils.reportError("Engine install error: " + errorCode);
+                    }
+                  });
+                }
+              }
+
+              var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
+              if (defaultSearchEngine) {
+                Services.search.currentEngine = defaultSearchEngine;
+              }
+            });
+          }
           if (config.disableSearchEngineInstall) {
             try {
               Cu.import("resource:///modules/ContentLinkHandler.jsm");
@@ -966,63 +1018,6 @@ var CCK2 = {
                       .getService(Components.interfaces.mozIJSSubScriptLoader)
                       .loadSubScript(prefFile, temp);
           });
-        }
-        break;
-      case "browser-search-service":
-        if (data == "init-complete") {
-          for (var id in this.configs) {
-            var config = this.configs[id];
-            if (config.searchplugins || config.defaultSearchEngine) {
-              let enginesToAdd;
-                if (Array.isArray(config.searchplugins)) {
-                  enginesToAdd = config.searchplugins.length
-                  for (var i=0; i < config.searchplugins.length; i++) {
-                    Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
-                    onSuccess: function (engine) {
-                      if (engine.name == config.defaultSearchEngine) {
-                        Services.search.currentEngine = engine;
-                      }
-                      enginesToAdd--;
-                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
-                        removeDefaultSearchEngines();
-                      }
-                    },
-                    onError: function (errorCode) {
-                      Components.utils.reportError("Engine install error: " + errorCode);
-                      // Ignore errors
-                    }
-                  });
-                }
-              } else {
-                enginesToAdd = Object.keys(config.searchplugins).length;
-                for (let enginename in config.searchplugins) {
-                  var engine = Services.search.getEngineByName(enginename);
-                  if (engine) {
-                    Services.search.removeEngine(engine);
-                  }
-                  Services.search.addEngine(config.searchplugins[enginename], Ci.nsISearchEngine.DATA_XML, null, false, {
-                    onSuccess: function (engine) {
-                      if (engine.name == config.defaultSearchEngine) {
-                        Services.search.currentEngine = engine;
-                      }
-                      enginesToAdd--;
-                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
-                        removeDefaultSearchEngines();
-                      }
-                    },
-                    onError: function (errorCode) {
-                      Components.utils.reportError("Engine install error: " + errorCode);
-                    }
-                  });
-                }
-              }
-
-              var defaultSearchEngine = Services.search.getEngineByName(config.defaultSearchEngine);
-              if (defaultSearchEngine) {
-                Services.search.currentEngine = defaultSearchEngine;
-              }
-            }
-          }
         }
         break;
       case "quit-application":
@@ -1559,7 +1554,6 @@ Services.obs.addObserver(CCK2, "browser-ui-startup-complete", false);
 Services.obs.addObserver(documentObserver, "chrome-document-global-created", false);  
 Services.obs.addObserver(documentObserver, "content-document-global-created", false);  
 Services.obs.addObserver(CCK2, "load-extension-defaults", false);
-Services.obs.addObserver(CCK2, "browser-search-service", false);
 try {
   loadBundleDirs()
 } catch (e) {
