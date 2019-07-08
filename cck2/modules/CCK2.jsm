@@ -1065,7 +1065,11 @@ async function removeDefaultBookmarks() {
   }
   var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
   if (!userAgentLocale) {
-    userAgentLocale = Services.locale.getRequestedLocales()[0];
+    try {
+      userAgentLocale = Services.locale.getRequestedLocales()[0];
+    } catch (e) {
+      userAgentLocale = Services.locale.requestedLocales[0];
+    }
   }
   var userAgentLocale = "en-US";
   var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
@@ -1357,7 +1361,17 @@ function fixupCert(cert) {
 function download(url, successCallback, errorCallback, extraParams) {
   var uri = Services.io.newURI(url, null, null);
 
-  var channel = Services.io.newChannelFromURI(uri);
+  var channel;
+  try {
+    channel = Services.io.newChannelFromURI(uri);
+  } catch(e) {
+    channel = Services.io.newChannelFromURI(uri,
+                                            null,
+                                            Services.scriptSecurityManager.getSystemPrincipal(),
+                                            null,
+                                            Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_INHERITS,
+                                            Ci.nsIContentPolicy.TYPE_OTHER);
+  }
 
   var downloader = Cc["@mozilla.org/network/downloader;1"].createInstance(Ci.nsIDownloader);
   var listener = {
