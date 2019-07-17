@@ -238,88 +238,6 @@ var CCK2 = {
                          config.registry[i].type);
         }
       }
-      if (config.permissions) {
-        for (var i in config.permissions) {
-          for (var j in config.permissions[i]) {
-            if (i.indexOf("http") == 0) {
-              Services.perms.add(NetUtil.newURI(i), j, config.permissions[i][j]);
-            } else {
-              var domain = i.replace(/^\*\./g, '');
-              Services.perms.add(NetUtil.newURI("http://" + domain), j, config.permissions[i][j]);
-              Services.perms.add(NetUtil.newURI("https://" + domain), j, config.permissions[i][j]);
-            }
-            if (j == "plugins") {
-              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
-              for (var k=0; k < plugins.length; k++) {
-                if (i.indexOf("http") == 0) {
-                  Services.perms.add(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                } else {
-                  var domain = i.replace(/^\*\./g, '');
-                  Services.perms.add(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                }
-              }
-            }
-          }
-          if (Object.keys(config.permissions[i]).length === 0) {
-            let perms = Services.perms.enumerator;
-            while (perms.hasMoreElements()) {
-              let perm = perms.getNext();
-              try {
-                // Firefox 41 and below
-                if (perm.host == i) {
-                  Services.perms.remove(perm.host, perm.type);
-                }
-              } catch(e) {
-                if (i.indexOf("http") == 0) {
-                  if (perm.matchesURI(NetUtil.newURI(i), false)) {
-                    perm.remove(NetUtil.newURI(i), perm.type);
-                  }
-                } else {
-                  var domain = i.replace(/^\*\./g, '');
-                  if (perm.matchesURI(NetUtil.newURI("http://" + domain), false)) {
-                    perm.remove(NetUtil.newURI("http://" + domain), perm.type);
-                  }
-                  if (perm.matchesURI(NetUtil.newURI("https://" + i), false)) {
-                    perm.remove(NetUtil.newURI("https://" + domain), perm.type);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      if (config.remove_permissions) {
-        for (var i in config.remove_permissions) {
-          for (var j in config.remove_permissions[i]) {
-            if (i.indexOf("http") == 0) {
-              Services.perms.remove(NetUtil.newURI(i), j);
-            } else {
-              var domain = i.replace(/^\*\./g, '');
-              Services.perms.remove(NetUtil.newURI("http://" + domain), j);
-              Services.perms.remove(NetUtil.newURI("https://" + domain), j);
-            }
-            if (j == "plugins") {
-              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
-              for (var k=0; k < plugins.length; k++) {
-                if (i.indexOf("http") == 0) {
-                  Services.perms.remove(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                  Services.perms.remove(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                } else {
-                  var domain = i.replace(/^\*\./g, '');
-                  Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                  Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                  Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                  Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
-                }
-              }
-            }
-          }
-        }
-      }
       if (config.disablePrivateBrowsing) {
         Preferences.lock("browser.taskbar.lists.tasks.enabled", false);
         Preferences.lock("browser.privatebrowsing.autostart", false);
@@ -896,6 +814,10 @@ var CCK2 = {
           // Delay loading unnecessary modules
           // We should do this on a timeout
           loadModules(config);
+          // Move permissions later so remove works
+          if ("permissions" in config) {
+            updatePermissions(config.permissions);
+          }
           if (!config.firstrun && config.installedVersion == config.version) {
             return;
           }
@@ -1485,6 +1407,87 @@ function disableAbout(aClass, aClassName, aboutType) {
   var registrar = Components.manager.QueryInterface(Ci.nsIComponentRegistrar);
   registrar.registerFactory(aClass, aClassName, "@mozilla.org/network/protocol/about;1?what=" + aboutType, gAbout);
   return gAbout;
+}
+
+function updatePermissions(permissions) {
+  for (var i in permissions) {
+    for (var j in permissions[i]) {
+      if (permissions[i][j] == 3) {
+        // Remove
+        if (i.indexOf("http") == 0) {
+            Services.perms.remove(NetUtil.newURI(i), j);
+        } else {
+          var domain = i.replace(/^\*\./g, '');
+          Services.perms.remove(NetUtil.newURI("http://" + domain), j);
+          Services.perms.remove(NetUtil.newURI("https://" + domain), j);
+        }
+        if (j == "plugins") {
+          var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+          for (var k=0; k < plugins.length; k++) {
+            if (i.indexOf("http") == 0) {
+              Services.perms.remove(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+            } else {
+              var domain = i.replace(/^\*\./g, '');
+              Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+            }
+          }
+        }
+      } else {
+        if (i.indexOf("http") == 0) {
+          Services.perms.add(NetUtil.newURI(i), j, permissions[i][j]);
+        } else {
+          var domain = i.replace(/^\*\./g, '');
+          Services.perms.add(NetUtil.newURI("http://" + domain), j, permissions[i][j]);
+          Services.perms.add(NetUtil.newURI("https://" + domain), j, permissions[i][j]);
+        }
+        if (j == "plugins") {
+          var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+          for (var k=0; k < plugins.length; k++) {
+            if (i.indexOf("http") == 0) {
+              Services.perms.add(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+            } else {
+              var domain = i.replace(/^\*\./g, '');
+              Services.perms.add(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+            }
+          }
+        }
+      }
+    }
+    if (Object.keys(permissions[i]).length === 0) {
+      let perms = Services.perms.enumerator;
+      while (perms.hasMoreElements()) {
+        let perm = perms.getNext();
+        try {
+          // Firefox 41 and below
+          if (perm.host == i) {
+            Services.perms.remove(perm.host, perm.type);
+          }
+        } catch(e) {
+          if (i.indexOf("http") == 0) {
+            if (perm.matchesURI(NetUtil.newURI(i), false)) {
+              perm.remove(NetUtil.newURI(i), perm.type);
+            }
+          } else {
+            var domain = i.replace(/^\*\./g, '');
+            if (perm.matchesURI(NetUtil.newURI("http://" + domain), false)) {
+              perm.remove(NetUtil.newURI("http://" + domain), perm.type);
+            }
+            if (perm.matchesURI(NetUtil.newURI("https://" + i), false)) {
+              perm.remove(NetUtil.newURI("https://" + domain), perm.type);
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 var documentObserver = {

@@ -23,6 +23,7 @@
               <menuitem label="" value="" />
               <menuitem label="&allow.label;" value="1" />
               <menuitem label="&block.label;" value="2" />
+              <menuitem label="&remove.label;" value="3" />
             </menupopup>
           </menulist>
         </row>
@@ -33,6 +34,7 @@
               <menuitem label="" value="" />
               <menuitem label="&allow.label;" value="1" />
               <menuitem label="&block.label;" value="2" />
+              <menuitem label="&remove.label;" value="3" />
             </menupopup>
           </menulist>
         </row>
@@ -43,6 +45,7 @@
               <menuitem label="" value="" />
               <menuitem label="&allow.label;" value="1" />
               <menuitem label="&block.label;" value="2" />
+              <menuitem label="&remove.label;" value="3" />
             </menupopup>
           </menulist>
         </row>
@@ -53,7 +56,8 @@
               <menuitem label="" value="" />
               <menuitem label="&allow.label;" value="1" />
               <menuitem label="&block.label;" value="2" />
-            </menupopup>
+              <menuitem label="&remove.label;" value="3" />
+7            </menupopup>
           </menulist>
         </row>
       </rows>

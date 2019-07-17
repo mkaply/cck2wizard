@@ -108,6 +108,8 @@ function convertValueToLabel(value) {
       return "Allow";
     case Services.perms.DENY_ACTION:
       return "Block";
+    case 3:
+      return "Remove";
   }
   return "";
 }

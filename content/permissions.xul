@@ -29,6 +29,7 @@
         </richlistbox>
       <hbox>
         <button label="&add.label;" oncommand="onAddPermissionsItem()"/>
+        <button label="&edit.label;" oncommand="onEditPermissionsItem()"/>
       </hbox>
     </vbox>
   </deck>
