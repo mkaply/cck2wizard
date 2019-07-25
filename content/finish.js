@@ -350,6 +350,17 @@ function packageCCK2(type) {
       numFilesToWrite += 1;
       writeFile(blankBookmarksFile, "", addFileToZip(zipwriter));
     }
+    let policyJSON = {"policies": {}};
+    if (config.disableFirefoxUpdates) {
+      policyJSON.policies.DisableAppUpdate = true;
+    }
+    if (Object.keys(policyJSON.policies).length > 0) {
+      var policiesFile = dir.clone();
+      policiesFile.append("distribution");
+      policiesFile.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
+      policiesFile.append("policies.json");
+      writeFile(policiesFile, JSON.stringify(policyJSON, null, 2), addFileToZip(zipwriter));
+    }
   }
   if (type == "extension" && "icon" in config.extension) {
     var iconFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
