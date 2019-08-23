@@ -577,6 +577,9 @@ var CCK2 = {
               }
             }
           }
+          if (config.removeAllCCK2Bookmarks) {
+            removeAllCCK2Bookmarks(config.id);
+          }
           if (!config.firstrun && config.installedVersion == config.version) {
             continue;
           }
@@ -1030,6 +1033,19 @@ async function removeOldBookmarks(oldBookmarks, oldVersion) {
       }
     }
   }
+}
+
+async function removeAllCCK2Bookmarks(id) {
+  let bookmarks = await PlacesUtils.promiseDBConnection().then(async db => {
+      let rows = await db.execute(`
+        SELECT b.id FROM moz_anno_attributes n
+        JOIN moz_items_annos a ON n.id = a.anno_attribute_id
+        JOIN moz_bookmarks b ON b.id = a.item_id
+        WHERE n.name LIKE :id || '%'`, {id});
+
+      return rows.map(row => row.getResultByName("id"));
+    });
+  removeOldBookmarks(bookmarks, "CCK2");
 }
 
 function loadModules(config) {
