@@ -69,14 +69,18 @@ function myExecCommand(doc, originalExecCommand) {
     case "copy":
       if (allowCutCopy(doc)) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
-        win.goDoCommand("cmd_" + aCommandName.toLowerCase());
+        if (win) {
+          win.goDoCommand("cmd_" + aCommandName.toLowerCase());
+        }
         return true;
       }
       break;
     case "paste":
       if (allowPaste(doc)) {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
-        win.goDoCommand("cmd_" + aCommandName.toLowerCase());
+        if (win) {
+          win.goDoCommand("cmd_" + aCommandName.toLowerCase());
+        }
         return true;
       }
       break;
