@@ -64,23 +64,6 @@ let fixupUTF8 = function(str) {
   return out;
 };
 
-/* Crazy hack to work around distribution.ini bug */
-/* Basically if the distribution can't be parsed,  make it null */
-let dirSvc = Cc["@mozilla.org/file/directory_service;1"].
-             getService(Ci.nsIProperties);
-let iniFile = dirSvc.get("XREAppDist", Ci.nsIFile);
-iniFile.leafName = "distribution";
-iniFile.append("distribution.ini");
-if (iniFile.exists()) {
-  try {
-    let ini = Cc["@mozilla.org/xpcom/ini-parser-factory;1"].
-                 getService(Ci.nsIINIParserFactory).
-                 createINIParser(iniFile);
-  } catch (e) {
-    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() { return null;});
-  }
-}
-
 var networkPrefMapping = {
   proxyType: "network.proxy.type",
   proxyHTTP: "network.proxy.http",
@@ -399,11 +382,6 @@ var CCK2 = {
       }
       if (config.homePage && !config.lockHomePage) {
         Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
-        /* If you have a distribution.ini, browser.startup.homepage gets wiped out */
-        /* We need to save it */
-        if (!Preferences.isSet("browser.startup.homepage")) {
-          Preferences.set("browser.startup.homepage", config.homePage);
-        }
       }
       if (config.lockHomePage) {
         if (config.homePage) {
@@ -511,52 +489,6 @@ var CCK2 = {
       case "distribution-customization-complete":
         for (var id in this.configs) {
           var config = this.configs[id];
-          // Due to bug 947838, we have to reinitialize default preferences
-          {
-            var iniFile = Services.dirsvc.get("XREAppDist", Ci.nsIFile);
-            iniFile.leafName = "distribution";
-            iniFile.append("distribution.ini");
-            if (iniFile.exists()) {
-              if (config.preferences) {
-                for (var i in config.preferences) {
-                  // Workaround bug where this pref is coming is as a string from import
-                  if (i == "toolkit.telemetry.prompted") {
-                     config.preferences[i].value = parseInt(config.preferences[i].value);
-                  }
-                  if (!("locked" in config.preferences[i]) &&
-                      !("userset" in config.preferences[i]) &&
-                      !("clear" in config.preferences[i])) {
-                    if (Preferences.defaults.has(i)) {
-                      try {
-                        // If it's a complex preference, we need to set it differently
-                        Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                        Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                      } catch (ex) {
-                        Preferences.defaults.set(i, config.preferences[i].value);
-                      }
-                    } else {
-                      Preferences.defaults.set(i, config.preferences[i].value);
-                    }
-                  }
-                }
-              }
-            }
-            if (config.homePage && !config.lockHomePage) {
-              Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
-              /* If you have a distribution.ini, we changed browser.startup.homepage */
-              /* Put it back */
-              if (Preferences.get("browser.startup.homepage") == config.homePage) {
-                Preferences.reset("browser.startup.homepage");
-              }
-            }
-            if (config.network) {
-              for (var i in networkPrefMapping) {
-                if (i in config.network) {
-                  Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
-                }
-              }
-            }
-          }
           // Try to install devices every time just in case get added after install
           if ("certs" in config && "devices" in config.certs) {
             let pkcs11;
