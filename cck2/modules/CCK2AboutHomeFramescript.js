@@ -16,7 +16,7 @@ var observer = {
   observe: function observe(subject, topic, data) {
     switch (topic) {
       case "content-document-global-created":
-        var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
+        var win = subject;
         win.addEventListener("load", function onLoad(event) {
           win.removeEventListener("load", onLoad, false);
           var doc = event.target;

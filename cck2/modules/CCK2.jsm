@@ -1441,7 +1441,7 @@ function updatePermissions(permissions) {
 var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow) {
-      var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
+      var win = subject;
       if (topic == "chrome-document-global-created" ||
           (topic == "content-document-global-created" && win.document.documentURIObject.scheme == "about")) {
         win.addEventListener("load", function onLoad(event) {
